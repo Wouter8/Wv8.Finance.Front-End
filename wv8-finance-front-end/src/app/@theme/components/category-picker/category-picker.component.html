@@ -1,0 +1,3 @@
+<nb-select placeholder="Select category" size="small" [(selected)]="category" (selectedChange)="categoryChange.emit(category)">
+  <nb-option *ngFor="let c of categories" [value]="c.id">{{c.name}}</nb-option>
+</nb-select>

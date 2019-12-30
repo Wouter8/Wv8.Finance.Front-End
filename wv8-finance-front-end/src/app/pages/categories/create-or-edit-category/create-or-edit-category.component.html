@@ -1,0 +1,67 @@
+<nb-card>
+  <nb-card-header>
+    {{ header }}
+  </nb-card-header>
+  <nb-card-body>
+    <table>
+      <tbody>
+        <tr>
+          <th>Icon</th>
+          <td>
+            <div class="clickable" [nbPopover]="iconPickerComponent" [nbPopoverContext]="iconPickerContext">
+              <wv8-icon-with-background
+                [icon]="category.icon"
+                [iconPack]="category.iconPack"
+                [color]="category.color"
+                (iconChanged)="onIconChange($event)"
+              ></wv8-icon-with-background>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>Name</th>
+          <td>
+            <input
+              type="text"
+              nbInput
+              fieldSize="small"
+              fullWidth
+              [(ngModel)]="category.name"
+              [disabled]="category.obsolete"
+              placeholder="Parties"
+            />
+          </td>
+        </tr>
+        <tr>
+          <th>Type</th>
+          <td>
+            <nb-select placeholder="Type" [(selected)]="category.type" size="small">
+              <nb-option *ngFor="let type of types | enumToArray" [value]="type.index">{{type.name}}</nb-option>
+            </nb-select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+  <nb-card-footer class="text-center">
+    <div class="row">
+      <div class="col-sm-6">
+        <button class="cancel" nbButton status="danger" (click)="cancel()">
+          Cancel
+          <nb-icon icon="close-outline"></nb-icon>
+        </button>
+      </div>
+      <div class="col-sm-6">
+        <button
+          nbButton
+          status="success"
+          [disabled]="category.obsolete"
+          (click)="submit()"
+        >
+          Submit
+          <nb-icon icon="save-outline"></nb-icon>
+        </button>
+      </div>
+    </div>
+  </nb-card-footer>
+</nb-card>

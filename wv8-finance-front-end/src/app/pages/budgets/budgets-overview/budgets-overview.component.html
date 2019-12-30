@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col-sm-12 col-xl-8">
+    <nb-card>
+      <nb-card-header>
+        <span class="title">Budgets</span>
+        <button nbButton size="tiny" (click)="onClickAdd($event)">
+          <nb-icon icon="plus-outline"></nb-icon>
+        </button>
+
+        <div class="header-right">
+            <input #periodPickerInput nbInput [fieldSize]="'small'" placeholder="Pick period" [nbDatepicker]="periodPicker">
+            <nb-rangepicker #periodPicker (rangeChange)="onSetPeriod($event)"></nb-rangepicker>
+        </div>
+      </nb-card-header>
+
+      <nb-card-body>
+        <wv8-table #table (select)="onSelect($event)"></wv8-table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-sm-12 col-xl-4">
+    <recurring-budgets-overview></recurring-budgets-overview>
+  </div>
+</div>

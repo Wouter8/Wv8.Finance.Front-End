@@ -1,0 +1,69 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap");
+
+// themes - our custom or/and out of the box themes
+@import "themes";
+
+// framework component themes (styles tied to theme variables)
+@import "~@nebular/theme/styles/globals";
+@import "~@nebular/auth/styles/all";
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/grid";
+
+// loading progress bar theme
+@import "./pace.theme";
+
+@import "./layout";
+@import "./overrides";
+
+// install the framework and custom global styles
+@include nb-install() {
+  // framework global styles
+  @include nb-theme-global();
+  @include nb-auth-global();
+
+  @include ngx-layout();
+  // loading progress bar
+  @include ngx-pace-theme();
+
+  @include nb-overrides();
+
+  .clickable {
+    cursor: pointer;
+  }
+
+  .obsolete {
+    font-style: italic;
+  }
+
+  .default {
+    color: red;
+  }
+
+  nb-card-header > .header-right {
+    float: right;
+  }
+
+  nb-card-header > * {
+    margin-right: 5px;
+  }
+
+  nb-card-header > .title {
+    margin-right: 15px;
+  }
+
+  .obsolete-text::after {
+    content: " (obsolete)";
+  }
+
+  nb-checkbox .native-input:disabled:checked + .custom-checkbox,
+  nb-checkbox .native-input:disabled:indeterminate + .custom-checkbox {
+    background-color: rgba(143, 155, 179, 0.48);
+  }
+
+  tbody > tr > th {
+      padding-right: 15px;
+  }
+}

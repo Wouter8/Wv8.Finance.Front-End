@@ -1,0 +1,30 @@
+@import './themes';
+
+@mixin nb-overrides() {
+  nb-select.size-medium button {
+    padding: 0.4375rem 2.2rem 0.4375rem 1.125rem !important;
+
+    nb-icon {
+      right: 0.41rem !important;
+    }
+  }
+
+  [nbButton].size-tiny {
+    padding: 1px 6px !important;
+
+    nb-icon {
+      font-size: 16px;
+    }
+  }
+
+  ng2-smart-table table tr td {
+    padding: .5em 1em;
+  }
+
+  ng2-smart-table table tr th, ng2-smart-table table tr th a,
+    ng2-smart-table table tr.ng2-smart-titles th a.sort.asc, ng2-smart-table table tr.ng2-smart-titles th a.sort.desc {
+    font-weight: bold;
+  }
+
+  
+}
