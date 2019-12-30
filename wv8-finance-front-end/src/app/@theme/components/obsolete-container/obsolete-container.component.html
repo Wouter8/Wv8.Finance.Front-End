@@ -1,0 +1,2 @@
+<span [ngClass]="{'obsolete': data.obsolete}">{{text}}</span>
+<nb-icon nbTooltip="Obsolete" nbTooltipPlacement="{{tooltipPlacement}}" *ngIf="data.obsolete" icon="alert-circle-outline" status="warning"></nb-icon>

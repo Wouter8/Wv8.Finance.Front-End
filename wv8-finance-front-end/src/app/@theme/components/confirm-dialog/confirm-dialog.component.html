@@ -1,0 +1,25 @@
+<nb-card>
+    <nb-card-header>
+      {{header}}
+    </nb-card-header>
+    <nb-card-body>
+      {{body}}
+    </nb-card-body>
+    <nb-card-footer class="text-center">
+      <div class="row">
+        <div class="col-sm-6">
+          <button class="cancel" nbButton status="danger" (click)="close(false)">
+            {{cancelText}}
+            <nb-icon icon="close-outline"></nb-icon>
+          </button>
+        </div>
+        <div class="col-sm-6">
+          <button nbButton status="success" (click)="close(true)">
+            {{submitText}}
+            <nb-icon icon="save-outline"></nb-icon>
+          </button>
+        </div>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+  

@@ -1,0 +1,5 @@
+<wv8-icon-with-background *ngIf="rowData.icon" [icon]="rowData.icon" [color]="rowData.color" [iconPack]="rowData.iconPack"></wv8-icon-with-background>
+<span *ngIf="value">{{value}}</span>
+<span *ngIf="!value">{{rowData.name}}</span>
+<nb-icon nbTooltip="Default" nbTooltipPlacement="right" *ngIf="rowData.default" icon="star" status="primary"></nb-icon>
+<nb-icon nbTooltip="Obsolete" nbTooltipPlacement="right" *ngIf="rowData.obsolete" icon="alert-circle-outline" status="warning"></nb-icon>

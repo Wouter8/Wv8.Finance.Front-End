@@ -1,0 +1,97 @@
+<nb-card>
+  <nb-card-header>
+    {{ header }}
+  </nb-card-header>
+  <nb-card-body>
+    <nb-stepper #stepper orientation="horizontal" disableStepNavigation>
+      <nb-step label="Values">
+        <table>
+          <tbody>
+            <tr>
+              <th>Category</th>
+              <td>
+                <category-picker
+                  [(category)]="budget.categoryId"
+                ></category-picker>
+              </td>
+            </tr>
+            <tr>
+              <th>Period</th>
+              <td>
+                <input
+                  #periodPickerInput
+                  nbInput
+                  fieldSize="small"
+                  placeholder="Pick period"
+                  fullWidth
+                  [disabled]="!budget.categoryId"
+                  [nbDatepicker]="periodPicker"
+                />
+                <nb-rangepicker
+                  #periodPicker
+                  (rangeChange)="onPeriodSelected($event)"
+                ></nb-rangepicker>
+              </td>
+            </tr>
+            <tr>
+              <th>Amount</th>
+              <td>
+                <input
+                  type="number"
+                  step="1"
+                  placeholder="100,00"
+                  nbInput
+                  fieldSize="small"
+                  fullWidth
+                  [(ngModel)]="budget.amount"
+                  [disabled]="!budget.categoryId"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <hr />
+
+        <div class="row text-center">
+          <div class="col-sm-6">
+            <button
+              nbButton
+              nbStepperPrevious
+              status="danger"
+              (click)="cancel()"
+            >
+              <nb-icon icon="close-outline"></nb-icon> Cancel
+            </button>
+          </div>
+          <div class="col-sm-6">
+            <button nbButton [disabled]="!filledValues()" (click)="toNextStep()">
+              Next <nb-icon icon="arrow-ios-forward"></nb-icon>
+            </button>
+          </div>
+        </div>
+      </nb-step>
+      <nb-step label="Overlapping">
+        <div *ngIf="overlappingBudgets.length > 0" class="col-sm-12 col-lg-6">
+          <div *ngFor="let b of overlappingBudgets">{{ b.amount }}</div>
+        </div>
+
+        <hr />
+
+        <div class="row text-center">
+          <div class="col-sm-6">
+            <button nbButton nbStepperPrevious>
+              <nb-icon icon="arrow-ios-back"></nb-icon> Back
+            </button>
+          </div>
+          <div class="col-sm-6">
+            <button nbButton status="success" (click)="submit()">
+              Send
+              <nb-icon icon="save-outline"></nb-icon>
+            </button>
+          </div>
+        </div>
+      </nb-step>
+    </nb-stepper>
+  </nb-card-body>
+</nb-card>

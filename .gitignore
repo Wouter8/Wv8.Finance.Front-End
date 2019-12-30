@@ -1,0 +1,41 @@
+# compiled output
+/wv8-finance-front-end/dist
+/wv8-finance-front-end/tmp
+/wv8-finance-front-end/out-tsc
+
+# dependencies
+/wv8-finance-front-end/node_modules
+
+# IDEs and editors
+/wv8-finance-front-end/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/wv8-finance-front-end/.sass-cache
+/wv8-finance-front-end/connect.lock
+/wv8-finance-front-end/coverage
+/wv8-finance-front-end/libpeerconnection.log
+npm-debug.log
+testem.log
+/wv8-finance-front-end/typings
+/wv8-finance-front-end/docs
+
+# e2e
+/wv8-finance-front-end/e2e/*.js
+/wv8-finance-front-end/e2e/*.map
+
+# System Files
+.DS_Store
+Thumbs.db

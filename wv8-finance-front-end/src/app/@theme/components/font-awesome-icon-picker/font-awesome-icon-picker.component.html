@@ -1,0 +1,41 @@
+<nb-card>
+  <nb-card-header>
+    Pick an icon
+
+    <div class="header-right">
+      <div
+        class="selected-color clickable"
+        [nbPopover]="colorSelector"
+        [nbPopoverContext]="colorSelectorContext"
+        [ngStyle]="{ 'background-color': color }"
+      ></div>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <div class="col-sm-3 clickable" *ngFor="let icon of iconsForPage">
+        <wv8-icon-with-background
+          [icon]="icon.icon"
+          [iconPack]="icon.iconPack"
+          [color]="color"
+          (click)="onSelectionChange(icon)"
+        ></wv8-icon-with-background>
+      </div>
+    </div>
+  </nb-card-body>
+  <nb-card-footer>
+    <div class="row">
+      <div class="col-sm-4">
+        <button nbButton size="tiny" (click)="previousPage()">
+          <nb-icon icon="minus-outline"></nb-icon>
+        </button>
+      </div>
+      <div class="col-sm-4 text-center">{{ currentPage }}/{{ totalPages }}</div>
+      <div class="col-sm-4 text-right">
+        <button nbButton size="tiny" (click)="nextPage()">
+          <nb-icon icon="plus-outline"></nb-icon>
+        </button>
+      </div>
+    </div>
+  </nb-card-footer>
+</nb-card>
