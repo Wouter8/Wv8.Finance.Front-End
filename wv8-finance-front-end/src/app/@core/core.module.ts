@@ -8,8 +8,6 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { AnalyticsService } from './utils';
-import { UserData } from './data/users';
-import { UserService } from './mock/users.service';
 import { MockDataModule } from './mock/mock-data.module';
 import { MenuItemsService } from './utils/menu-items.service';
 import { AccountData } from './data/account';
@@ -40,7 +38,6 @@ const socialLinks = [
 ];
 
 const DATA_SERVICES = [
-  { provide: UserData, useClass: UserService },
   { provide: AccountData, useClass: AccountService },
   { provide: CategoryData, useClass: CategoryService },
   { provide: BudgetData, useClass: BudgetService },

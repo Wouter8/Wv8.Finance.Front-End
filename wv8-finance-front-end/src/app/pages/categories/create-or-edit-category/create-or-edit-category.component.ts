@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, ViewChild } from "@angular/core";
 import { CategoryData, ICategory } from "../../../@core/data/category";
 import { Category } from "../../../@core/models/category.model";
 import {
@@ -6,7 +6,8 @@ import {
   NbToastrService,
   NbToastrConfig,
   NbDialogService,
-  NbTrigger
+  NbTrigger,
+  NbPopoverDirective
 } from "@nebular/theme";
 import { FontAwesomeIconPickerComponent } from "../../../@theme/components/font-awesome-icon-picker/font-awesome-icon-picker.component";
 import { FontAwesomeIcon } from '../../../@theme/components/font-awesome-icon-picker/font-awesome-icon';
@@ -26,6 +27,8 @@ export class CreateOrEditCategoryComponent implements OnInit {
   editing = false;
   header: string = "Creating new category";
 
+  @ViewChild(NbPopoverDirective, { static: false })
+  popover: NbPopoverDirective;
   iconPickerComponent = FontAwesomeIconPickerComponent;
   iconPickerContext: any;
 
@@ -42,8 +45,6 @@ export class CreateOrEditCategoryComponent implements OnInit {
     } else {
       this.category = new Category();
     }
-
-    this.setPopoverContext();
   }
 
   cancel() {
@@ -60,6 +61,15 @@ export class CreateOrEditCategoryComponent implements OnInit {
     this.dialogRef.close({ success: true, category: this.category });
   }
 
+  openIconChanger() {
+    this.setPopoverContext();
+    this.popover.toggle();
+  }
+
+  closeIconChanger() {
+    this.popover.hide();
+  }
+
   setPopoverContext() {
     this.iconPickerContext = {
       icon: this.category.icon,
@@ -73,12 +83,11 @@ export class CreateOrEditCategoryComponent implements OnInit {
   onIconChange(icon: FontAwesomeIcon) {
     this.category.icon = icon.icon;
     this.category.iconPack = icon.iconPack;
-    this.setPopoverContext();
+    this.closeIconChanger();
   }
 
   onColorChange(color: string) {
     this.category.color = color;
-    this.setPopoverContext();
   }
 
   private validate() {

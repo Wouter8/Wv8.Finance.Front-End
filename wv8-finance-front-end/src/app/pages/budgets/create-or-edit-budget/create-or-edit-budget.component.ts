@@ -9,6 +9,8 @@ import {
 import { Budget } from "../../../@core/models/budget.model";
 import { BudgetData } from "../../../@core/data/budget";
 import { Maybe } from "wv8.typescript.core";
+import { OverlappingBudget } from "../../../@core/models/overlapping-budget.model";
+import { OverlappingType } from "../../../@core/enums/overlapping-type";
 
 @Component({
   selector: "create-or-edit-budget",
@@ -25,7 +27,8 @@ export class CreateOrEditBudgetComponent implements OnInit {
   editing = false;
   header: string = "Creating new budget";
 
-  overlappingBudgets: Budget[] = [];
+  OverlappingType = OverlappingType;
+  overlappingBudgets: OverlappingBudget[] = [];
 
   constructor(
     protected dialogRef: NbDialogRef<CreateOrEditBudgetComponent>,
@@ -41,26 +44,6 @@ export class CreateOrEditBudgetComponent implements OnInit {
     } else {
       this.budget = new Budget();
     }
-  }
-
-  onCategoryChange() {
-    if (this.budget.startDate && this.budget.endDate) {
-      this.loadOverlappingBudgets();
-    }
-  }
-
-  loadOverlappingBudgets() {
-    this.budgetService
-      .getBudgetsByFilter(
-        new Maybe(this.budget.categoryId),
-        new Maybe(this.budget.startDate),
-        new Maybe(this.budget.endDate)
-      )
-      .subscribe(overlapping => {
-        this.overlappingBudgets = overlapping.filter(
-          b => b.id !== this.budget.id
-        );
-      });
   }
 
   onPeriodSelected(period: NbCalendarRange<Date>) {
@@ -86,14 +69,14 @@ export class CreateOrEditBudgetComponent implements OnInit {
     }
 
     this.budgetService
-      .getBudgetsByFilter(
+      .getOverlappingBudgets(
         new Maybe(this.budget.categoryId),
-        new Maybe(this.budget.startDate),
-        new Maybe(this.budget.endDate)
+        this.budget.startDate,
+        this.budget.endDate
       )
       .subscribe(overlapping => {
-        this.overlappingBudgets = overlapping;
-        
+        this.overlappingBudgets = overlapping.sort((a, b) => a.overlappingType - b.overlappingType);
+
         this.stepper.next();
       });
   }

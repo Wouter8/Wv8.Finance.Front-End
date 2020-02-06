@@ -73,7 +73,11 @@
       </nb-step>
       <nb-step label="Overlapping">
         <div *ngIf="overlappingBudgets.length > 0" class="col-sm-12 col-lg-6">
-          <div *ngFor="let b of overlappingBudgets">{{ b.amount }}</div>
+          <div *ngFor="let ob of overlappingBudgets">
+            {{ ob.budget.amount }}
+            {{ ob.budget.category.name }}
+            {{ OverlappingType.getOverlappingTypeString(ob.overlappingType) }}
+          </div>
         </div>
 
         <hr />

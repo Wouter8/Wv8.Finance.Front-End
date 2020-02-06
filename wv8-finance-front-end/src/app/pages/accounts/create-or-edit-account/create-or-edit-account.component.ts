@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, ViewChild } from "@angular/core";
 import { AccountData, IAccount } from "../../../@core/data/account";
 import { Account } from "../../../@core/models/account.model";
 import {
@@ -6,7 +6,8 @@ import {
   NbToastrService,
   NbToastrConfig,
   NbDialogService,
-  NbTrigger
+  NbTrigger,
+  NbPopoverDirective
 } from "@nebular/theme";
 import { FontAwesomeIconPickerComponent } from "../../../@theme/components/font-awesome-icon-picker/font-awesome-icon-picker.component";
 import { FontAwesomeIcon } from '../../../@theme/components/font-awesome-icon-picker/font-awesome-icon';
@@ -23,6 +24,9 @@ export class CreateOrEditAccountComponent implements OnInit {
   editing = false;
   header: string = "Creating new account";
 
+
+  @ViewChild(NbPopoverDirective, { static: false })
+  popover: NbPopoverDirective;
   iconPickerComponent = FontAwesomeIconPickerComponent;
   iconPickerContext: any;
 
@@ -39,8 +43,6 @@ export class CreateOrEditAccountComponent implements OnInit {
     } else {
       this.account = new Account();
     }
-
-    this.setPopoverContext();
   }
 
   cancel() {
@@ -57,6 +59,15 @@ export class CreateOrEditAccountComponent implements OnInit {
     this.dialogRef.close({ success: true, account: this.account });
   }
 
+  openIconChanger() {
+    this.setPopoverContext();
+    this.popover.toggle();
+  }
+
+  closeIconChanger() {
+    this.popover.hide();
+  }
+
   setPopoverContext() {
     this.iconPickerContext = {
       icon: this.account.icon,
@@ -70,12 +81,11 @@ export class CreateOrEditAccountComponent implements OnInit {
   onIconChange(icon: FontAwesomeIcon) {
     this.account.icon = icon.icon;
     this.account.iconPack = icon.iconPack;
-    this.setPopoverContext();
+    this.closeIconChanger();
   }
 
   onColorChange(color: string) {
     this.account.color = color;
-    this.setPopoverContext();
   }
 
   private validate() {

@@ -8,7 +8,7 @@
         <tr>
           <th>Icon</th>
           <td>
-            <div class="clickable" [nbPopover]="iconPickerComponent" [nbPopoverContext]="iconPickerContext">
+            <div (click)="openIconChanger()" class="clickable" [nbPopover]="iconPickerComponent" [nbPopoverContext]="iconPickerContext" nbPopoverPlacement="right" nbPopoverTrigger="noop">
               <wv8-icon-with-background
                 [icon]="category.icon"
                 [iconPack]="category.iconPack"

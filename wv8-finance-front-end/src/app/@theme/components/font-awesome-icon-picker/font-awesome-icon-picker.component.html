@@ -4,9 +4,12 @@
 
     <div class="header-right">
       <div
+        (click)="openColorChanger()"
         class="selected-color clickable"
         [nbPopover]="colorSelector"
         [nbPopoverContext]="colorSelectorContext"
+        nbPopoverPlacement="right"
+        nbPopoverTrigger="noop"
         [ngStyle]="{ 'background-color': color }"
       ></div>
     </div>

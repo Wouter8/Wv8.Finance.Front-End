@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from "@angular/core";
 import {
   NbDialogRef,
   NbToastrService,
   NbTrigger,
-  NbPosition
+  NbPosition,
+  NbPopoverDirective
 } from "@nebular/theme";
 import { Wv8Array } from "wv8.typescript.core";
 import { FontAwesomeIcon } from "./font-awesome-icon";
@@ -30,6 +31,8 @@ export class FontAwesomeIconPickerComponent implements OnInit {
   @Input()
   onColorChange = (color: string) => null;
 
+  @ViewChild(NbPopoverDirective, { static: false }) popover: NbPopoverDirective;
+
   pageSize = 32;
   currentPage = 1;
   totalPages = 1;
@@ -46,7 +49,6 @@ export class FontAwesomeIconPickerComponent implements OnInit {
       (this.fasIcons.length + this.farIcons.length) / this.pageSize
     );
     this.setIconsForPage();
-    this.setPopoverContext();
   }
 
   private setPopoverContext() {
@@ -54,6 +56,11 @@ export class FontAwesomeIconPickerComponent implements OnInit {
       color: this.color,
       onColorChange: this.onColorChanged.bind(this)
     };
+  }
+
+  openColorChanger() {
+    this.setPopoverContext();
+    this.popover.toggle();
   }
 
   onSelectionChange(icon: FontAwesomeIcon) {
@@ -65,7 +72,7 @@ export class FontAwesomeIconPickerComponent implements OnInit {
   onColorChanged(color: string) {
     this.color = color;
     this.onColorChange(color);
-    this.setPopoverContext();
+    this.popover.hide();
   }
 
   previousPage() {
