@@ -6,6 +6,8 @@ import { map } from "rxjs/operators";
 import { ICategory } from "../data/category";
 import { Maybe } from "wv8.typescript.core";
 import { CategoryType } from "../enums/category-type";
+import { OverlappingBudget } from "../models/overlapping-budget.model";
+import { OverlappingType } from "../enums/overlapping-type";
 
 @Injectable()
 export class BudgetService extends BudgetData {
@@ -124,8 +126,10 @@ export class BudgetService extends BudgetData {
 
       var withinPeriod =
         startDate.isSome && endDate.isSome
-          ? (budgetStartDate < startDate.value && budgetEndDate > endDate.value) ||
-            (budgetStartDate > startDate.value && budgetStartDate < endDate.value) ||
+          ? (budgetStartDate < startDate.value &&
+              budgetEndDate > endDate.value) ||
+            (budgetStartDate > startDate.value &&
+              budgetStartDate < endDate.value) ||
             (budgetEndDate > startDate.value && budgetEndDate < endDate.value)
           : true;
 
@@ -135,6 +139,33 @@ export class BudgetService extends BudgetData {
     return observableOf(found).pipe(
       map(budgets => budgets.map(a => Budget.fromDto(a)))
     );
+  }
+
+  getOverlappingBudgets(
+    categoryId: Maybe<number>,
+    startDate: Date,
+    endDate: Date
+  ): Observable<OverlappingBudget[]> {
+    return observableOf([
+      OverlappingBudget.fromDto({
+        budget: this.budgets[0],
+        fromRecurring: false,
+        overlappingPercentage: 35,
+        overlappingType: OverlappingType.Partial
+      }),
+      OverlappingBudget.fromDto({
+        budget: this.budgets[1],
+        fromRecurring: false,
+        overlappingPercentage: 50,
+        overlappingType: OverlappingType.Smaller
+      }),
+      OverlappingBudget.fromDto({
+        budget: this.budgets[2],
+        fromRecurring: false,
+        overlappingPercentage: 100,
+        overlappingType: OverlappingType.Equal
+      }),
+    ])
   }
 
   updateBudget(budget: IBudget): Observable<Budget> {

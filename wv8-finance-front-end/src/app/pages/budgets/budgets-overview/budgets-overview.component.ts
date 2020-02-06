@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { TableComponent } from "../../../@theme/components/table/table.component";
 import { CustomTableSettings } from "../../../@theme/components/table/table-settings.model";
 import { TableDefaultAndObsoleteCellComponent } from "../../../@theme/components/table/table-default-and-obsolete-cell/table-default-and-obsolete-cell.component";
 import { TableEuroCellComponent } from "../../../@theme/components/table/table-euro-cell/table-euro-cell.component";
 import { Router, ActivatedRoute } from "@angular/router";
-import { NbDialogService, NbToast, NbToastrService, NbCalendarRange, NbDatepicker, NbRangepickerComponent } from "@nebular/theme";
+import { NbDialogService, NbToast, NbToastrService, NbCalendarRange, NbDatepicker, NbRangepickerComponent, NbDateService } from "@nebular/theme";
 import { IBudget, BudgetData } from '../../../@core/data/budget';
 import { CreateOrEditBudgetComponent } from '../create-or-edit-budget/create-or-edit-budget.component';
 import { Budget } from '../../../@core/models/budget.model';
@@ -25,6 +25,9 @@ export class BudgetsOverviewComponent implements OnInit {
 
   @ViewChild("periodPicker", { static: true })
   periodPicker: NbRangepickerComponent<Date>;
+  
+  @ViewChild("periodPickerInput", { static: true })
+  periodPickerInput: ElementRef<HTMLInputElement>;
 
   budgets: Budget[] = [];
 
@@ -32,16 +35,18 @@ export class BudgetsOverviewComponent implements OnInit {
     private budgetService: BudgetData,
     private router: Router,
     private dialogService: NbDialogService,
-    private toasterService: NbToastrService
+    private toasterService: NbToastrService,
+    private dateService: NbDateService<Date>,
   ) {}
 
   ngOnInit() {
     let today = new Date();
     let range: NbCalendarRange<Date> = {
-      start: new Date(today.getFullYear(), today.getMonth(), 1),
-      end: new Date(today.getFullYear(), today.getMonth() + 1, 0),
+      start: this.dateService.getMonthStart(today),
+      end: this.dateService.getMonthEnd(today),
     }
     this.periodPicker.range = range;
+    this.periodPickerInput.nativeElement.value = `${this.dateService.format(range.start, "d MMM yy")} - ${this.dateService.format(range.end, "d MMM yy")}`;
 
     this.table.setSettings(this.getTableSettings());
     this.loadData(range);

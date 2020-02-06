@@ -1,9 +1,9 @@
-<div class="row">
-  <div class="color-picker">
-    <div class="col-sm-3 clickable" *ngFor="let color of colors">
-      <div class="possible-color" [ngStyle]="{'background-color': color}" (click)="onSelectionChange(color)">
-        
-      </div>
-    </div>
+<div class="color-picker">
+  <div class="clickable color-container" *ngFor="let color of colors">
+    <div
+      class="possible-color"
+      [ngStyle]="{ 'background-color': color }"
+      (click)="onSelectionChange(color)"
+    ></div>
   </div>
 </div>

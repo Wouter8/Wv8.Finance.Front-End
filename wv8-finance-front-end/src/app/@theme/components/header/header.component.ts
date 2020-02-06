@@ -6,7 +6,6 @@ import {
   NbThemeService
 } from "@nebular/theme";
 
-import { UserData } from "../../../@core/data/users";
 import { map, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
 
@@ -17,9 +16,7 @@ import { Subject } from "rxjs";
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
-  userPictureOnly: boolean = false;
   hideMenuButton: boolean = false;
-  user: any;
 
   menuOpen = false;
 
@@ -27,15 +24,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
     private themeService: NbThemeService,
-    private userService: UserData,
     private breakpointService: NbMediaBreakpointsService
   ) {}
 
   ngOnInit() {
-    this.userService
-      .getUsers()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((users: any) => (this.user = users.nick));
 
     const { sm, xl } = this.breakpointService.getBreakpointsMap();
     this.themeService
@@ -45,7 +37,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe((isLessThanXl: boolean) => {
-        this.userPictureOnly = isLessThanXl;
         this.hideMenuButton = !isLessThanXl;
       });
 

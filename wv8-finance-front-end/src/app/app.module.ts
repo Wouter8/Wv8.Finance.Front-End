@@ -22,7 +22,6 @@ import {
 } from '@nebular/theme';
 import { registerLocaleData } from '@angular/common';
 import localeNl from '@angular/common/locales/nl';
-import { CreateOrEditAccountComponent } from './pages/accounts/create-or-edit-account/create-or-edit-account.component';
 
 
 registerLocaleData(localeNl, 'nl');

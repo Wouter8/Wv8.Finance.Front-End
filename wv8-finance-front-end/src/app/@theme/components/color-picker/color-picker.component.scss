@@ -1,5 +1,20 @@
 .possible-color {
     width: 32px;
     height: 32px;
+    margin-left: 2px;
+    margin-right: 2px;
     border-radius: 50%;
+}
+
+.color-picker {
+    margin: 5px;
+    width: 108px;
+    height: 144px;
+}
+
+.color-container {
+    width: 36px;
+    display: inline-block;
+    margin: unset;
+    padding: unset;
 }

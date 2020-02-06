@@ -16,15 +16,16 @@ export class ColorPickerComponent implements OnInit {
   colors: string[] = [
     "#0049E4",
     "#00177F",
-    "#2E00C8",
+    "#4a1775",
     "#A202F7",
     "#DC0000",
     "#E88D00",
     "#5A3700",
-    "#F3FF00",
+    "#590000",
     "#51FF00",
     "#008514",
-    "#008551",
+    "#38756f",
+    "#000000",
   ];
 
   onSelectionChange(color: string) {

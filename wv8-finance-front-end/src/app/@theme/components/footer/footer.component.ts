@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   template: `
     <span class="created-by">Gemaakt door <b><a href="https://woutervanacht.com" target="_blank">Wouter van Acht</a></b></span>
     <div class="socials">
-      <a href="mailto:info@quiz-organizer.nl" target="_blank">
+      <a href="mailto:wouter@woutervanacht.com" target="_blank">
         <i class="control-icon ion ion-email"></i>
       </a>
       <a href="https://www.facebook.com/quizorganizer" target="_blank" class="ion ion-social-facebook"></a>
