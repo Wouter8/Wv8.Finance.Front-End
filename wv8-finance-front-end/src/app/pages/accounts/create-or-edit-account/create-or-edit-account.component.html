@@ -8,11 +8,18 @@
         <tr>
           <th>Icon</th>
           <td>
-            <div class="clickable" [nbPopover]="iconPickerComponent" [nbPopoverContext]="iconPickerContext" nbPopoverPlacement="right" nbPopoverTrigger="noop">
+            <div
+              class="clickable"
+              [nbPopover]="iconPickerComponent"
+              [nbPopoverContext]="iconPickerContext"
+              nbPopoverPlacement="right"
+              nbPopoverTrigger="noop"
+              (click)="openIconChanger()"
+            >
               <wv8-icon-with-background
-                [icon]="account.icon"
-                [iconPack]="account.iconPack"
-                [color]="account.color"
+                [icon]="account.icon.name"
+                [pack]="account.icon.pack"
+                [color]="account.icon.color"
                 (iconChanged)="onIconChange($event)"
               ></wv8-icon-with-background>
             </div>
@@ -26,33 +33,18 @@
               nbInput
               fieldSize="small"
               fullWidth
-              [(ngModel)]="account.name"
-              [disabled]="account.obsolete"
+              [(ngModel)]="account.description"
+              [disabled]="account.isObsolete"
               placeholder="Debit card"
             />
           </td>
         </tr>
-        <tr>
-          <th>Start balance</th>
-          <td>
-            <input
-              type="number"
-              nbInput
-              fieldSize="small"
-              fullWidth
-              [(ngModel)]="account.startBalance"
-              [disabled]="account.obsolete"
-              step="1"
-              placeholder="100,00"
-            />
-          </td>
-        </tr>
-        <tr>
+        <tr *ngIf="editing">
           <th>Default</th>
           <td>
             <nb-checkbox
-              [(checked)]="account.default"
-              [disabled]="account.obsolete"
+              [(checked)]="account.isDefault"
+              [disabled]="account.isObsolete"
             ></nb-checkbox>
           </td>
         </tr>
@@ -71,7 +63,7 @@
         <button
           nbButton
           status="success"
-          [disabled]="account.obsolete"
+          [disabled]="account.isObsolete"
           (click)="submit()"
         >
           Submit

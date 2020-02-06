@@ -2,15 +2,44 @@
   <div class="col-sm-12">
     <nb-card>
       <nb-card-header>
-        <wv8-icon-with-background [icon]="category.icon" [iconPack]="category.iconPack" [color]="category.color"></wv8-icon-with-background>
-        <wv8-obsolete-container [text]="category.name" [data]="category" [tooltipPlacement]="'top'"></wv8-obsolete-container>
-        <button *ngIf="!category.obsolete" nbButton size="tiny" (click)="onEditClick()">
+        <wv8-icon-with-background
+          [icon]="category.icon.name"
+          [pack]="category.icon.pack"
+          [color]="category.icon.color"
+        ></wv8-icon-with-background>
+        <wv8-obsolete-container
+          [text]="category.description"
+          [data]="category"
+          [tooltipPlacement]="'top'"
+        ></wv8-obsolete-container>
+        <button
+          *ngIf="!category.obsolete"
+          nbButton
+          size="tiny"
+          (click)="onEditClick()"
+        >
           <nb-icon icon="edit-outline"></nb-icon>
         </button>
-        <button *ngIf="category.obsolete" nbTooltip="Recover" nbTooltipPlacement="right" nbButton size="tiny" status="info" (click)="onObsoleteClick()">
+        <button
+          *ngIf="category.obsolete"
+          nbTooltip="Recover"
+          nbTooltipPlacement="right"
+          nbButton
+          size="tiny"
+          status="info"
+          (click)="onObsoleteClick()"
+        >
           <nb-icon icon="refresh-outline"></nb-icon>
         </button>
-        <button *ngIf="!category.obsolete" nbTooltip="Mark obsolete" nbTooltipPlacement="right" nbButton size="tiny" status="danger" (click)="onObsoleteClick()">
+        <button
+          *ngIf="!category.obsolete"
+          nbTooltip="Mark obsolete"
+          nbTooltipPlacement="right"
+          nbButton
+          size="tiny"
+          status="danger"
+          (click)="onObsoleteClick()"
+        >
           <nb-icon icon="trash-2-outline"></nb-icon>
         </button>
       </nb-card-header>

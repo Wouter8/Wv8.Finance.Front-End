@@ -6,7 +6,7 @@ import { NbDialogService, NbToastrService } from "@nebular/theme";
 import { CreateOrEditCategoryComponent } from "../create-or-edit-category/create-or-edit-category.component";
 import { Category } from "../../../@core/models/category.model";
 import { ConfirmDialogComponent } from "../../../@theme/components/confirm-dialog/confirm-dialog.component";
-import { CategoryType } from '../../../@core/enums/category-type';
+import { CategoryType } from "../../../@core/enums/category-type";
 
 @Component({
   selector: "category",
@@ -21,7 +21,7 @@ export class CategoryComponent implements OnInit {
     private router: Router,
     private categoryService: CategoryData,
     private dialogService: NbDialogService,
-    private toasterService: NbToastrService,
+    private toasterService: NbToastrService
   ) {}
 
   ngOnInit() {
@@ -29,12 +29,12 @@ export class CategoryComponent implements OnInit {
       let id = new Maybe<number>(params.id);
       if (id.isSome) {
         try {
-        this.categoryService
-          .getCategory(id.value)
-          .subscribe(category => (this.category = category));
+          this.categoryService
+            .getCategory(id.value)
+            .subscribe(category => (this.category = category));
         } catch {
-          this.toasterService.danger('', 'Category not found');
-          this.router.navigateByUrl('/categories');
+          this.toasterService.danger("", "Category not found");
+          this.router.navigateByUrl("/categories");
         }
       }
     });
@@ -47,20 +47,22 @@ export class CategoryComponent implements OnInit {
         .subscribe(() => {
           this.category.obsolete = false;
 
-          this.toasterService.success('', 'Recovered category');
+          this.toasterService.success("", "Recovered category");
         });
     } else {
       this.dialogService
         .open(ConfirmDialogComponent, {
-          context: { body: `Mark ${this.category.name} obsolete?` }
+          context: { body: `Mark ${this.category.description} obsolete?` }
         })
         .onClose.subscribe((confirmed: boolean) => {
           if (confirmed) {
-            this.categoryService.setCategoryObsolete(this.category.id, true).subscribe(() => {
-              this.category.obsolete = true;
+            this.categoryService
+              .setCategoryObsolete(this.category.id, true)
+              .subscribe(() => {
+                this.category.obsolete = true;
 
-              this.toasterService.success('', 'Marked category obsolete');
-            });
+                this.toasterService.success("", "Marked category obsolete");
+              });
           }
         });
     }
@@ -73,9 +75,17 @@ export class CategoryComponent implements OnInit {
       })
       .onClose.subscribe((data: { success: boolean; category: Category }) => {
         if (data && data.success) {
-          this.categoryService.updateCategory(data.category).subscribe(updated => this.category = updated);
+          this.categoryService
+            .updateCategory(
+              data.category.id,
+              data.category.description,
+              data.category.icon.pack,
+              data.category.icon.name,
+              data.category.icon.color
+            )
+            .subscribe(updated => (this.category = updated));
 
-          this.toasterService.success('', 'Updated category');
+          this.toasterService.success("", "Updated category");
         }
       });
   }

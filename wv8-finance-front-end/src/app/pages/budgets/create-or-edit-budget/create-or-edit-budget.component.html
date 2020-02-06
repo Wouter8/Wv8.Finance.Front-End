@@ -65,20 +65,18 @@
             </button>
           </div>
           <div class="col-sm-6">
-            <button nbButton [disabled]="!filledValues()" (click)="toNextStep()">
+            <button
+              nbButton
+              [disabled]="!filledValues()"
+              (click)="toNextStep()"
+            >
               Next <nb-icon icon="arrow-ios-forward"></nb-icon>
             </button>
           </div>
         </div>
       </nb-step>
       <nb-step label="Overlapping">
-        <div *ngIf="overlappingBudgets.length > 0" class="col-sm-12 col-lg-6">
-          <div *ngFor="let ob of overlappingBudgets">
-            {{ ob.budget.amount }}
-            {{ ob.budget.category.name }}
-            {{ OverlappingType.getOverlappingTypeString(ob.overlappingType) }}
-          </div>
-        </div>
+        OVERLAPPING BUDGETS
 
         <hr />
 

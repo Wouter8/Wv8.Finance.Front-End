@@ -1,5 +1,5 @@
 export interface IIcon {
-    value: string;
-    iconPack: string;
-    color: string;
+  name: string;
+  pack: string;
+  color: string;
 }

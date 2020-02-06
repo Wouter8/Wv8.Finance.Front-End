@@ -1,21 +1,19 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input } from "@angular/core";
 
 @Component({
-  selector: 'wv8-icon-with-background',
-  templateUrl: './icon-with-background.component.html',
-  styleUrls: ['./icon-with-background.component.scss']
+  selector: "wv8-icon-with-background",
+  templateUrl: "./icon-with-background.component.html",
+  styleUrls: ["./icon-with-background.component.scss"]
 })
 export class IconWithBackgroundComponent implements OnInit {
-  
   @Input()
   icon: string;
   @Input()
-  iconPack: string;
+  pack: string;
   @Input()
   color: string;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }
