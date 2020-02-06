@@ -8,8 +8,17 @@
         </button>
 
         <div class="header-right">
-            <input #periodPickerInput nbInput [fieldSize]="'small'" placeholder="Pick period" [nbDatepicker]="periodPicker">
-            <nb-rangepicker #periodPicker (rangeChange)="onSetPeriod($event)"></nb-rangepicker>
+          <input
+            #periodPickerInput
+            nbInput
+            [fieldSize]="'small'"
+            placeholder="Pick period"
+            [nbDatepicker]="periodPicker"
+          />
+          <nb-rangepicker
+            #periodPicker
+            (rangeChange)="onSetPeriod($event)"
+          ></nb-rangepicker>
         </div>
       </nb-card-header>
 
@@ -19,6 +28,6 @@
     </nb-card>
   </div>
   <div class="col-sm-12 col-xl-4">
-    <recurring-budgets-overview></recurring-budgets-overview>
+    RECURRING HERE
   </div>
 </div>

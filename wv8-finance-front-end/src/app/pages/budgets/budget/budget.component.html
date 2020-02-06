@@ -2,11 +2,18 @@
   <div class="col-sm-12">
     <nb-card>
       <nb-card-header>
-        <span>Budget for {{budget.category.name}}</span>
+        <span>Budget for {{ budget.category.description }}</span>
         <button nbButton size="tiny" (click)="onEditClick()">
           <nb-icon icon="edit-outline"></nb-icon>
         </button>
-        <button nbTooltip="Delete" nbTooltipPlacement="right" nbButton size="tiny" status="danger" (click)="onDeleteClick()">
+        <button
+          nbTooltip="Delete"
+          nbTooltipPlacement="right"
+          nbButton
+          size="tiny"
+          status="danger"
+          (click)="onDeleteClick()"
+        >
           <nb-icon icon="trash-2-outline"></nb-icon>
         </button>
       </nb-card-header>

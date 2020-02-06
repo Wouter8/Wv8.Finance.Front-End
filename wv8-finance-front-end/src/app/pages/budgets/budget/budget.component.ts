@@ -46,12 +46,10 @@ export class BudgetComponent implements OnInit {
       })
       .onClose.subscribe((confirmed: boolean) => {
         if (confirmed) {
-          this.budgetService
-            .deleteBudget(this.budget.id)
-            .subscribe(() => {
-              this.toasterService.success("", "Deleted budget");
-              this.router.navigateByUrl('/budgets');
-            });
+          this.budgetService.deleteBudget(this.budget.id).subscribe(() => {
+            this.toasterService.success("", "Deleted budget");
+            this.router.navigateByUrl("/budgets");
+          });
         }
       });
   }
@@ -64,7 +62,12 @@ export class BudgetComponent implements OnInit {
       .onClose.subscribe((data: { success: boolean; budget: Budget }) => {
         if (data.success) {
           this.budgetService
-            .updateBudget(data.budget.serialize())
+            .updateBudget(
+              data.budget.id,
+              data.budget.amount,
+              data.budget.startDate,
+              data.budget.endDate
+            )
             .subscribe(updated => (this.budget = updated));
 
           this.toasterService.success("", "Updated budget");

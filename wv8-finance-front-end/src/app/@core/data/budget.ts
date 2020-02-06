@@ -1,11 +1,9 @@
-import { Observable } from 'rxjs';
-import { TransactionType } from '../enums/transaction-type.enum';
-import { ICategory } from './category';
-import { IntervalUnit } from '../enums/interval-unit';
-import { Maybe, IMaybe } from 'wv8.typescript.core';
-import { Budget } from '../models/budget.model';
-import { RecurringBudget } from '../models/recurring-budget.model';
-import { OverlappingBudget } from '../models/overlapping-budget.model';
+import { Observable } from "rxjs";
+import { TransactionType } from "../enums/transaction-type.enum";
+import { ICategory } from "./category";
+import { IntervalUnit } from "../enums/interval-unit";
+import { Maybe, IMaybe } from "wv8.typescript.core";
+import { Budget } from "../models/budget.model";
 
 export interface IBudget {
   id: number;
@@ -20,9 +18,22 @@ export interface IBudget {
 export abstract class BudgetData {
   abstract getBudget(id: number): Observable<Budget>;
   abstract getBudgets(): Observable<Budget[]>;
-  abstract getBudgetsByFilter(categoryId: Maybe<number>, startDate: Maybe<Date>, endDate: Maybe<Date>): Observable<Budget[]>;
-  abstract getOverlappingBudgets(categoryId: Maybe<number>, startDate: Date, endDate: Date): Observable<OverlappingBudget[]>;
-  abstract updateBudget(budget: IBudget): Observable<Budget>;
-  abstract createBudget(budget: IBudget): Observable<Budget>;
+  abstract getBudgetsByFilter(
+    categoryId: Maybe<number>,
+    startDate: Maybe<Date>,
+    endDate: Maybe<Date>
+  ): Observable<Budget[]>;
+  abstract updateBudget(
+    id: number,
+    amount: number,
+    startDate: Date,
+    endDate: Date
+  ): Observable<Budget>;
+  abstract createBudget(
+    categoryId: number,
+    amount: number,
+    startDate: Date,
+    endDate: Date
+  ): Observable<Budget>;
   abstract deleteBudget(id: number): Observable<void>;
 }

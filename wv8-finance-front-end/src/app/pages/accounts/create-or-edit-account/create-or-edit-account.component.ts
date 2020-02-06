@@ -10,7 +10,7 @@ import {
   NbPopoverDirective
 } from "@nebular/theme";
 import { FontAwesomeIconPickerComponent } from "../../../@theme/components/font-awesome-icon-picker/font-awesome-icon-picker.component";
-import { FontAwesomeIcon } from '../../../@theme/components/font-awesome-icon-picker/font-awesome-icon';
+import { FontAwesomeIcon } from "../../../@theme/components/font-awesome-icon-picker/font-awesome-icon";
 
 @Component({
   selector: "create-or-edit-account",
@@ -23,7 +23,6 @@ export class CreateOrEditAccountComponent implements OnInit {
 
   editing = false;
   header: string = "Creating new account";
-
 
   @ViewChild(NbPopoverDirective, { static: false })
   popover: NbPopoverDirective;
@@ -39,7 +38,7 @@ export class CreateOrEditAccountComponent implements OnInit {
     if (this.account) {
       this.editing = true;
       this.account = this.account.copy();
-      this.header = `Editing ${this.account.name}`;
+      this.header = `Editing ${this.account.description}`;
     } else {
       this.account = new Account();
     }
@@ -70,28 +69,28 @@ export class CreateOrEditAccountComponent implements OnInit {
 
   setPopoverContext() {
     this.iconPickerContext = {
-      icon: this.account.icon,
-      iconPack: this.account.iconPack,
-      color: this.account.color,
+      icon: this.account.icon.name,
+      pack: this.account.icon.pack,
+      color: this.account.icon.color,
       onIconChange: this.onIconChange.bind(this),
-      onColorChange: this.onColorChange.bind(this),
-    }
+      onColorChange: this.onColorChange.bind(this)
+    };
   }
 
   onIconChange(icon: FontAwesomeIcon) {
-    this.account.icon = icon.icon;
-    this.account.iconPack = icon.iconPack;
+    this.account.icon.name = icon.icon;
+    this.account.icon.pack = icon.iconPack;
     this.closeIconChanger();
   }
 
   onColorChange(color: string) {
-    this.account.color = color;
+    this.account.icon.color = color;
   }
 
   private validate() {
     let messages: string[] = [];
 
-    if (this.account.name.trim().length < 3)
+    if (this.account.description.trim().length < 3)
       messages.push("Name must contain at least 3 characters");
 
     // TODO

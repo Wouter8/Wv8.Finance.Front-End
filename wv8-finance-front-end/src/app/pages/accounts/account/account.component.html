@@ -1,16 +1,45 @@
-<div class="row">
+<div *ngIf="account" class="row">
   <div class="col-sm-12">
     <nb-card>
       <nb-card-header>
-        <wv8-icon-with-background [icon]="account.icon" [iconPack]="account.iconPack" [color]="account.color"></wv8-icon-with-background>
-        <wv8-obsolete-container [text]="account.name" [data]="account" [tooltipPlacement]="'top'"></wv8-obsolete-container>
-        <button *ngIf="!account.obsolete" nbButton size="tiny" (click)="onEditClick()">
+        <wv8-icon-with-background
+          [icon]="account.icon.name"
+          [pack]="account.icon.pack"
+          [color]="account.icon.color"
+        ></wv8-icon-with-background>
+        <wv8-obsolete-container
+          [text]="account.description"
+          [data]="account"
+          [tooltipPlacement]="'top'"
+        ></wv8-obsolete-container>
+        <button
+          *ngIf="!account.isObsolete"
+          nbButton
+          size="tiny"
+          (click)="onEditClick()"
+        >
           <nb-icon icon="edit-outline"></nb-icon>
         </button>
-        <button *ngIf="account.obsolete" nbTooltip="Recover" nbTooltipPlacement="right" nbButton size="tiny" status="info" (click)="onObsoleteClick()">
+        <button
+          *ngIf="account.isObsolete"
+          nbTooltip="Recover"
+          nbTooltipPlacement="right"
+          nbButton
+          size="tiny"
+          status="info"
+          (click)="onObsoleteClick()"
+        >
           <nb-icon icon="refresh-outline"></nb-icon>
         </button>
-        <button *ngIf="!account.obsolete" nbTooltip="Mark obsolete" nbTooltipPlacement="right" nbButton size="tiny" status="danger" (click)="onObsoleteClick()">
+        <button
+          *ngIf="!account.isObsolete"
+          nbTooltip="Mark obsolete"
+          nbTooltipPlacement="right"
+          nbButton
+          size="tiny"
+          status="danger"
+          (click)="onObsoleteClick()"
+        >
           <nb-icon icon="trash-2-outline"></nb-icon>
         </button>
       </nb-card-header>
@@ -22,19 +51,19 @@
               <td>{{ account.id }}</td>
             </tr>
             <tr>
-              <th>Start balance</th>
-              <td>{{ account.startBalance | currency: "EUR" }}</td>
+              <th>Current balance</th>
+              <td>{{ account.currentBalance | currency: "EUR" }}</td>
             </tr>
             <tr>
               <th>Default</th>
               <td>
                 <nb-icon
-                  *ngIf="account.default"
+                  *ngIf="account.isDefault"
                   icon="checkmark-circle-2-outline"
                   status="primary"
                 ></nb-icon>
                 <nb-icon
-                  *ngIf="!account.default"
+                  *ngIf="!account.isDefault"
                   icon="close-circle-outline"
                 ></nb-icon>
               </td>

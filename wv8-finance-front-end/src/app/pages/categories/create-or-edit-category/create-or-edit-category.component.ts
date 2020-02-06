@@ -10,8 +10,8 @@ import {
   NbPopoverDirective
 } from "@nebular/theme";
 import { FontAwesomeIconPickerComponent } from "../../../@theme/components/font-awesome-icon-picker/font-awesome-icon-picker.component";
-import { FontAwesomeIcon } from '../../../@theme/components/font-awesome-icon-picker/font-awesome-icon';
-import { CategoryType } from '../../../@core/enums/category-type';
+import { FontAwesomeIcon } from "../../../@theme/components/font-awesome-icon-picker/font-awesome-icon";
+import { CategoryType } from "../../../@core/enums/category-type";
 
 @Component({
   selector: "create-or-edit-category",
@@ -41,7 +41,7 @@ export class CreateOrEditCategoryComponent implements OnInit {
     if (this.category) {
       this.editing = true;
       this.category = this.category.copy();
-      this.header = `Editing ${this.category.name}`;
+      this.header = `Editing ${this.category.description}`;
     } else {
       this.category = new Category();
     }
@@ -73,27 +73,27 @@ export class CreateOrEditCategoryComponent implements OnInit {
   setPopoverContext() {
     this.iconPickerContext = {
       icon: this.category.icon,
-      iconPack: this.category.iconPack,
-      color: this.category.color,
+      pack: this.category.icon.pack,
+      color: this.category.icon.color,
       onIconChange: this.onIconChange.bind(this),
-      onColorChange: this.onColorChange.bind(this),
-    }
+      onColorChange: this.onColorChange.bind(this)
+    };
   }
 
   onIconChange(icon: FontAwesomeIcon) {
-    this.category.icon = icon.icon;
-    this.category.iconPack = icon.iconPack;
+    this.category.icon.name = icon.icon;
+    this.category.icon.pack = icon.iconPack;
     this.closeIconChanger();
   }
 
   onColorChange(color: string) {
-    this.category.color = color;
+    this.category.icon.color = color;
   }
 
   private validate() {
     let messages: string[] = [];
 
-    if (this.category.name.trim().length < 3)
+    if (this.category.description.trim().length < 3)
       messages.push("Name must contain at least 3 characters");
 
     return messages;

@@ -10,4 +10,6 @@
 
 export const environment = {
   production: false,
+  base_url: "http://localhost:49907/api",
+  public_url: "http://localhost/#"
 };

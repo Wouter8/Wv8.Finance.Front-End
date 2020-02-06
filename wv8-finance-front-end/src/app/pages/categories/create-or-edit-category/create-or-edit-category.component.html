@@ -8,11 +8,18 @@
         <tr>
           <th>Icon</th>
           <td>
-            <div (click)="openIconChanger()" class="clickable" [nbPopover]="iconPickerComponent" [nbPopoverContext]="iconPickerContext" nbPopoverPlacement="right" nbPopoverTrigger="noop">
+            <div
+              (click)="openIconChanger()"
+              class="clickable"
+              [nbPopover]="iconPickerComponent"
+              [nbPopoverContext]="iconPickerContext"
+              nbPopoverPlacement="right"
+              nbPopoverTrigger="noop"
+            >
               <wv8-icon-with-background
-                [icon]="category.icon"
-                [iconPack]="category.iconPack"
-                [color]="category.color"
+                [icon]="category.icon.name"
+                [pack]="category.icon.pack"
+                [color]="category.icon.color"
                 (iconChanged)="onIconChange($event)"
               ></wv8-icon-with-background>
             </div>
@@ -26,7 +33,7 @@
               nbInput
               fieldSize="small"
               fullWidth
-              [(ngModel)]="category.name"
+              [(ngModel)]="category.description"
               [disabled]="category.obsolete"
               placeholder="Parties"
             />
@@ -35,8 +42,16 @@
         <tr>
           <th>Type</th>
           <td>
-            <nb-select placeholder="Type" [(selected)]="category.type" size="small">
-              <nb-option *ngFor="let type of types | enumToArray" [value]="type.index">{{type.name}}</nb-option>
+            <nb-select
+              placeholder="Type"
+              [(selected)]="category.type"
+              size="small"
+            >
+              <nb-option
+                *ngFor="let type of types | enumToArray"
+                [value]="type.index"
+                >{{ type.name }}</nb-option
+              >
             </nb-select>
           </td>
         </tr>

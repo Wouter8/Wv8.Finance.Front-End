@@ -1,4 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild
+} from "@angular/core";
 import {
   NbDialogRef,
   NbToastrService,
@@ -20,7 +27,7 @@ export class FontAwesomeIconPickerComponent implements OnInit {
   icon: string = "credit-card";
 
   @Input()
-  iconPack: string = "fas";
+  pack: string = "fas";
 
   @Input()
   color: string = "#00177F";
@@ -65,7 +72,7 @@ export class FontAwesomeIconPickerComponent implements OnInit {
 
   onSelectionChange(icon: FontAwesomeIcon) {
     this.icon = icon.icon;
-    this.iconPack = icon.iconPack;
+    this.pack = icon.iconPack;
     this.onIconChange(icon);
   }
 
@@ -141,7 +148,7 @@ export class FontAwesomeIconPickerComponent implements OnInit {
   select() {
     let iconFound = false;
     let iconsToSearch: string[] = [];
-    switch (this.iconPack) {
+    switch (this.pack) {
       case "far":
         iconsToSearch = this.farIcons;
         break;

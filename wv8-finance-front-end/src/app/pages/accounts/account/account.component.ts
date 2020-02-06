@@ -20,7 +20,7 @@ export class AccountComponent implements OnInit {
     private router: Router,
     private accountService: AccountData,
     private dialogService: NbDialogService,
-    private toasterService: NbToastrService,
+    private toasterService: NbToastrService
   ) {}
 
   ngOnInit() {
@@ -28,39 +28,43 @@ export class AccountComponent implements OnInit {
       let id = new Maybe<number>(params.id);
       if (id.isSome) {
         try {
-        this.accountService
-          .getAccount(id.value)
-          .subscribe(account => (this.account = account));
+          this.accountService
+            .getAccount(id.value)
+            .subscribe(account => (this.account = account));
         } catch {
-          this.toasterService.danger('', 'Account not found');
-          this.router.navigateByUrl('/accounts');
+          this.toasterService.danger("", "Account not found");
+          this.router.navigateByUrl("/accounts");
         }
+      } else {
+        this.router.navigateByUrl("/accounts");
       }
     });
   }
 
   onObsoleteClick() {
-    if (this.account.obsolete) {
+    if (this.account.isObsolete) {
       this.accountService
         .setAccountObsolete(this.account.id, false)
         .subscribe(() => {
-          this.account.obsolete = false;
+          this.account.isObsolete = false;
 
-          this.toasterService.success('', 'Recovered account');
+          this.toasterService.success("", "Recovered account");
         });
     } else {
       this.dialogService
         .open(ConfirmDialogComponent, {
-          context: { body: `Mark ${this.account.name} obsolete?` }
+          context: { body: `Mark ${this.account.description} obsolete?` }
         })
         .onClose.subscribe((confirmed: boolean) => {
           if (confirmed) {
-            this.accountService.setAccountObsolete(this.account.id, true).subscribe(() => {
-              this.account.obsolete = true;
-              this.account.default = false;
+            this.accountService
+              .setAccountObsolete(this.account.id, true)
+              .subscribe(() => {
+                this.account.isObsolete = true;
+                this.account.isDefault = false;
 
-              this.toasterService.success('', 'Marked account obsolete');
-            });
+                this.toasterService.success("", "Marked account obsolete");
+              });
           }
         });
     }
@@ -69,13 +73,22 @@ export class AccountComponent implements OnInit {
   onEditClick() {
     this.dialogService
       .open(CreateOrEditAccountComponent, {
-        context: { account: Account.fromDto(this.account) }
+        context: { account: this.account.copy() }
       })
       .onClose.subscribe((data: { success: boolean; account: Account }) => {
         if (data && data.success) {
-          this.accountService.updateAccount(data.account).subscribe(updated => this.account = updated);
+          this.accountService
+            .updateAccount(
+              data.account.id,
+              data.account.description,
+              data.account.isDefault,
+              data.account.icon.pack,
+              data.account.icon.name,
+              data.account.icon.color
+            )
+            .subscribe(updated => (this.account = updated));
 
-          this.toasterService.success('', 'Updated account');
+          this.toasterService.success("", "Updated account");
         }
       });
   }

@@ -1,21 +1,32 @@
-import { Observable } from 'rxjs';
-import { Account } from '../models/account.model';
+import { Observable } from "rxjs";
+import { Account } from "../models/account.model";
+import { IIcon } from "./icon";
 
 export interface IAccount {
   id: number;
-  name: string;
-  obsolete: boolean;
-  startBalance: number;
-  default: boolean;
-  icon: string;
-  iconPack: string;
-  color: string;
+  description: string;
+  isObsolete: boolean;
+  currentBalance: number;
+  isDefault: boolean;
+  icon: IIcon;
 }
 
 export abstract class AccountData {
   abstract getAccount(id: number): Observable<Account>;
-  abstract getAccounts(): Observable<Account[]>;
-  abstract updateAccount(account: IAccount): Observable<Account>;
-  abstract createAccount(account: IAccount): Observable<Account>;
-  abstract setAccountObsolete(id: number, obsolete: boolean): Observable<Account>;
+  abstract getAccounts(includeObsolete: boolean): Observable<Account[]>;
+  abstract updateAccount(
+    id: number,
+    description: string,
+    isDefault: boolean,
+    iconPack: string,
+    iconName: string,
+    iconColor: string
+  ): Observable<Account>;
+  abstract createAccount(
+    description: string,
+    iconPack: string,
+    iconName: string,
+    iconColor: string
+  ): Observable<Account>;
+  abstract setAccountObsolete(id: number, obsolete: boolean): Observable<void>;
 }

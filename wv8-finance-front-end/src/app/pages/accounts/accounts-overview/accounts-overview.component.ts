@@ -9,8 +9,8 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { NbDialogService, NbToast, NbToastrService } from "@nebular/theme";
 import { CreateOrEditAccountComponent } from "../create-or-edit-account/create-or-edit-account.component";
 import { Account } from "../../../@core/models/account.model";
-import { TableIconCellComponent } from '../../../@theme/components/table/table-icon-cell/table-icon-cell.component';
-import { TableNameCellComponent } from '../../../@theme/components/table/table-name-cell/table-name-cell.component';
+import { TableIconCellComponent } from "../../../@theme/components/table/table-icon-cell/table-icon-cell.component";
+import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
 
 @Component({
   selector: "accounts-overview",
@@ -50,18 +50,25 @@ export class AccountsOverviewComponent implements OnInit {
       .open(CreateOrEditAccountComponent)
       .onClose.subscribe((data: { success: boolean; account: Account }) => {
         if (data.success) {
-          this.accountService.createAccount(data.account).subscribe(account => {
-            this.accounts.push(account);
-            this.loadData();
+          this.accountService
+            .createAccount(
+              data.account.description,
+              data.account.icon.pack,
+              data.account.icon.name,
+              data.account.icon.color
+            )
+            .subscribe(account => {
+              this.accounts.push(account);
+              this.loadData();
 
-            this.toasterService.success("", "Added account");
-          });
+              this.toasterService.success("", "Added account");
+            });
         }
       });
   }
 
   private loadData() {
-    this.accountService.getAccounts().subscribe(accounts => {
+    this.accountService.getAccounts(true).subscribe(accounts => {
       this.accounts = accounts;
       this.setAccountList(this.showObsolete);
     });
@@ -71,7 +78,7 @@ export class AccountsOverviewComponent implements OnInit {
     if (showObsolete) {
       this.table.setData(this.accounts);
     } else {
-      this.table.setData(this.accounts.filter(a => !a.obsolete));
+      this.table.setData(this.accounts.filter(a => !a.isObsolete));
     }
   }
 
@@ -82,16 +89,16 @@ export class AccountsOverviewComponent implements OnInit {
           title: "ID",
           type: "text",
           sort: false,
-          width: "60px",
+          width: "60px"
         },
-        name: {
+        description: {
           title: "Name",
           type: "custom",
           renderComponent: TableNameCellComponent,
           sort: false
         },
-        startBalance: {
-          title: "Start Balance",
+        currentBalance: {
+          title: "Current Balance",
           type: "custom",
           renderComponent: TableEuroCellComponent,
           sort: false
@@ -101,7 +108,7 @@ export class AccountsOverviewComponent implements OnInit {
       clickable: true,
       rowClassFunction: (row: IAccount) => {
         let classes: string[] = [];
-        if (row.obsolete) {
+        if (row.isObsolete) {
           classes.push("obsolete");
         }
         return classes;

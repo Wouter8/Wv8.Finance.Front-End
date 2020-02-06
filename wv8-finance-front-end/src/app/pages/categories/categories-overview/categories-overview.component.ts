@@ -1,21 +1,21 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { TableComponent } from '../../../@theme/components/table/table.component';
-import { ICategory, CategoryData } from '../../../@core/data/category';
-import { Router } from '@angular/router';
-import { NbDialogService, NbToastrService } from '@nebular/theme';
-import { CreateOrEditCategoryComponent } from '../create-or-edit-category/create-or-edit-category.component';
-import { Category } from '../../../@core/models/category.model';
-import { CustomTableSettings } from '../../../@theme/components/table/table-settings.model';
-import { TableIconCellComponent } from '../../../@theme/components/table/table-icon-cell/table-icon-cell.component';
-import { TableDefaultAndObsoleteCellComponent } from '../../../@theme/components/table/table-default-and-obsolete-cell/table-default-and-obsolete-cell.component';
-import { TableEuroCellComponent } from '../../../@theme/components/table/table-euro-cell/table-euro-cell.component';
-import { TableObsoleteCellComponent } from '../../../@theme/components/table/table-obsolete-cell/table-obsolete-cell.component';
-import { TableNameCellComponent } from '../../../@theme/components/table/table-name-cell/table-name-cell.component';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { TableComponent } from "../../../@theme/components/table/table.component";
+import { ICategory, CategoryData } from "../../../@core/data/category";
+import { Router } from "@angular/router";
+import { NbDialogService, NbToastrService } from "@nebular/theme";
+import { CreateOrEditCategoryComponent } from "../create-or-edit-category/create-or-edit-category.component";
+import { Category } from "../../../@core/models/category.model";
+import { CustomTableSettings } from "../../../@theme/components/table/table-settings.model";
+import { TableIconCellComponent } from "../../../@theme/components/table/table-icon-cell/table-icon-cell.component";
+import { TableDefaultAndObsoleteCellComponent } from "../../../@theme/components/table/table-default-and-obsolete-cell/table-default-and-obsolete-cell.component";
+import { TableEuroCellComponent } from "../../../@theme/components/table/table-euro-cell/table-euro-cell.component";
+import { TableObsoleteCellComponent } from "../../../@theme/components/table/table-obsolete-cell/table-obsolete-cell.component";
+import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
 
 @Component({
-  selector: 'categories-overview',
-  templateUrl: './categories-overview.component.html',
-  styleUrls: ['./categories-overview.component.scss']
+  selector: "categories-overview",
+  templateUrl: "./categories-overview.component.html",
+  styleUrls: ["./categories-overview.component.scss"]
 })
 export class CategoriesOverviewComponent implements OnInit {
   @ViewChild("table", { static: true })
@@ -25,7 +25,7 @@ export class CategoriesOverviewComponent implements OnInit {
   showObsolete: boolean = false;
 
   constructor(
-    private categorieservice: CategoryData,
+    private categoriesService: CategoryData,
     private router: Router,
     private dialogService: NbDialogService,
     private toasterService: NbToastrService
@@ -50,18 +50,25 @@ export class CategoriesOverviewComponent implements OnInit {
       .open(CreateOrEditCategoryComponent)
       .onClose.subscribe((data: { success: boolean; category: Category }) => {
         if (data && data.success) {
-          this.categorieservice.createCategory(data.category).subscribe(category => {
-            this.categories.push(category);
-            this.loadData(this.showObsolete);
+          this.categoriesService
+            .createCategory(
+              data.category.description,
+              data.category.icon.pack,
+              data.category.icon.name,
+              data.category.icon.color
+            )
+            .subscribe(category => {
+              this.categories.push(category);
+              // this.loadData(this.showObsolete); TODO: why was this here?
 
-            this.toasterService.success("", "Added category");
-          });
+              this.toasterService.success("", "Added category");
+            });
         }
       });
   }
 
   private loadData(showObsolete: boolean) {
-    this.categorieservice.getCategories(showObsolete).subscribe(categories => {
+    this.categoriesService.getCategories(showObsolete).subscribe(categories => {
       this.categories = categories;
       this.table.setData(this.categories);
     });
@@ -74,14 +81,14 @@ export class CategoriesOverviewComponent implements OnInit {
           title: "ID",
           type: "text",
           sort: false,
-          width: "60px",
+          width: "60px"
         },
-        name: {
+        description: {
           title: "Name",
           type: "custom",
           renderComponent: TableNameCellComponent,
           sort: false
-        },
+        }
       },
       hideFilter: true,
       clickable: true,
@@ -94,5 +101,4 @@ export class CategoriesOverviewComponent implements OnInit {
       }
     };
   }
-
 }

@@ -9,7 +9,6 @@ import {
 import { Budget } from "../../../@core/models/budget.model";
 import { BudgetData } from "../../../@core/data/budget";
 import { Maybe } from "wv8.typescript.core";
-import { OverlappingBudget } from "../../../@core/models/overlapping-budget.model";
 import { OverlappingType } from "../../../@core/enums/overlapping-type";
 
 @Component({
@@ -28,7 +27,6 @@ export class CreateOrEditBudgetComponent implements OnInit {
   header: string = "Creating new budget";
 
   OverlappingType = OverlappingType;
-  overlappingBudgets: OverlappingBudget[] = [];
 
   constructor(
     protected dialogRef: NbDialogRef<CreateOrEditBudgetComponent>,
@@ -68,17 +66,7 @@ export class CreateOrEditBudgetComponent implements OnInit {
       return;
     }
 
-    this.budgetService
-      .getOverlappingBudgets(
-        new Maybe(this.budget.categoryId),
-        this.budget.startDate,
-        this.budget.endDate
-      )
-      .subscribe(overlapping => {
-        this.overlappingBudgets = overlapping.sort((a, b) => a.overlappingType - b.overlappingType);
-
-        this.stepper.next();
-      });
+    // TODO: Overlapping budgets
   }
 
   cancel() {
