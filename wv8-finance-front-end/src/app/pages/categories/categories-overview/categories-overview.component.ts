@@ -60,8 +60,7 @@ export class CategoriesOverviewComponent implements OnInit {
       });
   }
 
-  private loadData(showObsolete: boolean) {
-    console.log('loading data');
+  public loadData(showObsolete: boolean) {
     this.categoriesService.getCategories(showObsolete).subscribe(categories => {
       this.categories = categories;
       this.table.setData(this.categories);
