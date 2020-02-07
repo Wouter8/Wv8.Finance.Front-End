@@ -34,7 +34,7 @@
               fieldSize="small"
               fullWidth
               [(ngModel)]="category.description"
-              [disabled]="category.obsolete"
+              [disabled]="category.isObsolete"
               placeholder="Parties"
             />
           </td>
@@ -70,7 +70,7 @@
         <button
           nbButton
           status="success"
-          [disabled]="category.obsolete"
+          [disabled]="category.isObsolete"
           (click)="submit()"
         >
           Submit

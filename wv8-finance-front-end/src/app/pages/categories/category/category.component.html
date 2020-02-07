@@ -13,7 +13,7 @@
           [tooltipPlacement]="'top'"
         ></wv8-obsolete-container>
         <button
-          *ngIf="!category.obsolete"
+          *ngIf="!category.isObsolete"
           nbButton
           size="tiny"
           (click)="onEditClick()"
@@ -21,7 +21,7 @@
           <nb-icon icon="edit-outline"></nb-icon>
         </button>
         <button
-          *ngIf="category.obsolete"
+          *ngIf="category.isObsolete"
           nbTooltip="Recover"
           nbTooltipPlacement="right"
           nbButton
@@ -32,7 +32,7 @@
           <nb-icon icon="refresh-outline"></nb-icon>
         </button>
         <button
-          *ngIf="!category.obsolete"
+          *ngIf="!category.isObsolete"
           nbTooltip="Mark obsolete"
           nbTooltipPlacement="right"
           nbButton

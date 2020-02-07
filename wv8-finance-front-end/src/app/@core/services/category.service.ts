@@ -34,18 +34,20 @@ export class CategoryService extends CategoryData {
 
   getCategoriesByFilter(
     includeObsolete: boolean,
-    categoryType: Maybe<CategoryType>
+    type: Maybe<CategoryType>
   ): Observable<Category[]> {
-    const url = `${CategoryService.BaseUrl}`;
+    const url = `${CategoryService.BaseUrl}/filter`;
 
     return this.http
-      .get<ICategory[]>(url, { includeObsolete })
+      .get<ICategory[]>(url, { includeObsolete, type })
       .pipe(map(categories => categories.map(a => Category.fromDto(a))));
   }
 
   updateCategory(
     id: number,
     description: string,
+    type: CategoryType,
+    parentCategoryId: Maybe<number>,
     iconPack: string,
     iconName: string,
     iconColor: string
@@ -55,6 +57,8 @@ export class CategoryService extends CategoryData {
     return this.http
       .put<ICategory>(url, {
         description,
+        type,
+        parentCategoryId: parentCategoryId.asQueryParam(),
         iconPack,
         iconName,
         iconColor
@@ -64,6 +68,8 @@ export class CategoryService extends CategoryData {
 
   createCategory(
     description: string,
+    type: CategoryType,
+    parentCategoryId: Maybe<number>,
     iconPack: string,
     iconName: string,
     iconColor: string
@@ -73,6 +79,8 @@ export class CategoryService extends CategoryData {
     return this.http
       .post<ICategory>(url, {
         description,
+        type,
+        parentCategoryId: parentCategoryId.asQueryParam(),
         iconPack,
         iconName,
         iconColor

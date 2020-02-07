@@ -41,11 +41,11 @@ export class CategoryComponent implements OnInit {
   }
 
   onObsoleteClick() {
-    if (this.category.obsolete) {
+    if (this.category.isObsolete) {
       this.categoryService
         .setCategoryObsolete(this.category.id, false)
         .subscribe(() => {
-          this.category.obsolete = false;
+          this.category.isObsolete = false;
 
           this.toasterService.success("", "Recovered category");
         });
@@ -59,7 +59,7 @@ export class CategoryComponent implements OnInit {
             this.categoryService
               .setCategoryObsolete(this.category.id, true)
               .subscribe(() => {
-                this.category.obsolete = true;
+                this.category.isObsolete = true;
 
                 this.toasterService.success("", "Marked category obsolete");
               });
@@ -79,6 +79,8 @@ export class CategoryComponent implements OnInit {
             .updateCategory(
               data.category.id,
               data.category.description,
+              data.category.type,
+              data.category.parentCategoryId,
               data.category.icon.pack,
               data.category.icon.name,
               data.category.icon.color

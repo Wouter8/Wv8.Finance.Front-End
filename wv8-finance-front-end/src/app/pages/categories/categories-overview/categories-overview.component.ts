@@ -6,10 +6,6 @@ import { NbDialogService, NbToastrService } from "@nebular/theme";
 import { CreateOrEditCategoryComponent } from "../create-or-edit-category/create-or-edit-category.component";
 import { Category } from "../../../@core/models/category.model";
 import { CustomTableSettings } from "../../../@theme/components/table/table-settings.model";
-import { TableIconCellComponent } from "../../../@theme/components/table/table-icon-cell/table-icon-cell.component";
-import { TableDefaultAndObsoleteCellComponent } from "../../../@theme/components/table/table-default-and-obsolete-cell/table-default-and-obsolete-cell.component";
-import { TableEuroCellComponent } from "../../../@theme/components/table/table-euro-cell/table-euro-cell.component";
-import { TableObsoleteCellComponent } from "../../../@theme/components/table/table-obsolete-cell/table-obsolete-cell.component";
 import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
 
 @Component({
@@ -36,11 +32,6 @@ export class CategoriesOverviewComponent implements OnInit {
     this.loadData(this.showObsolete);
   }
 
-  onShowObsoleteChange(event: boolean) {
-    this.showObsolete = event;
-    this.loadData(event);
-  }
-
   onSelect(event: ICategory) {
     this.router.navigateByUrl(`categories/${event.id}`);
   }
@@ -53,13 +44,15 @@ export class CategoriesOverviewComponent implements OnInit {
           this.categoriesService
             .createCategory(
               data.category.description,
+              data.category.type,
+              data.category.parentCategoryId,
               data.category.icon.pack,
               data.category.icon.name,
               data.category.icon.color
             )
             .subscribe(category => {
               this.categories.push(category);
-              // this.loadData(this.showObsolete); TODO: why was this here?
+              this.table.setData(this.categories);
 
               this.toasterService.success("", "Added category");
             });
@@ -68,6 +61,7 @@ export class CategoriesOverviewComponent implements OnInit {
   }
 
   private loadData(showObsolete: boolean) {
+    console.log('loading data');
     this.categoriesService.getCategories(showObsolete).subscribe(categories => {
       this.categories = categories;
       this.table.setData(this.categories);
@@ -92,9 +86,9 @@ export class CategoriesOverviewComponent implements OnInit {
       },
       hideFilter: true,
       clickable: true,
-      rowClassFunction: (row: ICategory) => {
+      rowClassFunction: (row: Category) => {
         let classes: string[] = [];
-        if (row.obsolete) {
+        if (row.isObsolete) {
           classes.push("obsolete");
         }
         return classes;

@@ -6,7 +6,7 @@ import { IIcon } from "../data/icon";
 export class Category {
   id: number;
   description: string = "";
-  obsolete: boolean = false;
+  isObsolete: boolean = false;
   parentCategoryId: Maybe<number> = Maybe.none();
   parentCategory: Maybe<ICategory> = Maybe.none();
   type: CategoryType = CategoryType.Expense;
@@ -21,7 +21,7 @@ export class Category {
 
     instance.id = dto.id;
     instance.description = dto.description;
-    instance.obsolete = dto.obsolete;
+    instance.isObsolete = dto.isObsolete;
     instance.parentCategoryId = Maybe.deserialize(dto.parentCategoryId);
     instance.parentCategory = Maybe.deserialize(dto.parentCategory);
     instance.type = dto.type;

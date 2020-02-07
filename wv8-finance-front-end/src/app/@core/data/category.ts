@@ -7,10 +7,10 @@ import { IIcon } from "./icon";
 export interface ICategory {
   id: number;
   description: string;
-  obsolete: boolean;
+  type: CategoryType;
   parentCategoryId: IMaybe<number>;
   parentCategory: IMaybe<ICategory>;
-  type: CategoryType;
+  isObsolete: boolean;
   icon: IIcon;
 }
 
@@ -19,17 +19,21 @@ export abstract class CategoryData {
   abstract getCategories(includeObsolete: boolean): Observable<Category[]>;
   abstract getCategoriesByFilter(
     includeObsolete: boolean,
-    categoryType: Maybe<CategoryType>
+    type: Maybe<CategoryType>
   ): Observable<Category[]>;
   abstract updateCategory(
     id: number,
     description: string,
+    type: CategoryType,
+    parentCategoryId: Maybe<number>,
     iconPack: string,
     iconName: string,
     iconColor: string
   ): Observable<Category>;
   abstract createCategory(
     description: string,
+    type: CategoryType,
+    parentCategoryId: Maybe<number>,
     iconPack: string,
     iconName: string,
     iconColor: string
