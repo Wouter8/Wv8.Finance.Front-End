@@ -5,6 +5,7 @@ import { Category } from "./category.model";
 export class Budget {
   id: number;
   amount: number;
+  description: string;
   categoryId: number;
   category: Category;
   startDate: Date;
@@ -16,6 +17,7 @@ export class Budget {
     let instance = new Budget();
 
     instance.id = dto.id;
+    instance.description = dto.description;
     instance.amount = dto.amount;
     instance.categoryId = dto.categoryId;
     instance.category = Category.fromDto(dto.category);
@@ -30,6 +32,7 @@ export class Budget {
   public copy(): Budget {
     return Budget.fromDto({
       id: this.id,
+      description: this.description,
       amount: this.amount,
       categoryId: this.categoryId,
       startDate: this.startDate.toISOString(),

@@ -34,7 +34,7 @@ export class CategoryService extends CategoryData {
 
   getCategoriesByFilter(
     includeObsolete: boolean,
-    type: Maybe<CategoryType>
+    type: CategoryType
   ): Observable<Category[]> {
     const url = `${CategoryService.BaseUrl}/filter`;
 

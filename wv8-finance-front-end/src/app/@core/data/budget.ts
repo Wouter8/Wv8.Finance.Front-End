@@ -7,6 +7,7 @@ import { Budget } from "../models/budget.model";
 
 export interface IBudget {
   id: number;
+  description: string;
   amount: number;
   categoryId: number;
   category: ICategory;
@@ -25,11 +26,13 @@ export abstract class BudgetData {
   ): Observable<Budget[]>;
   abstract updateBudget(
     id: number,
+    description: string,
     amount: number,
     startDate: Date,
     endDate: Date
   ): Observable<Budget>;
   abstract createBudget(
+    description: string,
     categoryId: number,
     amount: number,
     startDate: Date,

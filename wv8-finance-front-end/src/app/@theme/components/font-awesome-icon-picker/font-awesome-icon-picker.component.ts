@@ -40,6 +40,8 @@ export class FontAwesomeIconPickerComponent implements OnInit {
 
   @ViewChild(NbPopoverDirective, { static: false }) popover: NbPopoverDirective;
 
+  filter = "";
+
   pageSize = 32;
   currentPage = 1;
   totalPages = 1;
@@ -52,10 +54,7 @@ export class FontAwesomeIconPickerComponent implements OnInit {
   constructor(private toasterService: NbToastrService) {}
 
   ngOnInit() {
-    this.totalPages = Math.ceil(
-      (this.fasIcons.length + this.farIcons.length) / this.pageSize
-    );
-    this.setIconsForPage();
+    this.filterIcons();
   }
 
   private setPopoverContext() {
@@ -98,14 +97,34 @@ export class FontAwesomeIconPickerComponent implements OnInit {
     this.setIconsForPage();
   }
 
+  filterIcons() {
+    let fasIconsLength = this.fasIcons.filter(
+      i => this.filter.length == 0 || i.indexOf(this.filter) >= 0
+    ).length;
+    let farIconsLength = this.farIcons.filter(
+      i => this.filter.length == 0 || i.indexOf(this.filter) >= 0
+    ).length;
+
+    this.totalPages = Math.max(
+      1,
+      Math.ceil((fasIconsLength + farIconsLength) / this.pageSize)
+    );
+
+    this.setIconsForPage();
+  }
+
   setIconsForPage() {
     let pageIndex = this.currentPage - 1;
     let startIndex = pageIndex * this.pageSize;
     let endIndex = startIndex + this.pageSize;
 
     // Clone arrays because slice removes elements
-    let fasIcons = this.fasIcons.slice();
-    let farIcons = this.farIcons.slice();
+    let fasIcons = this.fasIcons
+      .filter(i => this.filter.length == 0 || i.indexOf(this.filter) >= 0)
+      .slice();
+    let farIcons = this.farIcons
+      .filter(i => this.filter.length == 0 || i.indexOf(this.filter) >= 0)
+      .slice();
 
     if (endIndex <= fasIcons.length) {
       this.iconsForPage = fasIcons.splice(startIndex, this.pageSize).map(i => {

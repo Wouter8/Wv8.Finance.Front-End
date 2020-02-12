@@ -1,3 +1,40 @@
-<nb-select placeholder="Select category" size="small" [(selected)]="category" (selectedChange)="categoryChange.emit(category)">
-  <nb-option *ngFor="let c of categories" [value]="c.id">{{c.name}}</nb-option>
-</nb-select>
+<div *ngIf="categories">
+  <nb-select
+    placeholder="Select category"
+    size="small"
+    [(selected)]="categoryId"
+    (selectedChange)="categorySelected()"
+  >
+    <nb-option *ngIf="showEmptyOption" [value]="undefined">None</nb-option>
+    <nb-option *ngFor="let c of categories" [value]="c.id">
+      <wv8-icon-with-background
+        [icon]="c.icon.name"
+        [pack]="c.icon.pack"
+        [color]="c.icon.color"
+      ></wv8-icon-with-background>
+      <div class="category-description-container">
+        <span class="category-description"> {{ c.description }}</span>
+      </div>
+    </nb-option>
+  </nb-select>
+</div>
+<div *ngIf="this.hasSubCategories">
+  <nb-select
+    placeholder="Optionally, select sub category"
+    size="small"
+    [(selected)]="subCategoryId"
+    (selectedChange)="subCategorySelected()"
+  >
+    <nb-option [value]="-1">No child</nb-option>
+    <nb-option *ngFor="let c of selectedCategory.children" [value]="c.id">
+      <wv8-icon-with-background
+        [icon]="c.icon.name"
+        [pack]="c.icon.pack"
+        [color]="c.icon.color"
+      ></wv8-icon-with-background>
+      <div class="category-description-container">
+        <span class="category-description"> {{ c.description }}</span>
+      </div>
+    </nb-option>
+  </nb-select>
+</div>

@@ -8,16 +8,63 @@
         </button>
 
         <div class="header-right">
-          <nb-checkbox
-            status="primary"
-            (checkedChange)="loadData($event)"
+          <nb-checkbox status="primary" (checkedChange)="loadData($event)"
             >Show obsolete</nb-checkbox
           >
         </div>
       </nb-card-header>
 
       <nb-card-body>
-        <wv8-table #table (select)="onSelect($event)"></wv8-table>
+        <table class="table" [nbTreeGrid]="categoryGrid">
+          <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+          <tr
+            nbTreeGridRow
+            [clickToToggle]="false"
+            *nbTreeGridRowDef="let row; columns: allColumns"
+            class="clickable"
+            [ngClass]="{ obsolete: row.data.isObsolete }"
+            (click)="openCategory(row.data.id)"
+          ></tr>
+
+          <ng-container
+            *ngFor="let column of allColumns"
+            [nbTreeGridColumnDef]="column"
+          >
+            <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
+              {{ column | titlecase }}
+            </th>
+            <td nbTreeGridCell *nbTreeGridCellDef="let row">
+              <div class="toggle">
+                <div
+                  nbTreeGridRowToggle
+                  class="expand-toggle-container"
+                  *ngIf="row.hasChildren()"
+                  [attr.aria-label]="row.expanded ? 'collapse' : 'expand'"
+                >
+                  <nb-icon
+                    *ngIf="!row.expanded"
+                    icon="chevron-right"
+                    pack="fas"
+                    class="fa-fw"
+                  ></nb-icon>
+                  <nb-icon
+                    *ngIf="row.expanded"
+                    icon="chevron-down"
+                    pack="fas"
+                    class="fa-fw"
+                  ></nb-icon>
+                </div>
+              </div>
+              <div class="category-description-container">
+                <table-name-cell
+                  [value]="row.data[column]"
+                  [rowData]="row.data"
+                  [ngClass]="{ 'child-row': row.data.parentCategoryId.isSome }"
+                ></table-name-cell>
+              </div>
+            </td>
+          </ng-container>
+        </table>
       </nb-card-body>
     </nb-card>
   </div>

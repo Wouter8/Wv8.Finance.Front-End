@@ -55,6 +55,18 @@
             </nb-select>
           </td>
         </tr>
+        <tr>
+          <th>Parent</th>
+          <td>
+            <category-picker
+              [category]="category.parentCategoryId.valueOrElse(undefined)"
+              [showEmptyOption]="true"
+              (categoryChange)="setParentCategory($event)"
+              [showSubCategory]="false"
+              [filterCategories]="[category.id]"
+            ></category-picker>
+          </td>
+        </tr>
       </tbody>
     </table>
   </nb-card-body>
