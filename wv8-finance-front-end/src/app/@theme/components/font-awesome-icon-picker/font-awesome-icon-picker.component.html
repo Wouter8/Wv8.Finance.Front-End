@@ -16,6 +16,18 @@
   </nb-card-header>
   <nb-card-body>
     <div class="row">
+      <div class="col-sm-12">
+        <input
+          type="text"
+          nbInput
+          fieldSize="small"
+          fullWidth
+          [(ngModel)]="filter"
+          (ngModelChange)="filterIcons()"
+        />
+      </div>
+    </div>
+    <div class="row">
       <div class="col-sm-3 clickable" *ngFor="let icon of iconsForPage">
         <wv8-icon-with-background
           [icon]="icon.icon"

@@ -73,6 +73,7 @@ export class BudgetsOverviewComponent implements OnInit {
         if (data.success) {
           this.budgetService
             .createBudget(
+              data.budget.description,
               data.budget.categoryId,
               data.budget.amount,
               data.budget.startDate,

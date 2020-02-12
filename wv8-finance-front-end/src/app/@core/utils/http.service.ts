@@ -13,6 +13,11 @@ export class HttpService {
     return this.http.get<T>(url, { params });
   }
 
+  public delete<T>(url: string, queryParams: any = null): Observable<T> {
+    let query = this.getParams(queryParams);
+    return this.http.delete<T>(url, { params: query });
+  }
+
   public post<T>(
     url: string,
     queryParams: any = null,

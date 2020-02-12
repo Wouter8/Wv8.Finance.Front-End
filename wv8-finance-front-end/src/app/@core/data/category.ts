@@ -12,6 +12,7 @@ export interface ICategory {
   parentCategory: IMaybe<ICategory>;
   isObsolete: boolean;
   icon: IIcon;
+  children: ICategory[];
 }
 
 export abstract class CategoryData {
@@ -19,7 +20,7 @@ export abstract class CategoryData {
   abstract getCategories(includeObsolete: boolean): Observable<Category[]>;
   abstract getCategoriesByFilter(
     includeObsolete: boolean,
-    type: Maybe<CategoryType>
+    type: CategoryType
   ): Observable<Category[]>;
   abstract updateCategory(
     id: number,

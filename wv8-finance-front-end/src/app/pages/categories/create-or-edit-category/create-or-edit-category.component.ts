@@ -12,6 +12,7 @@ import {
 import { FontAwesomeIconPickerComponent } from "../../../@theme/components/font-awesome-icon-picker/font-awesome-icon-picker.component";
 import { FontAwesomeIcon } from "../../../@theme/components/font-awesome-icon-picker/font-awesome-icon";
 import { CategoryType } from "../../../@core/enums/category-type";
+import { Maybe } from "wv8.typescript.core";
 
 @Component({
   selector: "create-or-edit-category",
@@ -59,6 +60,10 @@ export class CreateOrEditCategoryComponent implements OnInit {
     }
 
     this.dialogRef.close({ success: true, category: this.category });
+  }
+
+  setParentCategory(categoryId: number) {
+    this.category.parentCategoryId = new Maybe(categoryId);
   }
 
   openIconChanger() {

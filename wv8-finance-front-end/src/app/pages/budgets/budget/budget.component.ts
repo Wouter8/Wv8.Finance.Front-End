@@ -64,6 +64,7 @@ export class BudgetComponent implements OnInit {
           this.budgetService
             .updateBudget(
               data.budget.id,
+              data.budget.description,
               data.budget.amount,
               data.budget.startDate,
               data.budget.endDate

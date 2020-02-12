@@ -48,13 +48,14 @@ import { ConfirmDialogComponent } from "./components/confirm-dialog/confirm-dial
 import { ObsoleteContainerComponent } from "./components/obsolete-container/obsolete-container.component";
 import { FontAwesomeIconPickerComponent } from "./components/font-awesome-icon-picker/font-awesome-icon-picker.component";
 import { IconWithBackgroundComponent } from "./components/icon-with-background/icon-with-background.component";
-import { ColorPickerComponent } from './components/color-picker/color-picker.component';
-import { TableNameCellComponent } from './components/table/table-name-cell/table-name-cell.component';
-import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
-import { TableDateCellComponent } from './components/table/table-euro-cell copy/table-date-cell.component';
-import { TableProgressCellComponent } from './components/table/table-progress-cell/table-progress-cell.component';
-import { IntervalPickerComponent } from './components/interval-picker/interval-picker.component';
-import { CategoryPickerComponent } from './components/category-picker/category-picker.component';
+import { ColorPickerComponent } from "./components/color-picker/color-picker.component";
+import { TableNameCellComponent } from "./components/table/table-name-cell/table-name-cell.component";
+import { EnumToArrayPipe } from "./pipes/enum-to-array.pipe";
+import { TableDateCellComponent } from "./components/table/table-euro-cell copy/table-date-cell.component";
+import { TableProgressCellComponent } from "./components/table/table-progress-cell/table-progress-cell.component";
+import { IntervalPickerComponent } from "./components/interval-picker/interval-picker.component";
+import { CategoryPickerComponent } from "./components/category-picker/category-picker.component";
+import { FormsModule } from "@angular/forms";
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -95,7 +96,7 @@ const COMPONENTS = [
   TableDateCellComponent,
   TableProgressCellComponent,
   IntervalPickerComponent,
-  CategoryPickerComponent,
+  CategoryPickerComponent
 ];
 const PIPES = [
   CapitalizePipe,
@@ -116,11 +117,12 @@ const ENTRY_COMPONENTS = [
   ColorPickerComponent,
   TableNameCellComponent,
   TableDateCellComponent,
-  TableProgressCellComponent,
+  TableProgressCellComponent
 ];
+const IMPORT_MODULES = [FormsModule];
 
 @NgModule({
-  imports: [CommonModule, ...NB_MODULES],
+  imports: [CommonModule, ...NB_MODULES, ...IMPORT_MODULES],
   exports: [CommonModule, ...PIPES, ...COMPONENTS],
   declarations: [...COMPONENTS, ...PIPES],
   entryComponents: [...ENTRY_COMPONENTS]

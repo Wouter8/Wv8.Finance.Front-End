@@ -1,4 +1,4 @@
-@import './themes';
+@import "./themes";
 
 @mixin nb-overrides() {
   nb-select.size-medium button {
@@ -18,13 +18,33 @@
   }
 
   ng2-smart-table table tr td {
-    padding: .5em 1em;
+    padding: 0.5em 1em;
   }
 
-  ng2-smart-table table tr th, ng2-smart-table table tr th a,
-    ng2-smart-table table tr.ng2-smart-titles th a.sort.asc, ng2-smart-table table tr.ng2-smart-titles th a.sort.desc {
+  ng2-smart-table table tr th,
+  ng2-smart-table table tr th a,
+  ng2-smart-table table tr.ng2-smart-titles th a.sort.asc,
+  ng2-smart-table table tr.ng2-smart-titles th a.sort.desc {
     font-weight: bold;
   }
 
-  
+  .nb-tree-grid-row:nth-child(2n):not(:hover) {
+    background-color: #f7f9fc;
+  }
+
+  table.table tbody tr:nth-child(2n) {
+    background-color: #f7f9fc;
+  }
+
+  table.table tbody tr:hover {
+    background: #edf1f7 !important;
+  }
+
+  table.table tr td,
+  table.table tr th {
+    position: relative;
+    padding: 0.875rem 1.25rem;
+    border: 1px solid #edf1f7 !important;
+    vertical-align: middle;
+  }
 }

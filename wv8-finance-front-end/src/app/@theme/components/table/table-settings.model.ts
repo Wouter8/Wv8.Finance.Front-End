@@ -1,17 +1,17 @@
-import { Maybe } from 'wv8.typescript.core';
-import { TableBooleanCellComponent } from './table-boolean-cell/table-boolean-cell.component';
-import { TableEuroCellComponent } from './table-euro-cell/table-euro-cell.component';
-import { Type } from '@angular/core';
-import { TableIconCellComponent } from './table-icon-cell/table-icon-cell.component';
-import { TableDefaultAndObsoleteCellComponent } from './table-default-and-obsolete-cell/table-default-and-obsolete-cell.component';
+import { Maybe } from "wv8.typescript.core";
+import { TableBooleanCellComponent } from "./table-boolean-cell/table-boolean-cell.component";
+import { TableEuroCellComponent } from "./table-euro-cell/table-euro-cell.component";
+import { Type } from "@angular/core";
+import { TableIconCellComponent } from "./table-icon-cell/table-icon-cell.component";
+import { TableDefaultAndObsoleteCellComponent } from "./table-default-and-obsolete-cell/table-default-and-obsolete-cell.component";
 
 export interface CustomTableSettings<T> {
-    columns: Columns;
-    hideFilter?: boolean;
-    rowsPerPage?: number;
-    selectMode?: false | "single" | "multi";
-    clickable?: boolean;
-    rowClassFunction?: (data: T) => string[];
+  columns: Columns;
+  hideFilter?: boolean;
+  rowsPerPage?: number;
+  selectMode?: false | "single" | "multi";
+  clickable?: boolean;
+  rowClassFunction?: (data: T) => string[];
 }
 
 export interface TableSettings {
@@ -28,6 +28,7 @@ export interface TableSettings {
   pager?: Pager;
   rowClassFunction?: Function;
   selectMode?: false | "single" | "multi";
+  tableClass: "table";
 }
 
 export interface Columns {
@@ -45,7 +46,11 @@ export interface ColumnSettings {
   defaultSortDirection?: string;
   editor?: { type: string; config?: any; component?: any };
   filter?: { type: string; config?: any; component?: any } | boolean;
-  renderComponent?: Type<TableBooleanCellComponent> | Type<TableEuroCellComponent> | Type<TableIconCellComponent> | Type<TableDefaultAndObsoleteCellComponent>;
+  renderComponent?:
+    | Type<TableBooleanCellComponent>
+    | Type<TableEuroCellComponent>
+    | Type<TableIconCellComponent>
+    | Type<TableDefaultAndObsoleteCellComponent>;
   compareFunction?: Function;
   valuePrepareFunction?: Function;
   filterFunction?: Function;
