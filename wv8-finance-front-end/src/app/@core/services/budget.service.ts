@@ -83,7 +83,7 @@ export class BudgetService extends BudgetData {
   }
 
   deleteBudget(id: number): Observable<void> {
-    const url = `${BudgetService.BaseUrl}/obsolete/${id}`;
+    const url = `${BudgetService.BaseUrl}/${id}`;
 
     return this.http.delete<void>(url);
   }
