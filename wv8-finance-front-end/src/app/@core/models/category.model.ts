@@ -28,11 +28,13 @@ export class Category {
       Category.fromDto(c)
     );
     instance.type = dto.type;
-    instance.icon = {
-      name: dto.icon.name,
-      pack: dto.icon.pack,
-      color: dto.icon.color
-    };
+    instance.icon = dto.icon
+      ? {
+          name: dto.icon.name,
+          pack: dto.icon.pack,
+          color: dto.icon.color
+        }
+      : undefined;
     instance.children = dto.children.map(c => Category.fromDto(c));
 
     return instance;

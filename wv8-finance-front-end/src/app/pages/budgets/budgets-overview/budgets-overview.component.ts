@@ -71,20 +71,10 @@ export class BudgetsOverviewComponent implements OnInit {
       .open(CreateOrEditBudgetComponent)
       .onClose.subscribe((data: { success: boolean; budget: Budget }) => {
         if (data.success) {
-          this.budgetService
-            .createBudget(
-              data.budget.description,
-              data.budget.categoryId,
-              data.budget.amount,
-              data.budget.startDate,
-              data.budget.endDate
-            )
-            .subscribe(budget => {
-              this.budgets.push(budget);
-              this.setBudgetList();
+          this.budgets.push(data.budget);
+          this.setBudgetList();
 
-              this.toasterService.success("", "Added budget");
-            });
+          this.toasterService.success("", "Added budget");
         }
       });
   }

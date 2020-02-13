@@ -49,7 +49,6 @@ export class BudgetService extends BudgetData {
 
   updateBudget(
     id: number,
-    description: string,
     amount: number,
     startDate: Date,
     endDate: Date
@@ -58,7 +57,6 @@ export class BudgetService extends BudgetData {
 
     return this.http
       .put<IBudget>(url, {
-        description,
         amount,
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString()
@@ -67,7 +65,6 @@ export class BudgetService extends BudgetData {
   }
 
   createBudget(
-    description: string,
     categoryId: number,
     amount: number,
     startDate: Date,
@@ -77,7 +74,6 @@ export class BudgetService extends BudgetData {
 
     return this.http
       .post<IBudget>(url, {
-        description,
         categoryId,
         amount,
         startDate: startDate.toISOString(),

@@ -61,15 +61,7 @@ export class BudgetComponent implements OnInit {
       })
       .onClose.subscribe((data: { success: boolean; budget: Budget }) => {
         if (data.success) {
-          this.budgetService
-            .updateBudget(
-              data.budget.id,
-              data.budget.description,
-              data.budget.amount,
-              data.budget.startDate,
-              data.budget.endDate
-            )
-            .subscribe(updated => (this.budget = updated));
+          this.budget = data.budget;
 
           this.toasterService.success("", "Updated budget");
         }

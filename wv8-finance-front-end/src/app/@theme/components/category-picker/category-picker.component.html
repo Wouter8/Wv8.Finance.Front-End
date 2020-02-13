@@ -4,6 +4,7 @@
     size="small"
     [(selected)]="categoryId"
     (selectedChange)="categorySelected()"
+    [disabled]="disabled"
   >
     <nb-option *ngIf="showEmptyOption" [value]="undefined">None</nb-option>
     <nb-option *ngFor="let c of categories" [value]="c.id">
@@ -24,6 +25,7 @@
     size="small"
     [(selected)]="subCategoryId"
     (selectedChange)="subCategorySelected()"
+    [disabled]="disabled"
   >
     <nb-option [value]="-1">No child</nb-option>
     <nb-option *ngFor="let c of selectedCategory.children" [value]="c.id">

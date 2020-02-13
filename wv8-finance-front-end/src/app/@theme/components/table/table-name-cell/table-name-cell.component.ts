@@ -15,6 +15,8 @@ export class TableNameCellComponent implements OnInit, ViewCell {
   @Input()
   overrideProperty: string;
   @Input()
+  nameProperty: string = "description";
+  @Input()
   searchInChilds: boolean = false;
 
   constructor() {}
@@ -33,6 +35,7 @@ export class TableNameCellComponent implements OnInit, ViewCell {
 
   searchIconIn(object: {}) {
     if (object["icon"]) {
+      this.value = object[this.nameProperty];
       this.rowData = object;
       return;
     }

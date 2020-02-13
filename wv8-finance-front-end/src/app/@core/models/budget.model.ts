@@ -5,7 +5,6 @@ import { Category } from "./category.model";
 export class Budget {
   id: number;
   amount: number;
-  description: string;
   categoryId: number;
   category: Category;
   startDate: Date;
@@ -17,7 +16,6 @@ export class Budget {
     let instance = new Budget();
 
     instance.id = dto.id;
-    instance.description = dto.description;
     instance.amount = dto.amount;
     instance.categoryId = dto.categoryId;
     instance.category = Category.fromDto(dto.category);
@@ -30,15 +28,17 @@ export class Budget {
   }
 
   public copy(): Budget {
-    return Budget.fromDto({
-      id: this.id,
-      description: this.description,
-      amount: this.amount,
-      categoryId: this.categoryId,
-      startDate: this.startDate.toISOString(),
-      endDate: this.endDate.toISOString(),
-      spent: this.spent,
-      category: this.category.copy()
-    });
+    let instance = new Budget();
+
+    instance.id = this.id;
+    instance.amount = this.amount;
+    instance.categoryId = this.categoryId;
+    instance.category = this.category.copy();
+    instance.startDate = new Date(this.startDate.toISOString());
+    instance.endDate = new Date(this.endDate.toISOString());
+    instance.spent = this.spent;
+    instance.spentPercentage = (instance.spent / instance.amount) * 100;
+
+    return instance;
   }
 }
