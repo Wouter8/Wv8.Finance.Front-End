@@ -11,6 +11,7 @@
               <th>Category</th>
               <td>
                 <category-picker
+                  [disabled]="this.editing"
                   [(category)]="budget.categoryId"
                 ></category-picker>
               </td>
@@ -76,7 +77,9 @@
         </div>
       </nb-step>
       <nb-step label="Overlapping">
-        OVERLAPPING BUDGETS
+        <p class="help-text">
+          Overlapping budgets will be visible here in the future.
+        </p>
 
         <hr />
 

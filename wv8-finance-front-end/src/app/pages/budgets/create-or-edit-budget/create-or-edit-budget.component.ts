@@ -1,10 +1,12 @@
-import { Component, OnInit, Input, ViewChild } from "@angular/core";
+import { Component, OnInit, Input, ViewChild, ElementRef } from "@angular/core";
 import {
   NbDialogRef,
   NbToastrService,
   NbToastrConfig,
   NbCalendarRange,
-  NbStepperComponent
+  NbStepperComponent,
+  NbRangepickerComponent,
+  NbDateService
 } from "@nebular/theme";
 import { Budget } from "../../../@core/models/budget.model";
 import { BudgetData } from "../../../@core/data/budget";
@@ -20,6 +22,12 @@ export class CreateOrEditBudgetComponent implements OnInit {
   @ViewChild("stepper", { static: true })
   stepper: NbStepperComponent;
 
+  @ViewChild("periodPicker", { static: true })
+  periodPicker: NbRangepickerComponent<Date>;
+
+  @ViewChild("periodPickerInput", { static: true })
+  periodPickerInput: ElementRef<HTMLInputElement>;
+
   @Input()
   budget: Budget;
 
@@ -31,7 +39,8 @@ export class CreateOrEditBudgetComponent implements OnInit {
   constructor(
     protected dialogRef: NbDialogRef<CreateOrEditBudgetComponent>,
     private budgetService: BudgetData,
-    private toasterService: NbToastrService
+    private toasterService: NbToastrService,
+    private dateService: NbDateService<Date>
   ) {}
 
   ngOnInit() {
@@ -39,6 +48,15 @@ export class CreateOrEditBudgetComponent implements OnInit {
       this.editing = true;
       this.budget = this.budget.copy();
       this.header = `Editing budget`;
+      let range: NbCalendarRange<Date> = {
+        start: this.dateService.getMonthStart(this.budget.startDate),
+        end: this.dateService.getMonthEnd(this.budget.endDate)
+      };
+      this.periodPicker.range = range;
+      this.periodPickerInput.nativeElement.value = `${this.dateService.format(
+        range.start,
+        "d MMM yy"
+      )} - ${this.dateService.format(range.end, "d MMM yy")}`;
     } else {
       this.budget = new Budget();
     }
@@ -67,6 +85,7 @@ export class CreateOrEditBudgetComponent implements OnInit {
     }
 
     // TODO: Overlapping budgets
+    this.stepper.next();
   }
 
   cancel() {
@@ -76,17 +95,44 @@ export class CreateOrEditBudgetComponent implements OnInit {
   submit() {
     let errors = this.validate();
     if (errors.length > 0) {
-      this.toasterService.warning(errors[0], "Incorrect data");
+      this.toasterService.warning(errors.join("\n"), "Incorrect data");
       return;
     }
 
-    this.dialogRef.close({ success: true, budget: this.budget });
+    if (this.editing) {
+      this.budgetService
+        .updateBudget(
+          this.budget.id,
+          this.budget.amount,
+          this.budget.startDate,
+          this.budget.endDate
+        )
+        .subscribe(budget => {
+          this.budget = budget;
+          this.dialogRef.close({ success: true, budget: this.budget });
+        });
+    } else {
+      this.budgetService
+        .createBudget(
+          this.budget.categoryId,
+          this.budget.amount,
+          this.budget.startDate,
+          this.budget.endDate
+        )
+        .subscribe(budget => {
+          this.budget = budget;
+          this.dialogRef.close({ success: true, budget: this.budget });
+        });
+    }
   }
 
   private validate() {
     let messages: string[] = [];
 
-    // TODO
+    if (this.budget.amount < 0)
+      messages.push("Amount has to be greater than 0");
+
+    // TODO: Add validation
 
     return messages;
   }
