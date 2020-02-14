@@ -28,7 +28,7 @@ export class CategoryPickerComponent implements OnInit {
 
   constructor(private categoryService: CategoryData) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     if (this.category instanceof Category) {
       this.inputIsObject = true;
       this.categoryId = this.category.id;
@@ -36,25 +36,25 @@ export class CategoryPickerComponent implements OnInit {
       this.categoryId = this.category;
     }
 
-    this.categoryService
-      .getCategoriesByFilter(false, CategoryType.Expense)
-      .subscribe(categories => {
-        this.categories = categories.filter(
-          c => this.filterCategories.indexOf(c.id) < 0
-        );
-        if (
-          this.categoryId &&
-          this.categories.map(c => c.id).indexOf(this.categoryId) < 0
-        ) {
-          // Given category is sub category
-          this.selectedCategory = this.categories.filter(
-            c => c.children.map(cc => cc.id).indexOf(this.categoryId) >= 0
-          )[0];
-          this.subCategoryId = this.categoryId;
-          this.categoryId = this.selectedCategory.id;
-          this.hasSubCategories = true;
-        }
-      });
+    let categories = await this.categoryService.getCategoriesByFilter(
+      false,
+      CategoryType.Expense
+    );
+    this.categories = categories.filter(
+      c => this.filterCategories.indexOf(c.id) < 0
+    );
+    if (
+      this.categoryId &&
+      this.categories.map(c => c.id).indexOf(this.categoryId) < 0
+    ) {
+      // Given category is sub category
+      this.selectedCategory = this.categories.filter(
+        c => c.children.map(cc => cc.id).indexOf(this.categoryId) >= 0
+      )[0];
+      this.subCategoryId = this.categoryId;
+      this.categoryId = this.selectedCategory.id;
+      this.hasSubCategories = true;
+    }
   }
 
   categorySelected() {

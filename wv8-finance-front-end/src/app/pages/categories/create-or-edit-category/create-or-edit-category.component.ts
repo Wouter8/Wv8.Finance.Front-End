@@ -101,7 +101,7 @@ export class CreateOrEditCategoryComponent implements OnInit {
     let messages: string[] = [];
 
     if (this.category.description.trim().length < 3)
-      messages.push("Name must contain at least 3 characters");
+      messages.push("Description must contain at least 3 characters");
 
     return messages;
   }
