@@ -101,14 +101,8 @@ export class BudgetsOverviewComponent implements OnInit {
   private getTableSettings(): CustomTableSettings<Budget> {
     return {
       columns: {
-        id: {
-          title: "ID",
-          type: "text",
-          sort: false,
-          width: "60px"
-        },
         description: {
-          title: "Name",
+          title: "Description",
           type: "custom",
           renderComponent: TableNameCellComponent,
           sort: false,

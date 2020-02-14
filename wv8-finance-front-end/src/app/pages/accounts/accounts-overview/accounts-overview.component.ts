@@ -83,14 +83,8 @@ export class AccountsOverviewComponent implements OnInit {
   private getTableSettings(): CustomTableSettings<IAccount> {
     return {
       columns: {
-        id: {
-          title: "ID",
-          type: "text",
-          sort: false,
-          width: "60px"
-        },
         description: {
-          title: "Name",
+          title: "Description",
           type: "custom",
           renderComponent: TableNameCellComponent,
           sort: false

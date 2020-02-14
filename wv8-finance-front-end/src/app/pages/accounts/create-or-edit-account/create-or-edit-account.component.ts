@@ -93,7 +93,7 @@ export class CreateOrEditAccountComponent implements OnInit {
     let messages: string[] = [];
 
     if (this.account.description.trim().length < 3)
-      messages.push("Name must contain at least 3 characters");
+      messages.push("Description must contain at least 3 characters");
 
     // TODO
 
