@@ -41,46 +41,43 @@ export class CategoriesOverviewComponent implements OnInit {
     this.loadData(this.showObsolete);
   }
 
-  onClickAdd(event: MouseEvent) {
+  async onClickAdd(event: MouseEvent) {
     this.dialogService
       .open(CreateOrEditCategoryComponent)
-      .onClose.subscribe((data: { success: boolean; category: Category }) => {
-        if (data && data.success) {
-          this.categoriesService
-            .createCategory(
+      .onClose.subscribe(
+        async (data: { success: boolean; category: Category }) => {
+          if (data && data.success) {
+            let category = await this.categoriesService.createCategory(
               data.category.description,
               data.category.type,
               data.category.parentCategoryId,
               data.category.icon.pack,
               data.category.icon.name,
               data.category.icon.color
-            )
-            .subscribe(category => {
-              if (category.parentCategoryId.isSome) {
-                let parent = this.categories.filter(
-                  c => c.id == category.parentCategoryId.value
-                )[0];
-                parent.children.push(category);
-              } else {
-                this.categories.push(category);
-              }
-              this.setTableData();
+            );
+            if (category.parentCategoryId.isSome) {
+              let parent = this.categories.filter(
+                c => c.id == category.parentCategoryId.value
+              )[0];
+              parent.children.push(category);
+            } else {
+              this.categories.push(category);
+            }
+            this.setTableData();
 
-              this.toasterService.success("", "Added category");
-            });
+            this.toasterService.success("", "Added category");
+          }
         }
-      });
+      );
   }
 
   openCategory(id: number) {
     this.router.navigateByUrl(`categories/${id}`);
   }
 
-  public loadData(showObsolete: boolean) {
-    this.categoriesService.getCategories(showObsolete).subscribe(categories => {
-      this.categories = categories;
-      this.setTableData();
-    });
+  public async loadData(showObsolete: boolean) {
+    this.categories = await this.categoriesService.getCategories(showObsolete);
+    this.setTableData();
   }
 
   private setTableData() {

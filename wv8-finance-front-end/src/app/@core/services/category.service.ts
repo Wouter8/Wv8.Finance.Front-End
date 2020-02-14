@@ -16,31 +16,34 @@ export class CategoryService extends CategoryData {
     super();
   }
 
-  getCategory(id: number): Observable<Category> {
+  getCategory(id: number): Promise<Category> {
     const url = `${CategoryService.BaseUrl}/${id}`;
 
     return this.http
       .get<ICategory>(url)
-      .pipe(map(category => Category.fromDto(category)));
+      .pipe(map(category => Category.fromDto(category)))
+      .toPromise();
   }
 
-  getCategories(includeObsolete: boolean = false): Observable<Category[]> {
+  getCategories(includeObsolete: boolean = false): Promise<Category[]> {
     const url = `${CategoryService.BaseUrl}`;
 
     return this.http
       .get<ICategory[]>(url, { includeObsolete })
-      .pipe(map(categories => categories.map(a => Category.fromDto(a))));
+      .pipe(map(categories => categories.map(a => Category.fromDto(a))))
+      .toPromise();
   }
 
   getCategoriesByFilter(
     includeObsolete: boolean,
     type: CategoryType
-  ): Observable<Category[]> {
+  ): Promise<Category[]> {
     const url = `${CategoryService.BaseUrl}/filter`;
 
     return this.http
       .get<ICategory[]>(url, { includeObsolete, type })
-      .pipe(map(categories => categories.map(a => Category.fromDto(a))));
+      .pipe(map(categories => categories.map(a => Category.fromDto(a))))
+      .toPromise();
   }
 
   updateCategory(
@@ -51,7 +54,7 @@ export class CategoryService extends CategoryData {
     iconPack: string,
     iconName: string,
     iconColor: string
-  ): Observable<Category> {
+  ): Promise<Category> {
     const url = `${CategoryService.BaseUrl}/${id}`;
 
     return this.http
@@ -63,7 +66,8 @@ export class CategoryService extends CategoryData {
         iconName,
         iconColor
       })
-      .pipe(map(category => Category.fromDto(category)));
+      .pipe(map(category => Category.fromDto(category)))
+      .toPromise();
   }
 
   createCategory(
@@ -73,7 +77,7 @@ export class CategoryService extends CategoryData {
     iconPack: string,
     iconName: string,
     iconColor: string
-  ): Observable<Category> {
+  ): Promise<Category> {
     const url = `${CategoryService.BaseUrl}`;
 
     return this.http
@@ -85,14 +89,17 @@ export class CategoryService extends CategoryData {
         iconName,
         iconColor
       })
-      .pipe(map(category => Category.fromDto(category)));
+      .pipe(map(category => Category.fromDto(category)))
+      .toPromise();
   }
 
-  setCategoryObsolete(id: number, obsolete: boolean): Observable<void> {
+  setCategoryObsolete(id: number, obsolete: boolean): Promise<void> {
     const url = `${CategoryService.BaseUrl}/obsolete/${id}`;
 
-    return this.http.put<void>(url, {
-      obsolete
-    });
+    return this.http
+      .put<void>(url, {
+        obsolete
+      })
+      .toPromise();
   }
 }

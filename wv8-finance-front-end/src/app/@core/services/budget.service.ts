@@ -15,27 +15,29 @@ export class BudgetService extends BudgetData {
     super();
   }
 
-  getBudget(id: number): Observable<Budget> {
+  getBudget(id: number): Promise<Budget> {
     const url = `${BudgetService.BaseUrl}/${id}`;
 
     return this.http
       .get<IBudget>(url)
-      .pipe(map(budget => Budget.fromDto(budget)));
+      .pipe(map(budget => Budget.fromDto(budget)))
+      .toPromise();
   }
 
-  getBudgets(): Observable<Budget[]> {
+  getBudgets(): Promise<Budget[]> {
     const url = `${BudgetService.BaseUrl}`;
 
     return this.http
       .get<IBudget[]>(url)
-      .pipe(map(budgets => budgets.map(a => Budget.fromDto(a))));
+      .pipe(map(budgets => budgets.map(a => Budget.fromDto(a))))
+      .toPromise();
   }
 
   getBudgetsByFilter(
     categoryId: Maybe<number>,
     startDate: Maybe<Date>,
     endDate: Maybe<Date>
-  ): Observable<Budget[]> {
+  ): Promise<Budget[]> {
     const url = `${BudgetService.BaseUrl}/filter`;
 
     return this.http
@@ -44,7 +46,8 @@ export class BudgetService extends BudgetData {
         startDate: startDate.map(d => d.toISOString()).asQueryParam(),
         endDate: endDate.map(d => d.toISOString()).asQueryParam()
       })
-      .pipe(map(budgets => budgets.map(a => Budget.fromDto(a))));
+      .pipe(map(budgets => budgets.map(a => Budget.fromDto(a))))
+      .toPromise();
   }
 
   updateBudget(
@@ -52,7 +55,7 @@ export class BudgetService extends BudgetData {
     amount: number,
     startDate: Date,
     endDate: Date
-  ): Observable<Budget> {
+  ): Promise<Budget> {
     const url = `${BudgetService.BaseUrl}/${id}`;
 
     return this.http
@@ -61,7 +64,8 @@ export class BudgetService extends BudgetData {
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString()
       })
-      .pipe(map(budget => Budget.fromDto(budget)));
+      .pipe(map(budget => Budget.fromDto(budget)))
+      .toPromise();
   }
 
   createBudget(
@@ -69,7 +73,7 @@ export class BudgetService extends BudgetData {
     amount: number,
     startDate: Date,
     endDate: Date
-  ): Observable<Budget> {
+  ): Promise<Budget> {
     const url = `${BudgetService.BaseUrl}`;
 
     return this.http
@@ -79,12 +83,13 @@ export class BudgetService extends BudgetData {
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString()
       })
-      .pipe(map(budget => Budget.fromDto(budget)));
+      .pipe(map(budget => Budget.fromDto(budget)))
+      .toPromise();
   }
 
-  deleteBudget(id: number): Observable<void> {
+  deleteBudget(id: number): Promise<void> {
     const url = `${BudgetService.BaseUrl}/${id}`;
 
-    return this.http.delete<void>(url);
+    return this.http.delete<void>(url).toPromise();
   }
 }

@@ -16,12 +16,12 @@ export interface ICategory {
 }
 
 export abstract class CategoryData {
-  abstract getCategory(id: number): Observable<Category>;
-  abstract getCategories(includeObsolete: boolean): Observable<Category[]>;
+  abstract getCategory(id: number): Promise<Category>;
+  abstract getCategories(includeObsolete: boolean): Promise<Category[]>;
   abstract getCategoriesByFilter(
     includeObsolete: boolean,
     type: CategoryType
-  ): Observable<Category[]>;
+  ): Promise<Category[]>;
   abstract updateCategory(
     id: number,
     description: string,
@@ -30,7 +30,7 @@ export abstract class CategoryData {
     iconPack: string,
     iconName: string,
     iconColor: string
-  ): Observable<Category>;
+  ): Promise<Category>;
   abstract createCategory(
     description: string,
     type: CategoryType,
@@ -38,6 +38,6 @@ export abstract class CategoryData {
     iconPack: string,
     iconName: string,
     iconColor: string
-  ): Observable<Category>;
-  abstract setCategoryObsolete(id: number, obsolete: boolean): Observable<void>;
+  ): Promise<Category>;
+  abstract setCategoryObsolete(id: number, obsolete: boolean): Promise<void>;
 }

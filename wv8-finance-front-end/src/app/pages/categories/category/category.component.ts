@@ -24,14 +24,12 @@ export class CategoryComponent implements OnInit {
     private toasterService: NbToastrService
   ) {}
 
-  ngOnInit() {
-    this.route.params.subscribe(params => {
+  async ngOnInit() {
+    this.route.params.subscribe(async params => {
       let id = new Maybe<number>(params.id);
       if (id.isSome) {
         try {
-          this.categoryService
-            .getCategory(id.value)
-            .subscribe(category => (this.category = category));
+          this.category = await this.categoryService.getCategory(id.value);
         } catch {
           this.toasterService.danger("", "Category not found");
           this.router.navigateByUrl("/categories");
@@ -40,43 +38,40 @@ export class CategoryComponent implements OnInit {
     });
   }
 
-  onObsoleteClick() {
+  async onObsoleteClick() {
     if (this.category.isObsolete) {
-      this.categoryService
-        .setCategoryObsolete(this.category.id, false)
-        .subscribe(() => {
-          this.category.isObsolete = false;
+      await this.categoryService.setCategoryObsolete(this.category.id, false);
 
-          this.toasterService.success("", "Recovered category");
-        });
+      this.category.isObsolete = false;
+      this.toasterService.success("", "Recovered category");
     } else {
       this.dialogService
         .open(ConfirmDialogComponent, {
           context: { body: `Mark ${this.category.description} obsolete?` }
         })
-        .onClose.subscribe((confirmed: boolean) => {
+        .onClose.subscribe(async (confirmed: boolean) => {
           if (confirmed) {
-            this.categoryService
-              .setCategoryObsolete(this.category.id, true)
-              .subscribe(() => {
-                this.category.isObsolete = true;
+            await this.categoryService.setCategoryObsolete(
+              this.category.id,
+              true
+            );
 
-                this.toasterService.success("", "Marked category obsolete");
-              });
+            this.category.isObsolete = true;
+            this.toasterService.success("", "Marked category obsolete");
           }
         });
     }
   }
 
-  onEditClick() {
+  async onEditClick() {
     this.dialogService
       .open(CreateOrEditCategoryComponent, {
         context: { category: this.category }
       })
-      .onClose.subscribe((data: { success: boolean; category: Category }) => {
-        if (data && data.success) {
-          this.categoryService
-            .updateCategory(
+      .onClose.subscribe(
+        async (data: { success: boolean; category: Category }) => {
+          if (data && data.success) {
+            this.category = await this.categoryService.updateCategory(
               data.category.id,
               data.category.description,
               data.category.type,
@@ -84,12 +79,12 @@ export class CategoryComponent implements OnInit {
               data.category.icon.pack,
               data.category.icon.name,
               data.category.icon.color
-            )
-            .subscribe(updated => (this.category = updated));
+            );
 
-          this.toasterService.success("", "Updated category");
+            this.toasterService.success("", "Updated category");
+          }
         }
-      });
+      );
   }
 
   getTypeString() {

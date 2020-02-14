@@ -12,8 +12,8 @@ export interface IAccount {
 }
 
 export abstract class AccountData {
-  abstract getAccount(id: number): Observable<Account>;
-  abstract getAccounts(includeObsolete: boolean): Observable<Account[]>;
+  abstract getAccount(id: number): Promise<Account>;
+  abstract getAccounts(includeObsolete: boolean): Promise<Account[]>;
   abstract updateAccount(
     id: number,
     description: string,
@@ -21,12 +21,12 @@ export abstract class AccountData {
     iconPack: string,
     iconName: string,
     iconColor: string
-  ): Observable<Account>;
+  ): Promise<Account>;
   abstract createAccount(
     description: string,
     iconPack: string,
     iconName: string,
     iconColor: string
-  ): Observable<Account>;
-  abstract setAccountObsolete(id: number, obsolete: boolean): Observable<void>;
+  ): Promise<Account>;
+  abstract setAccountObsolete(id: number, obsolete: boolean): Promise<void>;
 }

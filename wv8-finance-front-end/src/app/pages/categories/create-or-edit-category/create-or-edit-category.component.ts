@@ -59,6 +59,8 @@ export class CreateOrEditCategoryComponent implements OnInit {
       return;
     }
 
+    // TODO: Save to back-end here.
+
     this.dialogRef.close({ success: true, category: this.category });
   }
 

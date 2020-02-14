@@ -85,17 +85,13 @@ export class BudgetsOverviewComponent implements OnInit {
     }
   }
 
-  private loadData(range: NbCalendarRange<Date>) {
-    this.budgetService
-      .getBudgetsByFilter(
-        Maybe.none(),
-        new Maybe(range.start),
-        new Maybe(range.end)
-      )
-      .subscribe(budgets => {
-        this.budgets = budgets;
-        this.setBudgetList();
-      });
+  private async loadData(range: NbCalendarRange<Date>) {
+    this.budgets = await this.budgetService.getBudgetsByFilter(
+      Maybe.none(),
+      new Maybe(range.start),
+      new Maybe(range.end)
+    );
+    this.setBudgetList();
   }
 
   private setBudgetList() {

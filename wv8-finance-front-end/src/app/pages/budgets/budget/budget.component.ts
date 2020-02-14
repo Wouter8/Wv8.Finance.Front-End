@@ -23,14 +23,12 @@ export class BudgetComponent implements OnInit {
     private toasterService: NbToastrService
   ) {}
 
-  ngOnInit() {
-    this.route.params.subscribe(params => {
+  async ngOnInit() {
+    this.route.params.subscribe(async params => {
       let id = new Maybe<number>(params.id);
       if (id.isSome) {
         try {
-          this.budgetService
-            .getBudget(id.value)
-            .subscribe(budget => (this.budget = budget));
+          this.budget = await this.budgetService.getBudget(id.value);
         } catch {
           this.toasterService.danger("", "budget not found");
           this.router.navigateByUrl("/budgets");
@@ -39,17 +37,17 @@ export class BudgetComponent implements OnInit {
     });
   }
 
-  onDeleteClick() {
+  async onDeleteClick() {
     this.dialogService
       .open(ConfirmDialogComponent, {
         context: { body: `Delete budget?` }
       })
-      .onClose.subscribe((confirmed: boolean) => {
+      .onClose.subscribe(async (confirmed: boolean) => {
         if (confirmed) {
-          this.budgetService.deleteBudget(this.budget.id).subscribe(() => {
-            this.toasterService.success("", "Deleted budget");
-            this.router.navigateByUrl("/budgets");
-          });
+          await this.budgetService.deleteBudget(this.budget.id);
+
+          this.toasterService.success("", "Deleted budget");
+          this.router.navigateByUrl("/budgets");
         }
       });
   }

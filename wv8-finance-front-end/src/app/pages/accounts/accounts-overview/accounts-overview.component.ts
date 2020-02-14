@@ -45,33 +45,31 @@ export class AccountsOverviewComponent implements OnInit {
     this.router.navigateByUrl(`accounts/${event.id}`);
   }
 
-  onClickAdd(event: MouseEvent) {
+  async onClickAdd(event: MouseEvent) {
     this.dialogService
       .open(CreateOrEditAccountComponent)
-      .onClose.subscribe((data: { success: boolean; account: Account }) => {
-        if (data.success) {
-          this.accountService
-            .createAccount(
+      .onClose.subscribe(
+        async (data: { success: boolean; account: Account }) => {
+          if (data.success) {
+            let account = await this.accountService.createAccount(
               data.account.description,
               data.account.icon.pack,
               data.account.icon.name,
               data.account.icon.color
-            )
-            .subscribe(account => {
-              this.accounts.push(account);
-              this.loadData();
+            );
 
-              this.toasterService.success("", "Added account");
-            });
+            this.accounts.push(account);
+            this.loadData();
+
+            this.toasterService.success("", "Added account");
+          }
         }
-      });
+      );
   }
 
-  private loadData() {
-    this.accountService.getAccounts(true).subscribe(accounts => {
-      this.accounts = accounts;
-      this.setAccountList(this.showObsolete);
-    });
+  private async loadData() {
+    this.accounts = await this.accountService.getAccounts(true);
+    this.setAccountList(this.showObsolete);
   }
 
   private setAccountList(showObsolete: boolean) {

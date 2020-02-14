@@ -14,20 +14,22 @@ export class AccountService extends AccountData {
     super();
   }
 
-  getAccount(id: number): Observable<Account> {
+  getAccount(id: number): Promise<Account> {
     const url = `${AccountService.BaseUrl}/${id}`;
 
     return this.http
       .get<IAccount>(url)
-      .pipe(map(account => Account.fromDto(account)));
+      .pipe(map(account => Account.fromDto(account)))
+      .toPromise();
   }
 
-  getAccounts(includeObsolete: boolean = false): Observable<Account[]> {
+  getAccounts(includeObsolete: boolean = false): Promise<Account[]> {
     const url = `${AccountService.BaseUrl}`;
 
     return this.http
       .get<IAccount[]>(url, { includeObsolete })
-      .pipe(map(accounts => accounts.map(a => Account.fromDto(a))));
+      .pipe(map(accounts => accounts.map(a => Account.fromDto(a))))
+      .toPromise();
   }
 
   updateAccount(
@@ -37,7 +39,7 @@ export class AccountService extends AccountData {
     iconPack: string,
     iconName: string,
     iconColor: string
-  ): Observable<Account> {
+  ): Promise<Account> {
     const url = `${AccountService.BaseUrl}/${id}`;
 
     return this.http
@@ -48,7 +50,8 @@ export class AccountService extends AccountData {
         iconName,
         iconColor
       })
-      .pipe(map(account => Account.fromDto(account)));
+      .pipe(map(account => Account.fromDto(account)))
+      .toPromise();
   }
 
   createAccount(
@@ -56,7 +59,7 @@ export class AccountService extends AccountData {
     iconPack: string,
     iconName: string,
     iconColor: string
-  ): Observable<Account> {
+  ): Promise<Account> {
     const url = `${AccountService.BaseUrl}`;
 
     return this.http
@@ -66,14 +69,17 @@ export class AccountService extends AccountData {
         iconName,
         iconColor
       })
-      .pipe(map(account => Account.fromDto(account)));
+      .pipe(map(account => Account.fromDto(account)))
+      .toPromise();
   }
 
-  setAccountObsolete(id: number, obsolete: boolean): Observable<void> {
+  setAccountObsolete(id: number, obsolete: boolean): Promise<void> {
     const url = `${AccountService.BaseUrl}/obsolete/${id}`;
 
-    return this.http.put<void>(url, {
-      obsolete
-    });
+    return this.http
+      .put<void>(url, {
+        obsolete
+      })
+      .toPromise();
   }
 }
