@@ -92,7 +92,7 @@ export class CreateOrEditBudgetComponent implements OnInit {
     this.dialogRef.close({ success: false });
   }
 
-  submit() {
+  async submit() {
     let errors = this.validate();
     if (errors.length > 0) {
       this.toasterService.warning(errors.join("\n"), "Incorrect data");
@@ -100,29 +100,21 @@ export class CreateOrEditBudgetComponent implements OnInit {
     }
 
     if (this.editing) {
-      this.budgetService
-        .updateBudget(
-          this.budget.id,
-          this.budget.amount,
-          this.budget.startDate,
-          this.budget.endDate
-        )
-        .subscribe(budget => {
-          this.budget = budget;
-          this.dialogRef.close({ success: true, budget: this.budget });
-        });
+      this.budget = await this.budgetService.updateBudget(
+        this.budget.id,
+        this.budget.amount,
+        this.budget.startDate,
+        this.budget.endDate
+      );
+      this.dialogRef.close({ success: true, budget: this.budget });
     } else {
-      this.budgetService
-        .createBudget(
-          this.budget.categoryId,
-          this.budget.amount,
-          this.budget.startDate,
-          this.budget.endDate
-        )
-        .subscribe(budget => {
-          this.budget = budget;
-          this.dialogRef.close({ success: true, budget: this.budget });
-        });
+      this.budget = await this.budgetService.createBudget(
+        this.budget.categoryId,
+        this.budget.amount,
+        this.budget.startDate,
+        this.budget.endDate
+      );
+      this.dialogRef.close({ success: true, budget: this.budget });
     }
   }
 

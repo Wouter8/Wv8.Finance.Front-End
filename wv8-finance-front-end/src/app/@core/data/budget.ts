@@ -16,24 +16,24 @@ export interface IBudget {
 }
 
 export abstract class BudgetData {
-  abstract getBudget(id: number): Observable<Budget>;
-  abstract getBudgets(): Observable<Budget[]>;
+  abstract getBudget(id: number): Promise<Budget>;
+  abstract getBudgets(): Promise<Budget[]>;
   abstract getBudgetsByFilter(
     categoryId: Maybe<number>,
     startDate: Maybe<Date>,
     endDate: Maybe<Date>
-  ): Observable<Budget[]>;
+  ): Promise<Budget[]>;
   abstract updateBudget(
     id: number,
     amount: number,
     startDate: Date,
     endDate: Date
-  ): Observable<Budget>;
+  ): Promise<Budget>;
   abstract createBudget(
     categoryId: number,
     amount: number,
     startDate: Date,
     endDate: Date
-  ): Observable<Budget>;
-  abstract deleteBudget(id: number): Observable<void>;
+  ): Promise<Budget>;
+  abstract deleteBudget(id: number): Promise<void>;
 }
