@@ -60,9 +60,9 @@
           <td>
             <category-picker
               [category]="category.parentCategoryId.valueOrElse(undefined)"
-              [showEmptyOption]="true"
+              [showResetOption]="true"
+              placeholderText="Filter category"
               (categoryChange)="setParentCategory($event)"
-              [showSubCategory]="false"
               [filterCategories]="[category.id]"
             ></category-picker>
           </td>

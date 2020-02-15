@@ -5,12 +5,20 @@ import {
   NbDialogRef,
   NbToastrService,
   NbDateService,
-  NbCalendarRange
+  NbCalendarRange,
+  NbDatepicker,
+  NbTabComponent
 } from "@nebular/theme";
-import { Budget } from "../../../@core/models/budget.model";
+import { Transaction } from "../../../@core/models/transaction.model";
 import { OverlappingType } from "../../../@core/enums/overlapping-type";
-import { CreateOrEditBudgetComponent } from "../../budgets/create-or-edit-budget/create-or-edit-budget.component";
-import { BudgetData } from "../../../@core/data/budget";
+import { TransactionData } from "../../../@core/data/transaction";
+import { TransactionType } from "../../../@core/enums/transaction-type.enum";
+import { FontAwesomeIcon } from "../../../@theme/components/font-awesome-icon-picker/font-awesome-icon";
+import { IIcon } from "../../../@core/data/icon";
+import { Category } from "../../../@core/models/category.model";
+import { CategoryData } from "../../../@core/data/category";
+import { Maybe } from "wv8.typescript.core";
+import { CategoryType } from "../../../@core/enums/category-type";
 
 @Component({
   selector: "create-or-edit-transaction",
@@ -18,73 +26,55 @@ import { BudgetData } from "../../../@core/data/budget";
   styleUrls: ["./create-or-edit-transaction.component.scss"]
 })
 export class CreateOrEditTransactionComponent implements OnInit {
-  @ViewChild("stepper", { static: true })
-  stepper: NbStepperComponent;
-
-  @ViewChild("periodPicker", { static: true })
-  periodPicker: NbRangepickerComponent<Date>;
-
-  @ViewChild("periodPickerInput", { static: true })
-  periodPickerInput: ElementRef<HTMLInputElement>;
-
   @Input()
-  budget: Budget;
+  transaction: Transaction;
 
   editing = false;
-  header: string = "Creating new budget";
+  header: string = "Creating transaction";
 
-  OverlappingType = OverlappingType;
+  expenseIcon = { icon: "hand-holding", pack: "fas" };
+  incomeIcon = { icon: "hand-holding-usd", pack: "fas" };
+  transferIcon = { icon: "hands-helping", pack: "fas" };
+
+  types = TransactionType;
+  categories: Category[];
 
   constructor(
-    protected dialogRef: NbDialogRef<CreateOrEditBudgetComponent>,
-    private budgetService: BudgetData,
+    protected dialogRef: NbDialogRef<CreateOrEditTransactionComponent>,
+    private transactionService: TransactionData,
     private toasterService: NbToastrService,
     private dateService: NbDateService<Date>
   ) {}
 
   ngOnInit() {
-    if (this.budget) {
+    if (this.transaction) {
       this.editing = true;
-      this.budget = this.budget.copy();
-      this.header = `Editing budget`;
-      let range: NbCalendarRange<Date> = {
-        start: this.dateService.getMonthStart(this.budget.startDate),
-        end: this.dateService.getMonthEnd(this.budget.endDate)
-      };
-      this.periodPicker.range = range;
-      this.periodPickerInput.nativeElement.value = `${this.dateService.format(
-        range.start,
-        "d MMM yy"
-      )} - ${this.dateService.format(range.end, "d MMM yy")}`;
+      this.transaction = this.transaction.copy();
+      this.header = `Editing transaction`;
     } else {
-      this.budget = new Budget();
+      this.transaction = new Transaction();
+      let today = new Date();
+      today.setHours(0, 0, 0, 0);
+      this.transaction.date = today;
+      this.transaction.categoryId = Maybe.none();
+      this.transaction.receivingAccountId = Maybe.none();
     }
   }
 
-  onPeriodSelected(period: NbCalendarRange<Date>) {
-    if (period.end && period.start) {
-      this.budget.startDate = period.start;
-      this.budget.endDate = period.end;
+  onTypeChange(selectedTab: NbTabComponent) {
+    this.transaction.type = this.types[selectedTab.tabTitle];
+
+    switch (this.transaction.type) {
+      case TransactionType.Expense:
+      case TransactionType.Income:
+        this.transaction.category = Maybe.none();
+        this.transaction.categoryId = Maybe.none();
+        break;
+      case TransactionType.Transfer:
+        this.transaction.receivingAccount = Maybe.none();
+        this.transaction.receivingAccountId = Maybe.none();
+        break;
     }
-  }
-
-  filledValues() {
-    return (
-      this.budget.amount > 0 &&
-      this.budget.categoryId > 0 &&
-      this.budget.startDate &&
-      this.budget.endDate
-    );
-  }
-
-  toNextStep() {
-    if (!this.filledValues()) {
-      this.toasterService.warning("", "Invalid data");
-      return;
-    }
-
-    // TODO: Overlapping budgets
-    this.stepper.next();
   }
 
   cancel() {
@@ -92,38 +82,70 @@ export class CreateOrEditTransactionComponent implements OnInit {
   }
 
   async submit() {
-    let errors = this.validate();
+    let errors = this.validate().reverse();
     if (errors.length > 0) {
-      this.toasterService.warning(errors.join("\n"), "Incorrect data");
+      errors.map(e => this.toasterService.warning(e, "Incorrect data"));
       return;
     }
 
+    let amount =
+      this.transaction.type == TransactionType.Expense
+        ? -this.transaction.amount
+        : this.transaction.amount;
+
     if (this.editing) {
-      this.budget = await this.budgetService.updateBudget(
-        this.budget.id,
-        this.budget.amount,
-        this.budget.startDate,
-        this.budget.endDate
+      this.transaction = await this.transactionService.updateTransaction(
+        this.transaction.id,
+        this.transaction.accountId,
+        this.transaction.description,
+        this.transaction.date,
+        amount,
+        this.transaction.categoryId,
+        this.transaction.receivingAccountId
       );
-      this.dialogRef.close({ success: true, budget: this.budget });
+      this.dialogRef.close({ success: true, transaction: this.transaction });
     } else {
-      this.budget = await this.budgetService.createBudget(
-        this.budget.categoryId,
-        this.budget.amount,
-        this.budget.startDate,
-        this.budget.endDate
+      this.transaction = await this.transactionService.createTransaction(
+        this.transaction.accountId,
+        this.transaction.type,
+        this.transaction.description,
+        this.transaction.date,
+        amount,
+        this.transaction.categoryId,
+        this.transaction.receivingAccountId
       );
-      this.dialogRef.close({ success: true, budget: this.budget });
+      this.dialogRef.close({ success: true, transaction: this.transaction });
     }
+  }
+
+  setReceivingAccountId(id: number) {
+    this.transaction.receivingAccountId = new Maybe(id);
   }
 
   private validate() {
     let messages: string[] = [];
 
-    if (this.budget.amount < 0)
-      messages.push("Amount has to be greater than 0");
+    if (!this.transaction.accountId) messages.push("Select an account.");
+    if (!this.transaction.date) messages.push("Select a date.");
+    if (
+      !this.transaction.description ||
+      this.transaction.description.trim().length < 3
+    )
+      messages.push("Enter a description.");
+    if (!this.transaction.amount || this.transaction.amount <= 0)
+      messages.push("Amount must be greater than 0.");
 
-    // TODO: Add validation
+    switch (this.transaction.type) {
+      case TransactionType.Expense:
+      case TransactionType.Income:
+        if (this.transaction.categoryId.isNone)
+          messages.push("No category selected.");
+        break;
+      case TransactionType.Transfer:
+        if (this.transaction.receivingAccountId.isNone)
+          messages.push("No receiver selected.");
+        break;
+    }
 
     return messages;
   }

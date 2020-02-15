@@ -3,19 +3,56 @@
     {{ header }}
   </nb-card-header>
   <nb-card-body>
-    <nb-tabset fullWidth>
-      <nb-tab tabTitle="Expense">
-        <create-or-edit-expense></create-or-edit-expense>
+    <nb-tabset fullWidth (changeTab)="onTypeChange($event)">
+      <nb-tab
+        tabTitle="Expense"
+        [tabindex]="types.Expense"
+        tabIcon="trending-down-outline"
+      >
+        <create-or-edit-expense
+          [transaction]="transaction"
+          [editing]="editing"
+          [date]="transaction.date"
+        >
+        </create-or-edit-expense>
       </nb-tab>
-      <nb-tab tabTitle="Income"> </nb-tab>
-      <nb-tab tabTitle="Transfer"> </nb-tab>
+      <nb-tab
+        tabTitle="Income"
+        [tabindex]="types.Income"
+        tabIcon="trending-up-outline"
+      >
+        <create-or-edit-income
+          [transaction]="transaction"
+          [editing]="editing"
+          [date]="transaction.date"
+        >
+        </create-or-edit-income>
+      </nb-tab>
+      <nb-tab
+        tabTitle="Transfer"
+        [tabindex]="types.Transfer"
+        tabIcon="swap-outline"
+      >
+        <create-or-edit-transfer
+          [transaction]="transaction"
+          [editing]="editing"
+          [date]="transaction.date"
+        >
+        </create-or-edit-transfer>
+      </nb-tab>
     </nb-tabset>
   </nb-card-body>
-  <nb-card-footer>
-    <div class="row text-center">
-      <div class="col-sm-12">
+  <nb-card-footer class="text-center">
+    <div class="row">
+      <div class="col-sm-6">
+        <button class="cancel" nbButton status="danger" (click)="cancel()">
+          Cancel
+          <nb-icon icon="close-outline"></nb-icon>
+        </button>
+      </div>
+      <div class="col-sm-6">
         <button nbButton status="success" (click)="submit()">
-          Save
+          Submit
           <nb-icon icon="save-outline"></nb-icon>
         </button>
       </div>

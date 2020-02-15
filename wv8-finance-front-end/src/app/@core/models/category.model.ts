@@ -17,6 +17,12 @@ export class Category {
   };
   children: Category[];
 
+  public getCompleteName(): string {
+    return this.parentCategory.isSome
+      ? `${this.parentCategory.value.description} > ${this.description}`
+      : `${this.description}`;
+  }
+
   public static fromDto(dto: ICategory): Category {
     let instance = new Category();
 

@@ -32,6 +32,7 @@ export class TransactionService extends TransactionData {
 
   getTransactionsByFilter(
     type: Maybe<TransactionType>,
+    accountId: Maybe<number>,
     description: Maybe<string>,
     categoryId: Maybe<number>,
     startDate: Maybe<Date>,
@@ -44,6 +45,7 @@ export class TransactionService extends TransactionData {
     return this.http
       .get<ITransactionGroup>(url, {
         type: type.asEnumQueryParam(),
+        accountId: accountId.asQueryParam(),
         description: description.asQueryParam(),
         categoryId: categoryId.asQueryParam(),
         startDate: startDate.map(d => d.toISOString()).asQueryParam(),

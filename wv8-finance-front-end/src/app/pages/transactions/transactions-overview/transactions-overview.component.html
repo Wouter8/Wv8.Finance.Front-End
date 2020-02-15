@@ -9,22 +9,35 @@
 
         <div class="header-filter">
           <div class="row">
-            <div class="col">
-              Account
+            <div class="col-sm-3">
+              <account-picker
+                placeholderText="Filter account"
+                [showResetOption]="true"
+                [selectDefault]="false"
+                [(account)]="accountFilter"
+                (accountChange)="filter()"
+              ></account-picker>
             </div>
-            <div class="col">
-              Description
+            <div class="col-sm-3">
+              <category-picker
+                placeholderText="Filter category"
+                [showResetOption]="true"
+                [(category)]="categoryFilter"
+                (categoryChange)="filter()"
+              ></category-picker>
+            </div>
+            <div class="col-sm-3">
               <input
                 nbInput
                 type="text"
                 [fieldSize]="'small'"
                 placeholder="Filter description"
                 class="text-center"
+                [(ngModel)]="descriptionFilter"
                 (keyup)="filter()"
               />
             </div>
-            <div class="col">
-              Period
+            <div class="col-sm-3">
               <input
                 #periodPickerInput
                 nbInput
@@ -37,6 +50,23 @@
                 #periodPicker
                 (rangeChange)="onSetPeriod($event)"
               ></nb-rangepicker>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <nb-select
+                placeholder="Filter type"
+                [(selected)]="typeFilter"
+                (selectedChange)="filter()"
+                size="small"
+              >
+                <nb-option [value]="undefined">None</nb-option>
+                <nb-option
+                  *ngFor="let type of transactionTypes | enumToArray"
+                  [value]="type.index"
+                  >{{ type.name }}</nb-option
+                >
+              </nb-select>
             </div>
           </div>
         </div>

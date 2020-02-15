@@ -51,11 +51,13 @@ import { IconWithBackgroundComponent } from "./components/icon-with-background/i
 import { ColorPickerComponent } from "./components/color-picker/color-picker.component";
 import { TableNameCellComponent } from "./components/table/table-name-cell/table-name-cell.component";
 import { EnumToArrayPipe } from "./pipes/enum-to-array.pipe";
-import { TableDateCellComponent } from "./components/table/table-euro-cell copy/table-date-cell.component";
+import { TableDateCellComponent } from "./components/table/table-date-cell/table-date-cell.component";
 import { TableProgressCellComponent } from "./components/table/table-progress-cell/table-progress-cell.component";
 import { IntervalPickerComponent } from "./components/interval-picker/interval-picker.component";
 import { CategoryPickerComponent } from "./components/category-picker/category-picker.component";
 import { FormsModule } from "@angular/forms";
+import { TableTransactionTypeIconCellComponent } from "./components/table/table-transaction-type-icon-cell/table-transaction-type-icon-cell.component";
+import { AccountPickerComponent } from "./components/account-picker/account-picker.component";
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -96,7 +98,9 @@ const COMPONENTS = [
   TableDateCellComponent,
   TableProgressCellComponent,
   IntervalPickerComponent,
-  CategoryPickerComponent
+  CategoryPickerComponent,
+  TableTransactionTypeIconCellComponent,
+  AccountPickerComponent
 ];
 const PIPES = [
   CapitalizePipe,
@@ -117,7 +121,8 @@ const ENTRY_COMPONENTS = [
   ColorPickerComponent,
   TableNameCellComponent,
   TableDateCellComponent,
-  TableProgressCellComponent
+  TableProgressCellComponent,
+  TableTransactionTypeIconCellComponent
 ];
 const IMPORT_MODULES = [FormsModule];
 

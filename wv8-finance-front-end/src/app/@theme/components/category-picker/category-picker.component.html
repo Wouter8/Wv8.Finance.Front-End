@@ -1,42 +1,40 @@
 <div *ngIf="categories">
   <nb-select
-    placeholder="Select category"
+    [placeholder]="placeholderText"
     size="small"
+    [fullWidth]="fullWidth"
     [(selected)]="categoryId"
     (selectedChange)="categorySelected()"
     [disabled]="disabled"
   >
-    <nb-option *ngIf="showEmptyOption" [value]="undefined">None</nb-option>
-    <nb-option *ngFor="let c of categories" [value]="c.id">
-      <wv8-icon-with-background
-        [icon]="c.icon.name"
-        [pack]="c.icon.pack"
-        [color]="c.icon.color"
-      ></wv8-icon-with-background>
-      <div class="category-description-container">
-        <span class="category-description"> {{ c.description }}</span>
-      </div>
-    </nb-option>
-  </nb-select>
-</div>
-<div *ngIf="this.hasSubCategories">
-  <nb-select
-    placeholder="Optionally, select sub category"
-    size="small"
-    [(selected)]="subCategoryId"
-    (selectedChange)="subCategorySelected()"
-    [disabled]="disabled"
-  >
-    <nb-option [value]="-1">No child</nb-option>
-    <nb-option *ngFor="let c of selectedCategory.children" [value]="c.id">
-      <wv8-icon-with-background
-        [icon]="c.icon.name"
-        [pack]="c.icon.pack"
-        [color]="c.icon.color"
-      ></wv8-icon-with-background>
-      <div class="category-description-container">
-        <span class="category-description"> {{ c.description }}</span>
-      </div>
-    </nb-option>
+    <nb-option *ngIf="showResetOption" [value]="undefined">None</nb-option>
+    <nb-option-group *ngFor="let c of categories">
+      <nb-option [value]="c.id">
+        <wv8-icon-with-background
+          [icon]="c.icon.name"
+          [pack]="c.icon.pack"
+          [color]="c.icon.color"
+        ></wv8-icon-with-background>
+        <div class="category-description-container">
+          <span class="category-description"> {{ c.description }}</span>
+        </div>
+      </nb-option>
+      <nb-option
+        *ngFor="let child of c.children"
+        [value]="child.id"
+        class="child"
+      >
+        <wv8-icon-with-background
+          class="child"
+          [icon]="child.icon.name"
+          [pack]="child.icon.pack"
+          [color]="child.icon.color"
+          size="small"
+        ></wv8-icon-with-background>
+        <div class="category-description-container">
+          <span class="category-description"> {{ child.description }}</span>
+        </div>
+      </nb-option>
+    </nb-option-group>
   </nb-select>
 </div>

@@ -5,7 +5,11 @@
   [pack]="icon.pack"
   [size]="iconSize"
 ></wv8-icon-with-background>
-<span>{{ name }}</span>
+<span
+  [ngClass]="{ 'vertical-center': showIcon && iconSize == 'normal' }"
+  class="text"
+  >{{ name }}</span
+>
 <div class="icons-container">
   <nb-icon
     nbTooltip="Default"

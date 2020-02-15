@@ -1,0 +1,13 @@
+<div [nbTooltip]="tooltipText" nbTooltipPlacement="right">
+  <nb-icon
+    *ngIf="value == 1"
+    icon="trending-down-outline"
+    status="danger"
+  ></nb-icon>
+  <nb-icon
+    *ngIf="value == 2"
+    icon="trending-up-outline"
+    status="success"
+  ></nb-icon>
+  <nb-icon *ngIf="value == 3" icon="swap-outline" status="primary"></nb-icon>
+</div>
