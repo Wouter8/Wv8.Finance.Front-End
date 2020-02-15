@@ -37,6 +37,7 @@ export abstract class TransactionData {
   abstract getTransaction(id: number): Promise<Transaction>;
   abstract getTransactionsByFilter(
     type: Maybe<TransactionType>,
+    accountId: Maybe<number>,
     description: Maybe<string>,
     categoryId: Maybe<number>,
     startDate: Maybe<Date>,

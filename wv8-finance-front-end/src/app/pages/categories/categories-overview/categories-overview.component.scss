@@ -13,7 +13,9 @@ nb-tree-grid-row-toggle {
 }
 
 .expand-toggle-container {
-  display: inline;
+  display: inline-block;
+  position: relative;
+  top: 5px;
 }
 
 .toggle {

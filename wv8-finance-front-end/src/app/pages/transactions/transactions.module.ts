@@ -9,7 +9,8 @@ import {
   NbInputModule,
   NbTooltipModule,
   NbDatepickerModule,
-  NbTabsetModule
+  NbTabsetModule,
+  NbSelectModule
 } from "@nebular/theme";
 import { ThemeModule } from "../../@theme/theme.module";
 import { Ng2SmartTableModule } from "ng2-smart-table";
@@ -19,9 +20,9 @@ import { TransactionComponent } from "./transaction/transaction.component";
 import { CreateOrEditTransactionComponent } from "./create-or-edit-transaction/create-or-edit-transaction.component";
 import { TransactionsRoutingModule } from "./transactions-routing.module";
 import { TransactionsComponent } from "./transactions.component";
-import { CreateOrEditExpenseComponent } from "./create-or-edit-transaction/create-or-edit-expense/create-or-edit-expense.component";
-import { CreateOrEditIncomeComponent } from "./create-or-edit-transaction/create-or-edit-income/create-or-edit-income.component";
-import { CreateOrEditTransferComponent } from "./create-or-edit-transaction/create-or-edit-transfer/create-or-edit-transfer.component";
+import { CreateOrEditExpenseComponent } from './create-or-edit-transaction/create-or-edit-expense/create-or-edit-expense.component';
+import { CreateOrEditIncomeComponent } from './create-or-edit-transaction/create-or-edit-income/create-or-edit-income.component';
+import { CreateOrEditTransferComponent } from './create-or-edit-transaction/create-or-edit-transfer/create-or-edit-transfer.component';
 @NgModule({
   imports: [
     TransactionsRoutingModule,
@@ -36,7 +37,8 @@ import { CreateOrEditTransferComponent } from "./create-or-edit-transaction/crea
     FormsModule,
     NbTooltipModule,
     NbDatepickerModule,
-    NbTabsetModule
+    NbTabsetModule,
+    NbSelectModule
   ],
   declarations: [
     TransactionsComponent,

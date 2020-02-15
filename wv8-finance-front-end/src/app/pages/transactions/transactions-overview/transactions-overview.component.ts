@@ -13,7 +13,7 @@ import { Maybe } from "wv8.typescript.core";
 import { CustomTableSettings } from "../../../@theme/components/table/table-settings.model";
 import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
 import { TableEuroCellComponent } from "../../../@theme/components/table/table-euro-cell/table-euro-cell.component";
-import { TableDateCellComponent } from "../../../@theme/components/table/table-euro-cell copy/table-date-cell.component";
+import { TableDateCellComponent } from "../../../@theme/components/table/table-date-cell/table-date-cell.component";
 import { TableProgressCellComponent } from "../../../@theme/components/table/table-progress-cell/table-progress-cell.component";
 import { Transaction } from "../../../@core/models/transaction.model";
 import { TransactionData, ITransaction } from "../../../@core/data/transaction";
@@ -23,6 +23,7 @@ import { TableBooleanCellComponent } from "../../../@theme/components/table/tabl
 import { TransactionType } from "../../../@core/enums/transaction-type.enum";
 import { AccountService } from "../../../@core/services/account.service";
 import { AccountData } from "../../../@core/data/account";
+import { TableTransactionTypeIconCellComponent } from "../../../@theme/components/table/table-transaction-type-icon-cell/table-transaction-type-icon-cell.component";
 
 @Component({
   selector: "transactions-overview",
@@ -41,8 +42,14 @@ export class TransactionsOverviewComponent implements OnInit {
 
   transactionGroup: TransactionGroup = undefined;
 
+  accounts: Account[] = [];
+  transactionTypes = TransactionType;
+
   descriptionFilter: string = undefined;
+  categoryFilter: number = undefined;
+  accountFilter: number = undefined;
   rangeFilter: NbCalendarRange<Date> = undefined;
+  typeFilter: TransactionType = undefined;
 
   constructor(
     private transactionservice: TransactionData,
@@ -68,6 +75,8 @@ export class TransactionsOverviewComponent implements OnInit {
 
     this.table.setSettings(this.getTableSettings());
     this.filter();
+
+    this.accounts = await this.accountService.getAccounts(true);
   }
 
   onSelect(event: ITransaction) {
@@ -104,10 +113,10 @@ export class TransactionsOverviewComponent implements OnInit {
         : undefined;
 
     this.loadData(
-      Maybe.none(),
-      Maybe.none(),
+      new Maybe(this.typeFilter),
+      new Maybe(this.accountFilter),
       new Maybe(this.descriptionFilter),
-      Maybe.none(),
+      new Maybe(this.categoryFilter),
       new Maybe(range.start),
       new Maybe(range.end)
     );
@@ -130,6 +139,7 @@ export class TransactionsOverviewComponent implements OnInit {
   ) {
     this.transactionGroup = await this.transactionservice.getTransactionsByFilter(
       type,
+      accountId,
       description,
       categoryId,
       rangeStart,
@@ -163,7 +173,7 @@ export class TransactionsOverviewComponent implements OnInit {
             instance.iconSize = "small";
           }
         },
-        account: {
+        categoryId: {
           title: "Category",
           type: "custom",
           renderComponent: TableNameCellComponent,
@@ -173,11 +183,32 @@ export class TransactionsOverviewComponent implements OnInit {
           ) => {
             instance.nameFunction = () =>
               instance.typedData.category
-                .map(c => c.description)
+                .map(c => c.getCompleteName())
                 .valueOrElse("-");
             instance.iconFunction = () =>
               instance.typedData.category
                 .map(c => c.icon)
+                .valueOrElse(undefined);
+
+            instance.showDefaultIcon = false;
+            instance.iconSize = "small";
+          }
+        },
+        receivingAccountId: {
+          title: "Receiver",
+          type: "custom",
+          renderComponent: TableNameCellComponent,
+          sort: false,
+          onComponentInitFunction: (
+            instance: TableNameCellComponent<Transaction>
+          ) => {
+            instance.nameFunction = () =>
+              instance.typedData.receivingAccount
+                .map(a => a.description)
+                .valueOrElse("-");
+            instance.iconFunction = () =>
+              instance.typedData.receivingAccount
+                .map(a => a.icon)
                 .valueOrElse(undefined);
 
             instance.showDefaultIcon = false;
@@ -202,6 +233,12 @@ export class TransactionsOverviewComponent implements OnInit {
           title: "Amount",
           type: "custom",
           renderComponent: TableEuroCellComponent,
+          sort: false
+        },
+        type: {
+          title: "Type",
+          type: "custom",
+          renderComponent: TableTransactionTypeIconCellComponent,
           sort: false
         }
       },

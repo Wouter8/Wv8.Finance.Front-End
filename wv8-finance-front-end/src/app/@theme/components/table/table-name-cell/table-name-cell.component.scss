@@ -3,7 +3,13 @@
 }
 
 .icons-container {
-  top: 2px;
+  top: 6px;
   position: relative;
+  display: inline-block;
+}
+
+.vertical-center {
+  position: relative;
+  top: 5px;
   display: inline-block;
 }

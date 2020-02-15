@@ -10,14 +10,14 @@ export class Transaction {
   date: Date;
   type: TransactionType;
   amount: number;
-  categoryId: Maybe<number>;
-  category: Maybe<Category>;
+  categoryId: Maybe<number> = Maybe.none();
+  category: Maybe<Category> = Maybe.none();
   accountId: number;
   account: Account;
-  receivingAccountId: Maybe<number>;
-  receivingAccount: Maybe<Account>;
+  receivingAccountId: Maybe<number> = Maybe.none();
+  receivingAccount: Maybe<Account> = Maybe.none();
   settled: boolean;
-  recurringTransactionId: Maybe<number>;
+  recurringTransactionId: Maybe<number> = Maybe.none();
 
   public static fromDto(dto: ITransaction): Transaction {
     let instance = new Transaction();
@@ -26,7 +26,8 @@ export class Transaction {
     instance.description = dto.description;
     instance.date = new Date(dto.date);
     instance.type = dto.type;
-    instance.amount = dto.amount;
+    instance.amount =
+      dto.type == TransactionType.Expense ? -dto.amount : dto.amount;
     instance.categoryId = Maybe.deserialize(dto.categoryId);
     instance.category = Maybe.deserialize(dto.category).map(c =>
       Category.fromDto(c)
@@ -56,8 +57,10 @@ export class Transaction {
     instance.categoryId = Maybe.deserialize(this.categoryId.serialize());
     instance.category = this.category.map(c => c.copy());
     instance.accountId = this.accountId;
-    instance.account = this.account.copy();
-    instance.receivingAccountId = Maybe.deserialize(this.receivingAccountId);
+    if (this.account) instance.account = this.account.copy();
+    instance.receivingAccountId = Maybe.deserialize(
+      this.receivingAccountId.serialize()
+    );
     instance.receivingAccount = this.receivingAccount.map(a => a.copy());
     instance.settled = this.settled;
     instance.recurringTransactionId = Maybe.deserialize(

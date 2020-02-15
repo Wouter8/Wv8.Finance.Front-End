@@ -16,7 +16,7 @@ import {
 import { IBudget, BudgetData } from "../../../@core/data/budget";
 import { CreateOrEditBudgetComponent } from "../create-or-edit-budget/create-or-edit-budget.component";
 import { Budget } from "../../../@core/models/budget.model";
-import { TableDateCellComponent } from "../../../@theme/components/table/table-euro-cell copy/table-date-cell.component";
+import { TableDateCellComponent } from "../../../@theme/components/table/table-date-cell/table-date-cell.component";
 import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
 import { TableProgressCellComponent } from "../../../@theme/components/table/table-progress-cell/table-progress-cell.component";
 import { Maybe } from "wv8.typescript.core";
@@ -111,7 +111,7 @@ export class BudgetsOverviewComponent implements OnInit {
             instance: TableNameCellComponent<Budget>
           ) => {
             instance.nameFunction = () =>
-              instance.typedData.category.description;
+              instance.typedData.category.getCompleteName();
             instance.iconFunction = () => instance.typedData.category.icon;
           }
         },

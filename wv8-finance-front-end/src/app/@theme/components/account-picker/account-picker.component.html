@@ -1,0 +1,22 @@
+<div *ngIf="accounts">
+  <nb-select
+    [placeholder]="placeholderText"
+    size="small"
+    [fullWidth]="fullWidth"
+    [(selected)]="accountId"
+    (selectedChange)="accountSelected()"
+    [disabled]="disabled"
+  >
+    <nb-option *ngIf="showResetOption" [value]="undefined">None</nb-option>
+    <nb-option *ngFor="let a of accounts" [value]="a.id">
+      <wv8-icon-with-background
+        [icon]="a.icon.name"
+        [pack]="a.icon.pack"
+        [color]="a.icon.color"
+      ></wv8-icon-with-background>
+      <div class="account-description-container">
+        <span class="account-description"> {{ a.description }}</span>
+      </div>
+    </nb-option>
+  </nb-select>
+</div>
