@@ -22,11 +22,14 @@ import { AccountService } from "./services/account.service";
 import { HttpService } from "./utils/http.service";
 import { CategoryService } from "./services/category.service";
 import { BudgetService } from "./services/budget.service";
+import { TransactionData } from "./data/transaction";
+import { TransactionService } from "./services/transaction.service";
 
 const DATA_SERVICES = [
   { provide: AccountData, useClass: AccountService },
   { provide: CategoryData, useClass: CategoryService },
-  { provide: BudgetData, useClass: BudgetService }
+  { provide: BudgetData, useClass: BudgetService },
+  { provide: TransactionData, useClass: TransactionService }
 ];
 
 const UTIL_SERVICES = [AnalyticsService, MenuItemsService, HttpService];

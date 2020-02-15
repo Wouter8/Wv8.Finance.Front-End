@@ -76,7 +76,11 @@ export class CategoriesOverviewComponent implements OnInit {
   }
 
   public async loadData(showObsolete: boolean) {
-    this.categories = await this.categoriesService.getCategories(showObsolete);
+    this.categories = await this.categoriesService.getCategories(
+      showObsolete,
+      true
+    );
+    console.log(this.categories);
     this.setTableData();
   }
 

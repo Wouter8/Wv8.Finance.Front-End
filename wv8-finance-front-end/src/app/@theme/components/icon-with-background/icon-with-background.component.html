@@ -1,3 +1,12 @@
-<div class="icon-container" [ngStyle]="{ 'background-color': color }">
-  <nb-icon icon="{{ icon }}" pack="{{ pack }}" class="fa-fw"></nb-icon>
+<div
+  class="icon-container"
+  [ngStyle]="{ 'background-color': color }"
+  [ngClass]="{ small: size == 'small' }"
+>
+  <nb-icon
+    icon="{{ icon }}"
+    pack="{{ pack }}"
+    class="fa-fw"
+    [ngClass]="{ small: size == 'small' }"
+  ></nb-icon>
 </div>

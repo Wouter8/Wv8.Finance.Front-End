@@ -46,6 +46,12 @@
     float: right;
   }
 
+  nb-card-header > .header-filter {
+    font-weight: 100;
+    margin-top: 10px;
+    text-align: center;
+  }
+
   nb-card-header > * {
     margin-right: 5px;
   }
@@ -64,6 +70,6 @@
   }
 
   tbody > tr > th {
-      padding-right: 15px;
+    padding-right: 15px;
   }
 }

@@ -25,23 +25,24 @@ export class CategoryService extends CategoryData {
       .toPromise();
   }
 
-  getCategories(includeObsolete: boolean = false): Promise<Category[]> {
+  getCategories(includeObsolete: boolean, group: boolean): Promise<Category[]> {
     const url = `${CategoryService.BaseUrl}`;
 
     return this.http
-      .get<ICategory[]>(url, { includeObsolete })
+      .get<ICategory[]>(url, { includeObsolete, group })
       .pipe(map(categories => categories.map(a => Category.fromDto(a))))
       .toPromise();
   }
 
   getCategoriesByFilter(
     includeObsolete: boolean,
-    type: CategoryType
+    type: CategoryType,
+    group: boolean
   ): Promise<Category[]> {
     const url = `${CategoryService.BaseUrl}/filter`;
 
     return this.http
-      .get<ICategory[]>(url, { includeObsolete, type })
+      .get<ICategory[]>(url, { includeObsolete, type, group })
       .pipe(map(categories => categories.map(a => Category.fromDto(a))))
       .toPromise();
   }

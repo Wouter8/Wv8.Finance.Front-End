@@ -17,10 +17,14 @@ export interface ICategory {
 
 export abstract class CategoryData {
   abstract getCategory(id: number): Promise<Category>;
-  abstract getCategories(includeObsolete: boolean): Promise<Category[]>;
+  abstract getCategories(
+    includeObsolete: boolean,
+    group: boolean
+  ): Promise<Category[]>;
   abstract getCategoriesByFilter(
     includeObsolete: boolean,
-    type: CategoryType
+    type: CategoryType,
+    group: boolean
   ): Promise<Category[]>;
   abstract updateCategory(
     id: number,
