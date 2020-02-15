@@ -106,8 +106,13 @@ export class BudgetsOverviewComponent implements OnInit {
           type: "custom",
           renderComponent: TableNameCellComponent,
           sort: false,
-          onComponentInitFunction: (instance: TableNameCellComponent) => {
-            instance.overrideProperty = "category";
+
+          onComponentInitFunction: (
+            instance: TableNameCellComponent<Budget>
+          ) => {
+            instance.nameFunction = () =>
+              instance.typedData.category.description;
+            instance.iconFunction = () => instance.typedData.category.icon;
           }
         },
         amount: {

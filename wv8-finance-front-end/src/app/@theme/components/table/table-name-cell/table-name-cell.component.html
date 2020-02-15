@@ -1,22 +1,24 @@
 <wv8-icon-with-background
-  *ngIf="rowData.icon"
-  [icon]="rowData.icon.name"
-  [color]="rowData.icon.color"
-  [pack]="rowData.icon.pack"
+  *ngIf="showIcon && icon"
+  [icon]="icon.name"
+  [color]="icon.color"
+  [pack]="icon.pack"
+  [size]="iconSize"
 ></wv8-icon-with-background>
-<span *ngIf="value">{{ value }}</span>
-<span *ngIf="!value">{{ rowData.name }}</span>
-<nb-icon
-  nbTooltip="Default"
-  nbTooltipPlacement="right"
-  *ngIf="rowData.isDefault"
-  icon="star"
-  status="primary"
-></nb-icon>
-<nb-icon
-  nbTooltip="Obsolete"
-  nbTooltipPlacement="right"
-  *ngIf="rowData.isObsolete"
-  icon="alert-circle-outline"
-  status="warning"
-></nb-icon>
+<span>{{ name }}</span>
+<div class="icons-container">
+  <nb-icon
+    nbTooltip="Default"
+    nbTooltipPlacement="right"
+    *ngIf="showDefaultIcon && isDefault"
+    icon="star"
+    status="primary"
+  ></nb-icon>
+  <nb-icon
+    nbTooltip="Obsolete"
+    nbTooltipPlacement="right"
+    *ngIf="showObsoleteIcon && isObsolete"
+    icon="alert-circle-outline"
+    status="warning"
+  ></nb-icon>
+</div>

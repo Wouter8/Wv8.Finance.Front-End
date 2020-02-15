@@ -38,7 +38,8 @@ export class CategoryPickerComponent implements OnInit {
 
     let categories = await this.categoryService.getCategoriesByFilter(
       false,
-      CategoryType.Expense
+      CategoryType.Expense,
+      true
     );
     this.categories = categories.filter(
       c => this.filterCategories.indexOf(c.id) < 0

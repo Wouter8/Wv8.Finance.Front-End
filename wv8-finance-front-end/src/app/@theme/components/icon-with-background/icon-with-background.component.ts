@@ -12,6 +12,8 @@ export class IconWithBackgroundComponent implements OnInit {
   pack: string;
   @Input()
   color: string;
+  @Input()
+  size: "normal" | "small" = "normal";
 
   constructor() {}
 

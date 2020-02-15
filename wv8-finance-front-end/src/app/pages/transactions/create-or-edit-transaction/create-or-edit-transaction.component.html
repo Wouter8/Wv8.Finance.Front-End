@@ -1,0 +1,24 @@
+<nb-card>
+  <nb-card-header>
+    {{ header }}
+  </nb-card-header>
+  <nb-card-body>
+    <nb-tabset fullWidth>
+      <nb-tab tabTitle="Expense">
+        <create-or-edit-expense></create-or-edit-expense>
+      </nb-tab>
+      <nb-tab tabTitle="Income"> </nb-tab>
+      <nb-tab tabTitle="Transfer"> </nb-tab>
+    </nb-tabset>
+  </nb-card-body>
+  <nb-card-footer>
+    <div class="row text-center">
+      <div class="col-sm-12">
+        <button nbButton status="success" (click)="submit()">
+          Save
+          <nb-icon icon="save-outline"></nb-icon>
+        </button>
+      </div>
+    </div>
+  </nb-card-footer>
+</nb-card>
