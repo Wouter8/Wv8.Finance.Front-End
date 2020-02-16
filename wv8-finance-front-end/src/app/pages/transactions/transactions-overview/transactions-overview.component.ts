@@ -5,7 +5,8 @@ import {
   NbDialogService,
   NbToastrService,
   NbDateService,
-  NbCalendarRange
+  NbCalendarRange,
+  NbCalendarViewMode
 } from "@nebular/theme";
 import { Router } from "@angular/router";
 import { CreateOrEditTransactionComponent } from "../create-or-edit-transaction/create-or-edit-transaction.component";
@@ -51,6 +52,10 @@ export class TransactionsOverviewComponent implements OnInit {
   rangeFilter: NbCalendarRange<Date> = undefined;
   typeFilter: TransactionType = undefined;
 
+  rowsPerPage: number = 15;
+
+  onPageChangeFunction = this.filter.bind(this);
+
   constructor(
     private transactionservice: TransactionData,
     private accountService: AccountData,
@@ -63,9 +68,10 @@ export class TransactionsOverviewComponent implements OnInit {
   async ngOnInit() {
     let today = new Date();
     let range: NbCalendarRange<Date> = {
-      start: this.dateService.addMonth(today, -1),
-      end: this.dateService.addMonth(today, 1)
+      start: this.dateService.getMonthStart(today),
+      end: this.dateService.getMonthEnd(today)
     };
+
     this.periodPicker.range = range;
     this.rangeFilter = range;
     this.periodPickerInput.nativeElement.value = `${this.dateService.format(
@@ -98,7 +104,7 @@ export class TransactionsOverviewComponent implements OnInit {
       );
   }
 
-  filter() {
+  async filter(pageNumber: number = 1) {
     let range = {
       start: undefined,
       end: undefined
@@ -112,14 +118,23 @@ export class TransactionsOverviewComponent implements OnInit {
         ? this.descriptionFilter.trim()
         : undefined;
 
-    this.loadData(
+    await this.loadData(
       new Maybe(this.typeFilter),
       new Maybe(this.accountFilter),
       new Maybe(this.descriptionFilter),
       new Maybe(this.categoryFilter),
       new Maybe(range.start),
-      new Maybe(range.end)
+      new Maybe(range.end),
+      pageNumber
     );
+
+    console.log(pageNumber, this.transactionGroup);
+
+    this.setTransactionList();
+    this.table.totalPages = Math.ceil(
+      this.transactionGroup.totalSearchResults / this.rowsPerPage
+    );
+    this.table.currentPage = pageNumber;
   }
 
   onSetPeriod(event: NbCalendarRange<Date>) {
@@ -135,7 +150,8 @@ export class TransactionsOverviewComponent implements OnInit {
     description: Maybe<string>,
     categoryId: Maybe<number>,
     rangeStart: Maybe<Date>,
-    rangeEnd: Maybe<Date>
+    rangeEnd: Maybe<Date>,
+    pageNumber: number
   ) {
     this.transactionGroup = await this.transactionservice.getTransactionsByFilter(
       type,
@@ -144,10 +160,9 @@ export class TransactionsOverviewComponent implements OnInit {
       categoryId,
       rangeStart,
       rangeEnd,
-      0,
-      25
+      (pageNumber - 1) * this.rowsPerPage,
+      this.rowsPerPage
     );
-    this.setTransactionList();
   }
 
   private setTransactionList() {
@@ -226,7 +241,7 @@ export class TransactionsOverviewComponent implements OnInit {
           sort: false,
           onComponentInitFunction: (instance: TableDateCellComponent) => {
             instance.showFutureIcon = true;
-            instance.determineIsFuture = () => instance.rowData.settled;
+            instance.determineIsFuture = () => instance.rowData.processed;
           }
         },
         amount: {
@@ -247,9 +262,13 @@ export class TransactionsOverviewComponent implements OnInit {
       rowClassFunction: (row: Transaction) => {
         let classes: string[] = [];
 
-        if (!row.settled) classes.push("obsolete");
+        if (!row.processed) classes.push("obsolete");
 
         return classes;
+      },
+      pager: {
+        display: true,
+        perPage: this.rowsPerPage
       }
     };
   }

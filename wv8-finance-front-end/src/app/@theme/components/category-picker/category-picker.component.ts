@@ -16,54 +16,51 @@ import { CategoryType } from "../../../@core/enums/category-type";
   templateUrl: "./category-picker.component.html",
   styleUrls: ["./category-picker.component.scss"]
 })
-export class CategoryPickerComponent implements OnInit {
-  categories: Category[];
+export class CategoryPickerComponent implements OnInit, OnChanges {
+  categories: Category[] = [];
 
   inputIsObject = false;
 
-  @Input() typeFilter: Maybe<CategoryType> = Maybe.none();
+  @Input() typeFilter: CategoryType = CategoryType.Expense;
   @Input() placeholderText: string = "Select category";
   @Input() disabled: boolean = false;
   @Input() fullWidth: boolean = false;
   @Input() includeObsolete: boolean = false;
   @Input() filterCategories: number[] = [];
   @Input() showResetOption: boolean = false;
+  @Input() showSubCategories: boolean = true;
   @Input() category: number | Category;
   @Output() categoryChange = new EventEmitter<number | Category>();
 
-  selectedCategory: Category = undefined;
   categoryId: number = undefined;
 
   constructor(private categoryService: CategoryData) {}
 
-  async ngOnInit() {
+  async ngOnInit() {}
+
+  async ngOnChanges() {
+    let categoryId: number;
     if (this.category instanceof Category) {
       this.inputIsObject = true;
-      this.categoryId = this.category.id;
+      categoryId = this.category.id;
     } else {
-      this.categoryId = this.category;
+      categoryId = this.category;
     }
 
-    this.categories =
-      this.categoryId && this.disabled
-        ? [
-            (await this.categoryService.getCategory(this.categoryId))
-              .parentCategory.value
-          ]
-        : (
-            await this.categoryService.getCategoriesByFilter(
-              this.includeObsolete,
-              this.typeFilter.valueOrElse(CategoryType.Expense),
-              false
-            )
-          ).filter(c => this.filterCategories.indexOf(c.id) < 0);
+    this.categories = (
+      await this.categoryService.getCategoriesByFilter(
+        this.includeObsolete,
+        this.typeFilter,
+        false
+      )
+    ).filter(c => this.filterCategories.indexOf(c.id) < 0);
 
-    if (this.categoryId) {
-      this.selectedCategory = this.categories.filter(
-        c => c.id == this.categoryId
-      )[0];
-    }
     this.categories = this.categories.filter(c => c.parentCategoryId.isNone);
+
+    // Set after loading of categories so that option is properly selected.
+    setTimeout(() => {
+      this.categoryId = categoryId;
+    });
   }
 
   categorySelected() {
@@ -71,11 +68,11 @@ export class CategoryPickerComponent implements OnInit {
       return this.categoryChange.emit(undefined);
     }
 
-    this.selectedCategory = this.categories.filter(
+    let selectedCategory = this.categories.filter(
       c => c.id == this.categoryId
     )[0];
-    if (!this.selectedCategory) {
-      this.selectedCategory = this.categories
+    if (!selectedCategory) {
+      selectedCategory = this.categories
         .filter(
           c => c.children.map(child => child.id).indexOf(this.categoryId) >= 0
         )[0]
@@ -83,7 +80,7 @@ export class CategoryPickerComponent implements OnInit {
     }
 
     this.categoryChange.emit(
-      this.inputIsObject ? this.selectedCategory : this.selectedCategory.id
+      this.inputIsObject ? selectedCategory : selectedCategory.id
     );
   }
 }

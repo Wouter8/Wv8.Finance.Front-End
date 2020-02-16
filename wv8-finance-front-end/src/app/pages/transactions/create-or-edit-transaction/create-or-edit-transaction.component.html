@@ -10,6 +10,7 @@
         tabIcon="trending-down-outline"
       >
         <create-or-edit-expense
+          *ngIf="transaction.type == types.Expense"
           [transaction]="transaction"
           [editing]="editing"
           [date]="transaction.date"
@@ -22,6 +23,7 @@
         tabIcon="trending-up-outline"
       >
         <create-or-edit-income
+          *ngIf="transaction.type == types.Income"
           [transaction]="transaction"
           [editing]="editing"
           [date]="transaction.date"
@@ -34,6 +36,7 @@
         tabIcon="swap-outline"
       >
         <create-or-edit-transfer
+          *ngIf="transaction.type == types.Transfer"
           [transaction]="transaction"
           [editing]="editing"
           [date]="transaction.date"

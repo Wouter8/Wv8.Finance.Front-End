@@ -15,6 +15,7 @@ import { Category } from "../../../@core/models/category.model";
 import { CustomTableSettings } from "../../../@theme/components/table/table-settings.model";
 import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
 import { TreeNode } from "../../../@core/models/tree-node.model";
+import { CategoryType } from "../../../@core/enums/category-type";
 
 @Component({
   selector: "categories-overview",
@@ -22,11 +23,16 @@ import { TreeNode } from "../../../@core/models/tree-node.model";
   styleUrls: ["./categories-overview.component.scss"]
 })
 export class CategoriesOverviewComponent implements OnInit {
-  categoryGrid: TreeNode<Category>[];
+  expenseCategoryGrid: TreeNode<Category>[];
+  incomeCategoryGrid: TreeNode<Category>[];
 
-  allColumns = ["description"];
+  firstColumn = "description";
+  otherColumns = ["type"];
+  allColumns = [this.firstColumn, ...this.otherColumns];
 
   categories: Category[] = [];
+
+  categoryTypes = CategoryType;
 
   showObsolete: boolean = false;
 
@@ -41,9 +47,11 @@ export class CategoriesOverviewComponent implements OnInit {
     this.loadData(this.showObsolete);
   }
 
-  async onClickAdd(event: MouseEvent) {
+  async onClickAdd(type: CategoryType, event: MouseEvent) {
     this.dialogService
-      .open(CreateOrEditCategoryComponent)
+      .open(CreateOrEditCategoryComponent, {
+        context: { initialType: type }
+      })
       .onClose.subscribe(
         async (data: { success: boolean; category: Category }) => {
           if (data && data.success) {
@@ -80,11 +88,15 @@ export class CategoriesOverviewComponent implements OnInit {
       showObsolete,
       true
     );
-    console.log(this.categories);
     this.setTableData();
   }
 
   private setTableData() {
-    this.categoryGrid = TreeNode.fromCategories(this.categories);
+    this.expenseCategoryGrid = TreeNode.fromCategories(
+      this.categories.filter(c => c.type == CategoryType.Expense)
+    );
+    this.incomeCategoryGrid = TreeNode.fromCategories(
+      this.categories.filter(c => c.type == CategoryType.Income)
+    );
   }
 }

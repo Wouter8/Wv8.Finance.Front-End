@@ -4,11 +4,12 @@ import { TableEuroCellComponent } from "./table-euro-cell/table-euro-cell.compon
 import { Type } from "@angular/core";
 import { TableIconCellComponent } from "./table-icon-cell/table-icon-cell.component";
 import { TableDefaultAndObsoleteCellComponent } from "./table-default-and-obsolete-cell/table-default-and-obsolete-cell.component";
+import { ViewCell } from "ng2-smart-table";
 
 export interface CustomTableSettings<T> {
   columns: Columns;
+  pager?: Pager;
   hideFilter?: boolean;
-  rowsPerPage?: number;
   selectMode?: false | "single" | "multi";
   clickable?: boolean;
   rowClassFunction?: (data: T) => string[];
@@ -46,11 +47,7 @@ export interface ColumnSettings {
   defaultSortDirection?: string;
   editor?: { type: string; config?: any; component?: any };
   filter?: { type: string; config?: any; component?: any } | boolean;
-  renderComponent?:
-    | Type<TableBooleanCellComponent>
-    | Type<TableEuroCellComponent>
-    | Type<TableIconCellComponent>
-    | Type<TableDefaultAndObsoleteCellComponent>;
+  renderComponent?: Type<ViewCell>;
   compareFunction?: Function;
   valuePrepareFunction?: Function;
   filterFunction?: Function;

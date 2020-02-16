@@ -58,6 +58,7 @@ import { CategoryPickerComponent } from "./components/category-picker/category-p
 import { FormsModule } from "@angular/forms";
 import { TableTransactionTypeIconCellComponent } from "./components/table/table-transaction-type-icon-cell/table-transaction-type-icon-cell.component";
 import { AccountPickerComponent } from "./components/account-picker/account-picker.component";
+import { TableCategoryTypeIconCellComponent } from "./components/table/table-category-type-icon-cell/table-category-type-icon-cell.component";
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -100,7 +101,8 @@ const COMPONENTS = [
   IntervalPickerComponent,
   CategoryPickerComponent,
   TableTransactionTypeIconCellComponent,
-  AccountPickerComponent
+  AccountPickerComponent,
+  TableCategoryTypeIconCellComponent
 ];
 const PIPES = [
   CapitalizePipe,
@@ -122,7 +124,8 @@ const ENTRY_COMPONENTS = [
   TableNameCellComponent,
   TableDateCellComponent,
   TableProgressCellComponent,
-  TableTransactionTypeIconCellComponent
+  TableTransactionTypeIconCellComponent,
+  TableCategoryTypeIconCellComponent
 ];
 const IMPORT_MODULES = [FormsModule];
 

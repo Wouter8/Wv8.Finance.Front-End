@@ -22,6 +22,8 @@ import { Maybe } from "wv8.typescript.core";
 export class CreateOrEditCategoryComponent implements OnInit {
   @Input()
   category: Category;
+  @Input()
+  initialType: CategoryType = undefined;
 
   types = CategoryType;
 
@@ -45,6 +47,7 @@ export class CreateOrEditCategoryComponent implements OnInit {
       this.header = `Editing ${this.category.description}`;
     } else {
       this.category = new Category();
+      if (this.initialType) this.category.type = this.initialType;
     }
   }
 

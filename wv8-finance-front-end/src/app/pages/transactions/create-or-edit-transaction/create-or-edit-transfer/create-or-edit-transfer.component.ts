@@ -43,6 +43,6 @@ export class CreateOrEditTransferComponent implements OnInit, OnChanges {
   }
 
   setReceivingAccountId(id: number) {
-    this.transaction.categoryId = new Maybe(id);
+    this.transaction.receivingAccountId = new Maybe(id);
   }
 }

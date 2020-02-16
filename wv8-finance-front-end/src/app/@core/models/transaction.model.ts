@@ -16,7 +16,7 @@ export class Transaction {
   account: Account;
   receivingAccountId: Maybe<number> = Maybe.none();
   receivingAccount: Maybe<Account> = Maybe.none();
-  settled: boolean;
+  processed: boolean;
   recurringTransactionId: Maybe<number> = Maybe.none();
 
   public static fromDto(dto: ITransaction): Transaction {
@@ -38,7 +38,7 @@ export class Transaction {
     instance.receivingAccount = Maybe.deserialize(dto.receivingAccount).map(a =>
       Account.fromDto(a)
     );
-    instance.settled = dto.settled;
+    instance.processed = dto.processed;
     instance.recurringTransactionId = Maybe.deserialize(
       dto.recurringTransactionId
     );
@@ -62,7 +62,7 @@ export class Transaction {
       this.receivingAccountId.serialize()
     );
     instance.receivingAccount = this.receivingAccount.map(a => a.copy());
-    instance.settled = this.settled;
+    instance.processed = this.processed;
     instance.recurringTransactionId = Maybe.deserialize(
       this.recurringTransactionId.serialize()
     );

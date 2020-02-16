@@ -5,6 +5,7 @@ import { TransactionType } from "../enums/transaction-type.enum";
 import { ICategory } from "../data/category";
 
 export class TransactionGroup {
+  totalSearchResults: number;
   totalSum: number;
   sumPerIncomeCategory: Map<Category, number>;
   sumPerExpenseCategory: Map<Category, number>;
@@ -18,6 +19,7 @@ export class TransactionGroup {
 
     instance.transactions = dto.transactions.map(t => Transaction.fromDto(t));
     instance.totalSum = dto.totalSum;
+    instance.totalSearchResults = dto.totalSearchResults;
 
     instance.categories = new Map();
     instance.sumPerExpenseCategory = new Map();

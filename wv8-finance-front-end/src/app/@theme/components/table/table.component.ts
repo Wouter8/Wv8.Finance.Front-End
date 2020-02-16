@@ -3,11 +3,17 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  ViewChild
+  ViewChild,
+  Input
 } from "@angular/core";
-import { TableSettings, CustomTableSettings } from "./table-settings.model";
+import {
+  TableSettings,
+  CustomTableSettings,
+  Pager
+} from "./table-settings.model";
 import { LocalDataSource } from "ng2-smart-table";
 import { Maybe } from "wv8.typescript.core";
+import { TablePagination } from "./table-pagination-model";
 
 @Component({
   selector: "wv8-table",
@@ -15,31 +21,61 @@ import { Maybe } from "wv8.typescript.core";
   styleUrls: ["./table.component.scss"]
 })
 export class TableComponent<T> implements OnInit {
-  source: LocalDataSource = new LocalDataSource();
-  settings: TableSettings;
-
   @ViewChild("table", { static: true })
   table: Ng2SmartTable;
 
+  @Input()
+  onPageChange: (page: number) => void;
   @Output("select")
   onSelect = new EventEmitter<T>();
+
+  source: LocalDataSource = new LocalDataSource();
+  settings: TableSettings;
+  currentPage: number = 1;
+  totalPages: number = 1;
+  pager: Pager = {
+    display: false,
+    perPage: 25
+  };
 
   private DEFAULT_SETTINGS: TableSettings = {
     actions: false,
     hideHeader: false,
     hideSubHeader: false,
     mode: "external",
-    pager: {
-      display: true,
-      perPage: 25
-    },
     selectMode: false,
+    pager: {
+      display: false
+    },
     tableClass: "table"
   };
 
   constructor() {}
 
   ngOnInit() {}
+
+  goToPage(i: number) {
+    this.currentPage = i;
+    this.onPageChange(this.currentPage);
+  }
+
+  getPaginationNumbers(): number[] {
+    let result = [];
+    let i =
+      this.currentPage == this.totalPages
+        ? this.currentPage - 2
+        : this.currentPage - 1;
+    while (result.length < 3) {
+      if (i > 0) {
+        result.push(i);
+      }
+
+      if (i == this.totalPages) break;
+
+      i++;
+    }
+    return result;
+  }
 
   public setData(data: T[]) {
     this.source.load(data);
@@ -50,9 +86,14 @@ export class TableComponent<T> implements OnInit {
 
     this.settings.columns = settings.columns;
 
-    this.settings.pager.perPage = new Maybe(settings.rowsPerPage).valueOrElse(
-      this.DEFAULT_SETTINGS.pager.perPage
-    );
+    if (settings.pager) {
+      this.pager.display = new Maybe(settings.pager.display).valueOrElse(
+        this.pager.display
+      );
+      this.pager.perPage = new Maybe(settings.pager.perPage).valueOrElse(
+        this.pager.perPage
+      );
+    }
     this.settings.selectMode = new Maybe(settings.selectMode).valueOrElse(
       this.DEFAULT_SETTINGS.selectMode
     );

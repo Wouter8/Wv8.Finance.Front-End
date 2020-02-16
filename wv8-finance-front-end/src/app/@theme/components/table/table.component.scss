@@ -1,4 +1,13 @@
-@import '../../styles/themes';
+@import "../../styles/themes";
 
 @include nb-install-component() {
+}
+
+.pagination-container {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.pagination-button {
+  height: 44px;
 }

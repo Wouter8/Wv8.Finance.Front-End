@@ -58,7 +58,7 @@
         <category-picker
           [disabled]="this.editing"
           [fullWidth]="true"
-          [category]="transaction.categoryId"
+          [category]="transaction.categoryId.valueOrElse(undefined)"
           (categoryChange)="setCategoryId($event)"
         ></category-picker>
       </td>
