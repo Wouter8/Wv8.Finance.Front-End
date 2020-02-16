@@ -26,7 +26,7 @@ export class CreateOrEditIncomeComponent implements OnInit, OnChanges {
   @Input() editing: boolean;
   @Input() date: Date;
 
-  typeFilter = new Maybe(CategoryType.Income);
+  types = CategoryType;
 
   constructor(private dateService: NbDateService<Date>) {}
 

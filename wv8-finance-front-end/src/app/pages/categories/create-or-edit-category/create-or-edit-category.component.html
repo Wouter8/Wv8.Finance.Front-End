@@ -59,9 +59,10 @@
           <th>Parent</th>
           <td>
             <category-picker
+              [typeFilter]="category.type"
               [category]="category.parentCategoryId.valueOrElse(undefined)"
               [showResetOption]="true"
-              placeholderText="Filter category"
+              [showSubCategories]="false"
               (categoryChange)="setParentCategory($event)"
               [filterCategories]="[category.id]"
             ></category-picker>

@@ -19,11 +19,12 @@ export interface ITransaction {
   account: IAccount;
   receivingAccountId: IMaybe<number>;
   receivingAccount: IMaybe<IAccount>;
-  settled: boolean;
+  processed: boolean;
   recurringTransactionId: IMaybe<number>;
 }
 
 export interface ITransactionGroup {
+  totalSearchResults: number;
   totalSum: number;
   sumPerIncomeCategory: Map<number, number>;
   sumPerExpenseCategory: Map<number, number>;

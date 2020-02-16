@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-sm-12 col-xl-8">
+  <div class="col-sm-12">
     <nb-card>
       <nb-card-header>
         <span class="title">Transactions</span>
@@ -9,7 +9,7 @@
 
         <div class="header-filter">
           <div class="row">
-            <div class="col-sm-3">
+            <div class="col-sm-12 col-lg-6 col-xxxl-2">
               <account-picker
                 placeholderText="Filter account"
                 [showResetOption]="true"
@@ -18,7 +18,7 @@
                 (accountChange)="filter()"
               ></account-picker>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-12 col-lg-6 col-xxxl-2">
               <category-picker
                 placeholderText="Filter category"
                 [showResetOption]="true"
@@ -26,7 +26,7 @@
                 (categoryChange)="filter()"
               ></category-picker>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-12 col-lg-6 col-xxxl-2">
               <input
                 nbInput
                 type="text"
@@ -37,23 +37,7 @@
                 (keyup)="filter()"
               />
             </div>
-            <div class="col-sm-3">
-              <input
-                #periodPickerInput
-                nbInput
-                [fieldSize]="'small'"
-                placeholder="Filter period"
-                [nbDatepicker]="periodPicker"
-                class="period-picker-input"
-              />
-              <nb-rangepicker
-                #periodPicker
-                (rangeChange)="onSetPeriod($event)"
-              ></nb-rangepicker>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-3">
+            <div class="col-sm-12 col-lg-6 col-xxxl-2">
               <nb-select
                 placeholder="Filter type"
                 [(selected)]="typeFilter"
@@ -68,16 +52,31 @@
                 >
               </nb-select>
             </div>
+            <div class="col-sm-12 col-lg-6 col-xxxl-2">
+              <input
+                #periodPickerInput
+                nbInput
+                [fieldSize]="'small'"
+                placeholder="Filter period"
+                [nbDatepicker]="periodPicker"
+                class="period-picker-input"
+              />
+              <nb-rangepicker
+                #periodPicker
+                (rangeChange)="onSetPeriod($event)"
+              ></nb-rangepicker>
+            </div>
           </div>
         </div>
       </nb-card-header>
 
       <nb-card-body>
-        <wv8-table #table (select)="onSelect($event)"></wv8-table>
+        <wv8-table
+          #table
+          (select)="onSelect($event)"
+          [onPageChange]="onPageChangeFunction"
+        ></wv8-table>
       </nb-card-body>
     </nb-card>
-  </div>
-  <div class="col-sm-12 col-xl-4">
-    RECURRING HERE
   </div>
 </div>

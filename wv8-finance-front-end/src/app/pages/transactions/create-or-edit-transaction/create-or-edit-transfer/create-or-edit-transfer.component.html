@@ -57,8 +57,9 @@
       <td>
         <account-picker
           [disabled]="this.editing"
+          [selectDefault]="false"
           [fullWidth]="true"
-          [account]="transaction.receivingAccountId"
+          [account]="transaction.receivingAccountId.valueOrElse(undefined)"
           (accountChange)="setReceivingAccountId($event)"
         ></account-picker>
       </td>

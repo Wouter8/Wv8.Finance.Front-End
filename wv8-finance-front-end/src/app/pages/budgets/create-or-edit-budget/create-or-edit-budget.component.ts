@@ -49,8 +49,8 @@ export class CreateOrEditBudgetComponent implements OnInit {
       this.budget = this.budget.copy();
       this.header = `Editing budget`;
       let range: NbCalendarRange<Date> = {
-        start: this.dateService.getMonthStart(this.budget.startDate),
-        end: this.dateService.getMonthEnd(this.budget.endDate)
+        start: this.budget.startDate,
+        end: this.budget.endDate
       };
       this.periodPicker.range = range;
       this.periodPickerInput.nativeElement.value = `${this.dateService.format(

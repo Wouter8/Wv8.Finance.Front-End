@@ -1,4 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges
+} from "@angular/core";
 import { AccountData } from "../../../@core/data/account";
 import { Account } from "../../../@core/models/account.model";
 import { Maybe } from "wv8.typescript.core";
@@ -9,7 +16,7 @@ import { Maybe } from "wv8.typescript.core";
   styleUrls: ["./account-picker.component.scss"]
 })
 export class AccountPickerComponent implements OnInit, OnChanges {
-  accounts: Account[];
+  accounts: Account[] = [];
 
   inputIsObject = false;
 
@@ -31,29 +38,33 @@ export class AccountPickerComponent implements OnInit, OnChanges {
   async ngOnInit() {}
 
   async ngOnChanges() {
+    let accountId: number;
     if (this.account instanceof Account) {
       this.inputIsObject = true;
-      this.accountId = this.account.id;
+      accountId = this.account.id;
     } else {
-      this.accountId = this.account;
+      accountId = this.account;
     }
 
     this.accounts =
-      this.accountId && this.disabled
-        ? [await this.accountService.getAccount(this.accountId)]
+      accountId && this.disabled
+        ? [await this.accountService.getAccount(accountId)]
         : (await this.accountService.getAccounts(this.includeObsolete)).filter(
             c => this.filterAccounts.indexOf(c.id) < 0
           );
 
-    if (this.accountId) {
-      this.selectedAccount = this.accounts.filter(
-        c => c.id == this.accountId
-      )[0];
+    if (accountId) {
+      this.selectedAccount = this.accounts.filter(c => c.id == accountId)[0];
     } else if (this.selectDefault) {
       let defaultAccounts = this.accounts.filter(a => a.isDefault);
-      if (defaultAccounts.length > 0) this.accountId = defaultAccounts[0].id;
-      this.accountSelected();
+      if (defaultAccounts.length > 0) accountId = defaultAccounts[0].id;
     }
+
+    // Set after loading everything so options get properly selected.
+    setTimeout(() => {
+      this.accountId = accountId;
+      this.accountSelected();
+    });
   }
 
   accountSelected() {
