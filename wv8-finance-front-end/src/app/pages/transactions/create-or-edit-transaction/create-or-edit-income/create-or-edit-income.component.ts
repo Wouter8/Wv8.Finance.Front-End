@@ -16,32 +16,18 @@ import { NbDatepicker, NbDateService } from "@nebular/theme";
   templateUrl: "./create-or-edit-income.component.html",
   styleUrls: ["./create-or-edit-income.component.scss"]
 })
-export class CreateOrEditIncomeComponent implements OnInit, OnChanges {
-  @ViewChild("datePicker", { static: true })
-  datePicker: NbDatepicker<Date>;
-  @ViewChild("datePickerInput", { static: true })
-  datePickerInput: ElementRef<HTMLInputElement>;
-
+export class CreateOrEditIncomeComponent implements OnInit {
   @Input() transaction: Transaction;
   @Input() editing: boolean;
-  @Input() date: Date;
 
   types = CategoryType;
 
-  constructor(private dateService: NbDateService<Date>) {}
+  constructor() {}
 
   ngOnInit() {}
 
-  ngOnChanges() {
-    this.datePicker.value = this.transaction.date;
-    this.datePickerInput.nativeElement.value = `${this.dateService.format(
-      this.transaction.date,
-      "d MMM yy"
-    )}`;
-  }
-
   dateChanged(date: Date) {
-    this.transaction.date = new Date(date.toISOString());
+    this.transaction.date = new Date(date);
   }
 
   setCategoryId(id: number) {

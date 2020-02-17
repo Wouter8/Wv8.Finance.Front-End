@@ -19,21 +19,16 @@
             <tr>
               <th>Period</th>
               <td>
-                <input
-                  #periodPickerInput
-                  nbInput
-                  fieldSize="small"
-                  placeholder="Pick period"
-                  fullWidth
+                <period-picker
                   [disabled]="!budget.categoryId"
-                  [nbDatepicker]="periodPicker"
-                />
-                <nb-rangepicker
-                  #periodPicker
-                  (rangeChange)="onPeriodSelected($event)"
-                ></nb-rangepicker>
+                  [setInitialValue]="editing"
+                  [start]="budget.startDate"
+                  [end]="budget.endDate"
+                  (periodChanged)="onPeriodSelected($event)"
+                ></period-picker>
               </td>
             </tr>
+
             <tr>
               <th>Amount</th>
               <td>

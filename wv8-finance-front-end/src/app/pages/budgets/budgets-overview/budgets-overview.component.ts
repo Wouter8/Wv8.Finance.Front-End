@@ -30,36 +30,17 @@ export class BudgetsOverviewComponent implements OnInit {
   @ViewChild("table", { static: true })
   table: TableComponent<Budget>;
 
-  @ViewChild("periodPicker", { static: true })
-  periodPicker: NbRangepickerComponent<Date>;
-
-  @ViewChild("periodPickerInput", { static: true })
-  periodPickerInput: ElementRef<HTMLInputElement>;
-
   budgets: Budget[] = [];
 
   constructor(
     private budgetService: BudgetData,
     private router: Router,
     private dialogService: NbDialogService,
-    private toasterService: NbToastrService,
-    private dateService: NbDateService<Date>
+    private toasterService: NbToastrService
   ) {}
 
   ngOnInit() {
-    let today = new Date();
-    let range: NbCalendarRange<Date> = {
-      start: this.dateService.getMonthStart(today),
-      end: this.dateService.getMonthEnd(today)
-    };
-    this.periodPicker.range = range;
-    this.periodPickerInput.nativeElement.value = `${this.dateService.format(
-      range.start,
-      "d MMM yy"
-    )} - ${this.dateService.format(range.end, "d MMM yy")}`;
-
     this.table.setSettings(this.getTableSettings());
-    this.loadData(range);
   }
 
   onSelect(event: IBudget) {

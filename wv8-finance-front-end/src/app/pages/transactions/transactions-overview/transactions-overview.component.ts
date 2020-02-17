@@ -35,12 +35,6 @@ export class TransactionsOverviewComponent implements OnInit {
   @ViewChild("table", { static: true })
   table: TableComponent<Transaction>;
 
-  @ViewChild("periodPicker", { static: true })
-  periodPicker: NbRangepickerComponent<Date>;
-
-  @ViewChild("periodPickerInput", { static: true })
-  periodPickerInput: ElementRef<HTMLInputElement>;
-
   transactionGroup: TransactionGroup = undefined;
 
   accounts: Account[] = [];
@@ -61,24 +55,10 @@ export class TransactionsOverviewComponent implements OnInit {
     private accountService: AccountData,
     private router: Router,
     private dialogService: NbDialogService,
-    private toasterService: NbToastrService,
-    private dateService: NbDateService<Date>
+    private toasterService: NbToastrService
   ) {}
 
   async ngOnInit() {
-    let today = new Date();
-    let range: NbCalendarRange<Date> = {
-      start: this.dateService.getMonthStart(today),
-      end: this.dateService.getMonthEnd(today)
-    };
-
-    this.periodPicker.range = range;
-    this.rangeFilter = range;
-    this.periodPickerInput.nativeElement.value = `${this.dateService.format(
-      range.start,
-      "d MMM yy"
-    )} - ${this.dateService.format(range.end, "d MMM yy")}`;
-
     this.table.setSettings(this.getTableSettings());
     this.filter();
 
@@ -109,7 +89,7 @@ export class TransactionsOverviewComponent implements OnInit {
       start: undefined,
       end: undefined
     };
-    if (this.rangeFilter.start && this.rangeFilter.end) {
+    if (this.rangeFilter && this.rangeFilter.start && this.rangeFilter.end) {
       range.start = this.rangeFilter.start;
       range.end = this.rangeFilter.end;
     }
@@ -127,8 +107,6 @@ export class TransactionsOverviewComponent implements OnInit {
       new Maybe(range.end),
       pageNumber
     );
-
-    console.log(pageNumber, this.transactionGroup);
 
     this.setTransactionList();
     this.table.totalPages = Math.ceil(

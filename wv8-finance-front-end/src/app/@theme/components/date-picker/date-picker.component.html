@@ -1,0 +1,13 @@
+<input
+  #datePickerInput
+  nbInput
+  fieldSize="small"
+  placeholder="Pick period"
+  fullWidth
+  [nbDatepicker]="datePicker"
+/>
+<nb-datepicker
+  #datePicker
+  [(date)]="date"
+  (dateChange)="onDateChange($event)"
+></nb-datepicker>

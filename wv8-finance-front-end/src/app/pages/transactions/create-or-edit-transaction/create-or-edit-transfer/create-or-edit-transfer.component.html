@@ -13,15 +13,10 @@
     <tr>
       <th>Date</th>
       <td>
-        <input
-          #datePickerInput
-          nbInput
-          fieldSize="small"
-          placeholder="Pick period"
-          fullWidth
-          [nbDatepicker]="datePicker"
-        />
-        <nb-datepicker #datePicker [(date)]="transaction.date"></nb-datepicker>
+        <date-picker
+          [date]="transaction.date"
+          (dateChange)="dateChanged($event)"
+        ></date-picker>
       </td>
     </tr>
     <tr>

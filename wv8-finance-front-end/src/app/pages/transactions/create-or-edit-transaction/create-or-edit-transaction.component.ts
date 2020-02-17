@@ -49,7 +49,6 @@ export class CreateOrEditTransactionComponent implements OnInit {
   ngOnInit() {
     if (this.transaction) {
       this.editing = true;
-      this.transaction = this.transaction.copy();
       this.header = `Editing transaction`;
     } else {
       this.transaction = new Transaction();
@@ -62,6 +61,8 @@ export class CreateOrEditTransactionComponent implements OnInit {
   }
 
   onTypeChange(selectedTab: NbTabComponent) {
+    if (this.editing) return;
+
     this.transaction.type = this.types[selectedTab.tabTitle];
 
     switch (this.transaction.type) {

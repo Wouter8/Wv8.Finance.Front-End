@@ -15,7 +15,9 @@ import {
   NbTooltipModule,
   NbCardModule,
   NbPopoverModule,
-  NbProgressBarModule
+  NbProgressBarModule,
+  NbDatepickerModule,
+  NbInputModule
 } from "@nebular/theme";
 import { NbEvaIconsModule } from "@nebular/eva-icons";
 import { NbSecurityModule } from "@nebular/security";
@@ -59,6 +61,8 @@ import { FormsModule } from "@angular/forms";
 import { TableTransactionTypeIconCellComponent } from "./components/table/table-transaction-type-icon-cell/table-transaction-type-icon-cell.component";
 import { AccountPickerComponent } from "./components/account-picker/account-picker.component";
 import { TableCategoryTypeIconCellComponent } from "./components/table/table-category-type-icon-cell/table-category-type-icon-cell.component";
+import { DatePickerComponent } from "./components/date-picker/date-picker.component";
+import { PeriodPickerComponent } from "./components/period-picker/period-picker.component";
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -77,7 +81,9 @@ const NB_MODULES = [
   Ng2SmartTableModule,
   NbTooltipModule,
   NbPopoverModule,
-  NbProgressBarModule
+  NbProgressBarModule,
+  NbDatepickerModule,
+  NbInputModule
 ];
 const COMPONENTS = [
   SwitcherComponent,
@@ -102,7 +108,9 @@ const COMPONENTS = [
   CategoryPickerComponent,
   TableTransactionTypeIconCellComponent,
   AccountPickerComponent,
-  TableCategoryTypeIconCellComponent
+  TableCategoryTypeIconCellComponent,
+  DatePickerComponent,
+  PeriodPickerComponent
 ];
 const PIPES = [
   CapitalizePipe,

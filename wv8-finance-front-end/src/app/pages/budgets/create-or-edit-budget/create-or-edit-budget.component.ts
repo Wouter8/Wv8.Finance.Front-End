@@ -22,12 +22,6 @@ export class CreateOrEditBudgetComponent implements OnInit {
   @ViewChild("stepper", { static: true })
   stepper: NbStepperComponent;
 
-  @ViewChild("periodPicker", { static: true })
-  periodPicker: NbRangepickerComponent<Date>;
-
-  @ViewChild("periodPickerInput", { static: true })
-  periodPickerInput: ElementRef<HTMLInputElement>;
-
   @Input()
   budget: Budget;
 
@@ -46,17 +40,7 @@ export class CreateOrEditBudgetComponent implements OnInit {
   ngOnInit() {
     if (this.budget) {
       this.editing = true;
-      this.budget = this.budget.copy();
       this.header = `Editing budget`;
-      let range: NbCalendarRange<Date> = {
-        start: this.budget.startDate,
-        end: this.budget.endDate
-      };
-      this.periodPicker.range = range;
-      this.periodPickerInput.nativeElement.value = `${this.dateService.format(
-        range.start,
-        "d MMM yy"
-      )} - ${this.dateService.format(range.end, "d MMM yy")}`;
     } else {
       this.budget = new Budget();
     }

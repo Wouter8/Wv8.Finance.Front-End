@@ -9,7 +9,7 @@
 
         <div class="header-filter">
           <div class="row">
-            <div class="col-sm-12 col-lg-6 col-xxxl-2">
+            <div class="col-sm-12 col-lg-6 col-xl-4 col-xxxl-2">
               <account-picker
                 placeholderText="Filter account"
                 [showResetOption]="true"
@@ -18,7 +18,7 @@
                 (accountChange)="filter()"
               ></account-picker>
             </div>
-            <div class="col-sm-12 col-lg-6 col-xxxl-2">
+            <div class="col-sm-12 col-lg-6 col-xl-4 col-xxxl-2">
               <category-picker
                 placeholderText="Filter category"
                 [showResetOption]="true"
@@ -26,18 +26,17 @@
                 (categoryChange)="filter()"
               ></category-picker>
             </div>
-            <div class="col-sm-12 col-lg-6 col-xxxl-2">
+            <div class="col-sm-12 col-lg-6 col-xl-4 col-xxxl-2">
               <input
                 nbInput
                 type="text"
                 [fieldSize]="'small'"
                 placeholder="Filter description"
-                class="text-center"
                 [(ngModel)]="descriptionFilter"
                 (keyup)="filter()"
               />
             </div>
-            <div class="col-sm-12 col-lg-6 col-xxxl-2">
+            <div class="col-sm-12 col-lg-6 col-xl-4 col-xxxl-2">
               <nb-select
                 placeholder="Filter type"
                 [(selected)]="typeFilter"
@@ -52,19 +51,10 @@
                 >
               </nb-select>
             </div>
-            <div class="col-sm-12 col-lg-6 col-xxxl-2">
-              <input
-                #periodPickerInput
-                nbInput
-                [fieldSize]="'small'"
-                placeholder="Filter period"
-                [nbDatepicker]="periodPicker"
-                class="period-picker-input"
-              />
-              <nb-rangepicker
-                #periodPicker
-                (rangeChange)="onSetPeriod($event)"
-              ></nb-rangepicker>
+            <div class="col-sm-12 col-lg-6 col-xl-4 col-xxxl-2">
+              <period-picker
+                (periodChanged)="onSetPeriod($event)"
+              ></period-picker>
             </div>
           </div>
         </div>
