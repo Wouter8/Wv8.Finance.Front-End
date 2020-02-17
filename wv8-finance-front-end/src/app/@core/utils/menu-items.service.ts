@@ -23,7 +23,19 @@ export class MenuItemsService {
     {
       title: "Transactions",
       icon: "swap",
-      link: "/transactions"
+      expanded: false,
+      children: [
+        {
+          title: "Overview",
+          icon: "list-outline",
+          link: "/transactions"
+        },
+        {
+          title: "Recurring transactions",
+          link: "/transactions/recurring",
+          icon: "clock-outline"
+        }
+      ]
     },
     {
       title: "Categories",

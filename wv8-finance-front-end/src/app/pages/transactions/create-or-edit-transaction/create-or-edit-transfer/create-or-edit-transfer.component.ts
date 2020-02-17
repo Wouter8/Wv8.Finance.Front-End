@@ -16,30 +16,16 @@ import { CategoryType } from "../../../../@core/enums/category-type";
   templateUrl: "./create-or-edit-transfer.component.html",
   styleUrls: ["./create-or-edit-transfer.component.scss"]
 })
-export class CreateOrEditTransferComponent implements OnInit, OnChanges {
-  @ViewChild("datePicker", { static: true })
-  datePicker: NbDatepicker<Date>;
-  @ViewChild("datePickerInput", { static: true })
-  datePickerInput: ElementRef<HTMLInputElement>;
-
+export class CreateOrEditTransferComponent implements OnInit {
   @Input() transaction: Transaction;
   @Input() editing: boolean;
-  @Input() date: Date;
 
-  constructor(private dateService: NbDateService<Date>) {}
+  constructor() {}
 
   ngOnInit() {}
 
-  ngOnChanges() {
-    this.datePicker.value = this.transaction.date;
-    this.datePickerInput.nativeElement.value = `${this.dateService.format(
-      this.transaction.date,
-      "d MMM yy"
-    )}`;
-  }
-
   dateChanged(date: Date) {
-    this.transaction.date = new Date(date.toISOString());
+    this.transaction.date = new Date(date);
   }
 
   setReceivingAccountId(id: number) {

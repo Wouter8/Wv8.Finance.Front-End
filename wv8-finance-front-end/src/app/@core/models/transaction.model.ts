@@ -51,20 +51,20 @@ export class Transaction {
 
     instance.id = this.id;
     instance.description = this.description;
-    instance.date = new Date(this.date.toISOString());
+    instance.date = new Date(this.date);
     instance.type = this.type;
     instance.amount = this.amount;
-    instance.categoryId = Maybe.deserialize(this.categoryId.serialize());
+    instance.categoryId = new Maybe(this.categoryId.valueOrElse(undefined));
     instance.category = this.category.map(c => c.copy());
     instance.accountId = this.accountId;
-    if (this.account) instance.account = this.account.copy();
-    instance.receivingAccountId = Maybe.deserialize(
-      this.receivingAccountId.serialize()
+    instance.account = this.account.copy();
+    instance.receivingAccountId = new Maybe(
+      this.receivingAccountId.valueOrElse(undefined)
     );
     instance.receivingAccount = this.receivingAccount.map(a => a.copy());
     instance.processed = this.processed;
-    instance.recurringTransactionId = Maybe.deserialize(
-      this.recurringTransactionId.serialize()
+    instance.recurringTransactionId = new Maybe(
+      this.recurringTransactionId.valueOrElse(undefined)
     );
 
     return instance;

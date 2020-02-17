@@ -48,7 +48,7 @@
     vertical-align: middle;
   }
 
-  .period-picker-input {
-    text-align: center;
+  [nbInput].size-small::placeholder {
+    font-size: 0.8125rem;
   }
 }

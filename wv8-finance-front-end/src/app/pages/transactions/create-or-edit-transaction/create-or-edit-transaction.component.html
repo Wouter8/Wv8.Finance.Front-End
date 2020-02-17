@@ -9,12 +9,7 @@
         [tabindex]="types.Expense"
         tabIcon="trending-down-outline"
       >
-        <create-or-edit-expense
-          *ngIf="transaction.type == types.Expense"
-          [transaction]="transaction"
-          [editing]="editing"
-          [date]="transaction.date"
-        >
+        <create-or-edit-expense [transaction]="transaction" [editing]="editing">
         </create-or-edit-expense>
       </nb-tab>
       <nb-tab
@@ -22,12 +17,7 @@
         [tabindex]="types.Income"
         tabIcon="trending-up-outline"
       >
-        <create-or-edit-income
-          *ngIf="transaction.type == types.Income"
-          [transaction]="transaction"
-          [editing]="editing"
-          [date]="transaction.date"
-        >
+        <create-or-edit-income [transaction]="transaction" [editing]="editing">
         </create-or-edit-income>
       </nb-tab>
       <nb-tab
@@ -36,10 +26,8 @@
         tabIcon="swap-outline"
       >
         <create-or-edit-transfer
-          *ngIf="transaction.type == types.Transfer"
           [transaction]="transaction"
           [editing]="editing"
-          [date]="transaction.date"
         >
         </create-or-edit-transfer>
       </nb-tab>

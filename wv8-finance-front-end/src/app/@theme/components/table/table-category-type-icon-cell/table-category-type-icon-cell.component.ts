@@ -18,7 +18,6 @@ export class TableCategoryTypeIconCellComponent implements OnInit, ViewCell {
   constructor() {}
 
   ngOnInit() {
-    console.log(this.value, this.rowData);
     this.tooltipText = CategoryType.getCategoryTypeString(this.value);
   }
 }

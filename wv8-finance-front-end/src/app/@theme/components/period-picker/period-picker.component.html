@@ -1,0 +1,13 @@
+<input
+  #periodPickerInput
+  nbInput
+  [fieldSize]="fieldSize"
+  placeholder="Filter period"
+  [nbDatepicker]="periodPicker"
+  class="period-picker-input"
+  [ngStyle]="{ 'text-align': textAlign }"
+/>
+<nb-rangepicker
+  #periodPicker
+  (rangeChange)="onSetPeriod($event)"
+></nb-rangepicker>

@@ -8,18 +8,10 @@
         </button>
 
         <div class="header-right">
-          <input
-            #periodPickerInput
-            nbInput
-            [fieldSize]="'small'"
-            placeholder="Pick period"
-            [nbDatepicker]="periodPicker"
-            class="period-picker-input"
-          />
-          <nb-rangepicker
-            #periodPicker
-            (rangeChange)="onSetPeriod($event)"
-          ></nb-rangepicker>
+          <period-picker
+            textAlign="center"
+            (periodChanged)="onSetPeriod($event)"
+          ></period-picker>
         </div>
       </nb-card-header>
 
