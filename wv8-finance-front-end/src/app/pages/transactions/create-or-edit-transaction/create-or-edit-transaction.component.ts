@@ -7,7 +7,8 @@ import {
   NbDateService,
   NbCalendarRange,
   NbDatepicker,
-  NbTabComponent
+  NbTabComponent,
+  NbTabsetComponent
 } from "@nebular/theme";
 import { Transaction } from "../../../@core/models/transaction.model";
 import { OverlappingType } from "../../../@core/enums/overlapping-type";
@@ -26,17 +27,21 @@ import { CategoryType } from "../../../@core/enums/category-type";
   styleUrls: ["./create-or-edit-transaction.component.scss"]
 })
 export class CreateOrEditTransactionComponent implements OnInit {
+  @ViewChild("expenseTab", { static: true })
+  expenseTab: NbTabComponent;
+  @ViewChild("incomeTab", { static: true })
+  incomeTab: NbTabComponent;
+  @ViewChild("transferTab", { static: true })
+  transferTab: NbTabComponent;
+
   @Input()
   transaction: Transaction;
 
   editing = false;
   header: string = "Creating transaction";
 
-  expenseIcon = { icon: "hand-holding", pack: "fas" };
-  incomeIcon = { icon: "hand-holding-usd", pack: "fas" };
-  transferIcon = { icon: "hands-helping", pack: "fas" };
-
-  types = TransactionType;
+  transactionTypes = TransactionType;
+  categoryTypes = CategoryType;
   categories: Category[];
 
   constructor(
@@ -50,6 +55,18 @@ export class CreateOrEditTransactionComponent implements OnInit {
     if (this.transaction) {
       this.editing = true;
       this.header = `Editing transaction`;
+
+      switch (this.transaction.type) {
+        case TransactionType.Expense:
+          this.expenseTab.active = true;
+          break;
+        case TransactionType.Income:
+          this.incomeTab.active = true;
+          break;
+        case TransactionType.Transfer:
+          this.transferTab.active = true;
+          break;
+      }
     } else {
       this.transaction = new Transaction();
       let today = new Date();
@@ -63,7 +80,7 @@ export class CreateOrEditTransactionComponent implements OnInit {
   onTypeChange(selectedTab: NbTabComponent) {
     if (this.editing) return;
 
-    this.transaction.type = this.types[selectedTab.tabTitle];
+    this.transaction.type = this.transactionTypes[selectedTab.tabTitle];
 
     switch (this.transaction.type) {
       case TransactionType.Expense:

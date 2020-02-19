@@ -20,10 +20,13 @@ import { TransactionComponent } from "./transaction/transaction.component";
 import { CreateOrEditTransactionComponent } from "./create-or-edit-transaction/create-or-edit-transaction.component";
 import { TransactionsRoutingModule } from "./transactions-routing.module";
 import { TransactionsComponent } from "./transactions.component";
-import { CreateOrEditExpenseComponent } from "./create-or-edit-transaction/create-or-edit-expense/create-or-edit-expense.component";
-import { CreateOrEditIncomeComponent } from "./create-or-edit-transaction/create-or-edit-income/create-or-edit-income.component";
+import { CreateOrEditNonTransferComponent } from "./create-or-edit-transaction/create-or-edit-income/create-or-edit-non-transfer.component";
 import { CreateOrEditTransferComponent } from "./create-or-edit-transaction/create-or-edit-transfer/create-or-edit-transfer.component";
 import { RecurringTransactionsOverviewComponent } from "./recurring-transactions/recurring-transactions-overview/recurring-transactions-overview.component";
+import { CreateOrEditRecurringTransactionComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-transaction.component";
+import { CreateOrEditRecurringNonTransferComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-income/create-or-edit-recurring-non-transfer.component";
+import { CreateOrEditRecurringTransferComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-transfer/create-or-edit-recurring-transfer.component";
+import { RecurringTransactionComponent } from "./recurring-transactions/recurring-transaction/recurring-transaction.component";
 @NgModule({
   imports: [
     TransactionsRoutingModule,
@@ -46,11 +49,17 @@ import { RecurringTransactionsOverviewComponent } from "./recurring-transactions
     TransactionsOverviewComponent,
     TransactionComponent,
     CreateOrEditTransactionComponent,
-    CreateOrEditExpenseComponent,
-    CreateOrEditIncomeComponent,
+    CreateOrEditNonTransferComponent,
     CreateOrEditTransferComponent,
-    RecurringTransactionsOverviewComponent
+    RecurringTransactionsOverviewComponent,
+    RecurringTransactionComponent,
+    CreateOrEditRecurringTransactionComponent,
+    CreateOrEditRecurringNonTransferComponent,
+    CreateOrEditRecurringTransferComponent
   ],
-  entryComponents: [CreateOrEditTransactionComponent]
+  entryComponents: [
+    CreateOrEditTransactionComponent,
+    CreateOrEditRecurringTransactionComponent
+  ]
 })
 export class TransactionsModule {}

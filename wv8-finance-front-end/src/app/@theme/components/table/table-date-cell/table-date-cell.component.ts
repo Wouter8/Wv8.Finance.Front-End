@@ -16,16 +16,18 @@ export class TableDateCellComponent implements OnInit, ViewCell {
   determineIsFuture: () => boolean;
   @Input()
   showFutureIcon: boolean = false;
+  @Input()
+  futureTooltipText: string = "Future";
 
-  isPast: boolean = false;
+  isFuture: boolean = false;
 
   constructor() {}
 
   ngOnInit() {
     var now = new Date();
     now.setHours(0, 0, 0, 0);
-    this.isPast = this.determineIsFuture
+    this.isFuture = this.determineIsFuture
       ? this.determineIsFuture()
-      : this.value < now;
+      : this.value > now;
   }
 }
