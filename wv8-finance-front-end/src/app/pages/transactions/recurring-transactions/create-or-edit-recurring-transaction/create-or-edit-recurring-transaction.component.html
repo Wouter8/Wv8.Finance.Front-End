@@ -10,12 +10,13 @@
         [tabindex]="transactionTypes.Expense"
         tabIcon="trending-down-outline"
       >
-        <create-or-edit-non-transfer
-          [transaction]="transaction"
+        <create-or-edit-recurring-non-transfer
+          [recurringTransaction]="recurringTransaction"
           [editing]="editing"
           [categoryType]="categoryTypes.Expense"
+          [(updateInstances)]="updateInstances"
         >
-        </create-or-edit-non-transfer>
+        </create-or-edit-recurring-non-transfer>
       </nb-tab>
       <nb-tab
         #incomeTab
@@ -23,12 +24,13 @@
         [tabindex]="transactionTypes.Income"
         tabIcon="trending-up-outline"
       >
-        <create-or-edit-non-transfer
-          [transaction]="transaction"
+        <create-or-edit-recurring-non-transfer
+          [recurringTransaction]="recurringTransaction"
           [editing]="editing"
           [categoryType]="categoryTypes.Income"
+          [(updateInstances)]="updateInstances"
         >
-        </create-or-edit-non-transfer>
+        </create-or-edit-recurring-non-transfer>
       </nb-tab>
       <nb-tab
         #transferTab
@@ -36,11 +38,12 @@
         [tabindex]="transactionTypes.Transfer"
         tabIcon="swap-outline"
       >
-        <create-or-edit-transfer
-          [transaction]="transaction"
+        <create-or-edit-recurring-transfer
+          [recurringTransaction]="recurringTransaction"
           [editing]="editing"
+          [(updateInstances)]="updateInstances"
         >
-        </create-or-edit-transfer>
+        </create-or-edit-recurring-transfer>
       </nb-tab>
     </nb-tabset>
   </nb-card-body>

@@ -1,3 +1,16 @@
-<p>
-  recurring-transactions-overview works!
-</p>
+<div class="row">
+  <div class="col-sm-12">
+    <nb-card>
+      <nb-card-header>
+        <span class="title">Recurring Transactions</span>
+        <button nbButton size="tiny" (click)="onClickAdd($event)">
+          <nb-icon icon="plus-outline"></nb-icon>
+        </button>
+      </nb-card-header>
+
+      <nb-card-body>
+        <wv8-table #table (select)="onSelect($event)"></wv8-table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

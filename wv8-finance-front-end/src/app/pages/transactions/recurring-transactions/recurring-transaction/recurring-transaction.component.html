@@ -1,0 +1,36 @@
+<div class="row" *ngIf="recurringTransaction">
+  <div class="col-sm-12">
+    <nb-card>
+      <nb-card-header>
+        <span>{{ recurringTransaction.description }}</span>
+        <button nbButton size="tiny" (click)="onEditClick()">
+          <nb-icon icon="edit-outline"></nb-icon>
+        </button>
+        <button
+          nbTooltip="Delete"
+          nbTooltipPlacement="right"
+          nbButton
+          size="tiny"
+          status="danger"
+          (click)="onDeleteClick()"
+        >
+          <nb-icon icon="trash-2-outline"></nb-icon>
+        </button>
+      </nb-card-header>
+      <nb-card-body>
+        <table>
+          <tbody>
+            <tr>
+              <th>Id</th>
+              <td>{{ recurringTransaction.id }}</td>
+            </tr>
+            <tr>
+              <th>Date</th>
+              <td>{{ recurringTransaction.startDate | date }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

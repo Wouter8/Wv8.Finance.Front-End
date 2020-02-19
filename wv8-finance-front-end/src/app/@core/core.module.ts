@@ -24,12 +24,15 @@ import { CategoryService } from "./services/category.service";
 import { BudgetService } from "./services/budget.service";
 import { TransactionData } from "./data/transaction";
 import { TransactionService } from "./services/transaction.service";
+import { RecurringTransactionService } from "./services/recurring-transaction.service";
+import { RecurringTransactionData } from "./data/recurring-transaction";
 
 const DATA_SERVICES = [
   { provide: AccountData, useClass: AccountService },
   { provide: CategoryData, useClass: CategoryService },
   { provide: BudgetData, useClass: BudgetService },
-  { provide: TransactionData, useClass: TransactionService }
+  { provide: TransactionData, useClass: TransactionService },
+  { provide: RecurringTransactionData, useClass: RecurringTransactionService }
 ];
 
 const UTIL_SERVICES = [AnalyticsService, MenuItemsService, HttpService];

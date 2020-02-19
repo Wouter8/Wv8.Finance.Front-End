@@ -3,14 +3,14 @@
  * Copyright Akveo. All Rights Reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule, LOCALE_ID } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { CoreModule } from './@core/core.module';
-import { ThemeModule } from './@theme/theme.module';
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NgModule, LOCALE_ID } from "@angular/core";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { CoreModule } from "./@core/core.module";
+import { ThemeModule } from "./@theme/theme.module";
+import { AppComponent } from "./app.component";
+import { AppRoutingModule } from "./app-routing.module";
 import {
   NbChatModule,
   NbDatepickerModule,
@@ -18,13 +18,13 @@ import {
   NbMenuModule,
   NbSidebarModule,
   NbToastrModule,
-  NbWindowModule,
-} from '@nebular/theme';
-import { registerLocaleData } from '@angular/common';
-import localeNl from '@angular/common/locales/nl';
+  NbWindowModule
+} from "@nebular/theme";
+import { registerLocaleData } from "@angular/common";
+import localeNl from "@angular/common/locales/nl";
+import { ErrorInterceptor } from "./@core/services/error.interceptor";
 
-
-registerLocaleData(localeNl, 'nl');
+registerLocaleData(localeNl, "nl");
 
 @NgModule({
   declarations: [AppComponent],
@@ -43,17 +43,21 @@ registerLocaleData(localeNl, 'nl');
     NbWindowModule.forRoot(),
     NbToastrModule.forRoot(),
     NbChatModule.forRoot({
-      messageGoogleMapKey: 'AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY',
+      messageGoogleMapKey: "AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY"
     }),
-    CoreModule.forRoot(),
+    CoreModule.forRoot()
   ],
   providers: [
     {
       provide: LOCALE_ID,
-      useValue: 'nl-NL'
+      useValue: "nl-NL"
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true
+    }
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule {}

@@ -75,7 +75,7 @@ export class TransactionsOverviewComponent implements OnInit {
       .onClose.subscribe(
         (data: { success: boolean; transaction: Transaction }) => {
           if (data.success) {
-            this.transactionGroup.transactions.push(data.transaction);
+            this.transactionGroup.transactions.unshift(data.transaction);
             this.setTransactionList();
 
             this.toasterService.success("", "Added transaction");

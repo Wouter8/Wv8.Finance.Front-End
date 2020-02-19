@@ -12,15 +12,14 @@ import { CategoryType } from "../../../../@core/enums/category-type";
 import { NbDatepicker, NbDateService } from "@nebular/theme";
 
 @Component({
-  selector: "create-or-edit-income",
-  templateUrl: "./create-or-edit-income.component.html",
-  styleUrls: ["./create-or-edit-income.component.scss"]
+  selector: "create-or-edit-non-transfer",
+  templateUrl: "./create-or-edit-non-transfer.component.html",
+  styleUrls: ["./create-or-edit-non-transfer.component.scss"]
 })
-export class CreateOrEditIncomeComponent implements OnInit {
+export class CreateOrEditNonTransferComponent implements OnInit {
   @Input() transaction: Transaction;
   @Input() editing: boolean;
-
-  types = CategoryType;
+  @Input() categoryType: CategoryType;
 
   constructor() {}
 

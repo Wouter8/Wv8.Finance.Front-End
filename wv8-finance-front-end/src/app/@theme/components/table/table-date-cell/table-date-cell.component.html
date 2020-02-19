@@ -1,9 +1,9 @@
 {{ value | date: "dd-MM-yyyy" }}
 <div class="icons-container">
   <nb-icon
-    nbTooltip="Future"
+    [nbTooltip]="futureTooltipText"
     nbTooltipPlacement="right"
-    *ngIf="showFutureIcon && !isPast"
+    *ngIf="showFutureIcon && isFuture"
     icon="calendar-outline"
     status="warning"
   ></nb-icon>

@@ -53,7 +53,7 @@
         <category-picker
           [disabled]="this.editing"
           [fullWidth]="true"
-          [typeFilter]="types.Income"
+          [typeFilter]="categoryType"
           [category]="transaction.categoryId.valueOrElse(undefined)"
           (categoryChange)="setCategoryId($event)"
         ></category-picker>

@@ -1,0 +1,122 @@
+<table>
+  <tbody>
+    <tr>
+      <th>Account</th>
+      <td>
+        <account-picker
+          [disabled]="this.editing"
+          [fullWidth]="true"
+          [(account)]="recurringTransaction.accountId"
+        ></account-picker>
+      </td>
+    </tr>
+    <tr>
+      <th>Start Date</th>
+      <td>
+        <date-picker
+          [date]="recurringTransaction.startDate"
+          (dateChange)="startDateChanged($event)"
+        ></date-picker>
+      </td>
+    </tr>
+    <tr>
+      <th>Description</th>
+      <td>
+        <input
+          type="text"
+          placeholder="Description"
+          nbInput
+          fieldSize="small"
+          fullWidth
+          [(ngModel)]="recurringTransaction.description"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th>Amount</th>
+      <td>
+        <input
+          type="number"
+          step="1"
+          min="0"
+          placeholder="100,00"
+          nbInput
+          fieldSize="small"
+          fullWidth
+          [(ngModel)]="recurringTransaction.amount"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th>Category</th>
+      <td>
+        <category-picker
+          [disabled]="this.editing"
+          [fullWidth]="true"
+          [typeFilter]="categoryType"
+          [category]="recurringTransaction.categoryId.valueOrElse(undefined)"
+          (categoryChange)="setCategoryId($event)"
+        ></category-picker>
+      </td>
+    </tr>
+    <tr>
+      <th>Interval</th>
+      <td>
+        <input
+          type="number"
+          step="1"
+          min="1"
+          placeholder="3"
+          nbInput
+          fieldSize="small"
+          fullWidth
+          [(ngModel)]="recurringTransaction.interval"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th>Unit</th>
+      <td>
+        <nb-select
+          placeholder="Unit"
+          [(selected)]="recurringTransaction.intervalUnit"
+          size="small"
+        >
+          <nb-option
+            *ngFor="let type of intervalUnits | enumToArray"
+            [value]="type.index"
+            >{{ type.name }}</nb-option
+          >
+        </nb-select>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        Needs confirmation
+        <nb-icon
+          icon="info-outline"
+          nbTooltip="Created transactions need to be manually confirmed before being processed. Check this when you don't know the exact date or amount."
+          status="info"
+        ></nb-icon>
+      </th>
+      <td>
+        <nb-checkbox
+          [value]="recurringTransaction.needsConfirmation"
+        ></nb-checkbox>
+      </td>
+    </tr>
+    <tr *ngIf="editing">
+      <th>
+        Re-add transactions
+        <nb-icon
+          icon="info-outline"
+          nbTooltip="Remove already created transactions and create them again with the updated recurring transaction"
+          status="info"
+        ></nb-icon>
+      </th>
+      <td>
+        <nb-checkbox [(value)]="updateInstances"></nb-checkbox>
+      </td>
+    </tr>
+  </tbody>
+</table>
