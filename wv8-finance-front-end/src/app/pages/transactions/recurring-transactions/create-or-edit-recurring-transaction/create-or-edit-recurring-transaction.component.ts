@@ -130,7 +130,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       );
       this.dialogRef.close({
         success: true,
-        transaction: this.recurringTransaction
+        recurringTransaction: this.recurringTransaction
       });
     } else {
       this.recurringTransaction = await this.recurringTransactionService.createRecurringTransaction(

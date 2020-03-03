@@ -57,6 +57,23 @@ export class CategoryPickerComponent implements OnInit, OnChanges {
 
     this.categories = this.categories.filter(c => c.parentCategoryId.isNone);
 
+    if (
+      categoryId &&
+      this.categories.map(c => c.id).indexOf(categoryId) < 0 &&
+      this.categories
+        .map(c => c.children)
+        .reduce((a, b) => a.concat(b))
+        .map(c => c.id)
+        .indexOf(categoryId) < 0
+    ) {
+      let obsoleteCategory = await this.categoryService.getCategory(categoryId);
+      this.categories.push(
+        obsoleteCategory.parentCategoryId.isNone
+          ? obsoleteCategory
+          : obsoleteCategory.parentCategory.value
+      );
+    }
+
     // Set after loading of categories so that option is properly selected.
     setTimeout(() => {
       this.categoryId = categoryId;

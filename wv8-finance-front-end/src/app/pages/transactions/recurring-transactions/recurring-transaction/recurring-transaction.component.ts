@@ -6,6 +6,7 @@ import { ConfirmDialogComponent } from "../../../../@theme/components/confirm-di
 import { CreateOrEditRecurringTransactionComponent } from "../create-or-edit-recurring-transaction/create-or-edit-recurring-transaction.component";
 import { RecurringTransaction } from "../../../../@core/models/recurring-transaction.model";
 import { RecurringTransactionData } from "../../../../@core/data/recurring-transaction";
+import { DeleteRecurringTransactionComponent } from "../delete-recurring-transaction/delete-recurring-transaction.component";
 
 @Component({
   selector: "recurring-transaction",
@@ -32,8 +33,8 @@ export class RecurringTransactionComponent implements OnInit {
             id.value
           );
         } catch {
-          this.toasterService.danger("", "transaction not found");
-          this.router.navigateByUrl("/transactions");
+          this.toasterService.danger("", "Recurring transaction not found");
+          this.router.navigateByUrl("/transactions/recurring");
         }
       }
     });
@@ -41,19 +42,20 @@ export class RecurringTransactionComponent implements OnInit {
 
   async onDeleteClick() {
     this.dialogService
-      .open(ConfirmDialogComponent, {
-        context: { body: `Delete transaction?` }
-      })
-      .onClose.subscribe(async (confirmed: boolean) => {
-        if (confirmed) {
-          await this.recurringTransactionService.deleteRecurringTransaction(
-            this.recurringTransaction.id
-          );
+      .open(DeleteRecurringTransactionComponent)
+      .onClose.subscribe(
+        async (data: { confirmed: boolean; deleteInstances: boolean }) => {
+          if (data.confirmed) {
+            await this.recurringTransactionService.deleteRecurringTransaction(
+              this.recurringTransaction.id,
+              data.deleteInstances
+            );
 
-          this.toasterService.success("", "Deleted transaction");
-          this.router.navigateByUrl("/transactions");
+            this.toasterService.success("", "Deleted recurring transaction");
+            this.router.navigateByUrl("/transactions/recurring");
+          }
         }
-      });
+      );
   }
 
   onEditClick() {
@@ -71,7 +73,7 @@ export class RecurringTransactionComponent implements OnInit {
           if (data.success) {
             this.recurringTransaction = data.recurringTransaction;
 
-            this.toasterService.success("", "Updated transaction");
+            this.toasterService.success("", "Updated recurring transaction");
           }
         }
       );

@@ -8,7 +8,7 @@ import {
   Output,
   EventEmitter
 } from "@angular/core";
-import { NbDatepicker, NbDateService } from "@nebular/theme";
+import { NbDatepicker, NbDateService, NbCalendarRange } from "@nebular/theme";
 import { Maybe } from "wv8.typescript.core";
 import { RecurringTransaction } from "../../../../../@core/models/recurring-transaction.model";
 import { IntervalUnit } from "../../../../../@core/enums/interval-unit";
@@ -31,12 +31,9 @@ export class CreateOrEditRecurringTransferComponent implements OnInit {
 
   ngOnInit() {}
 
-  startDateChanged(date: Date) {
-    this.recurringTransaction.startDate = new Date(date);
-  }
-
-  endDateChanged(date: Date) {
-    this.recurringTransaction.endDate = new Date(date);
+  periodChanged(period: NbCalendarRange<Date>) {
+    this.recurringTransaction.startDate = new Date(period.start);
+    this.recurringTransaction.endDate = new Date(period.end);
   }
 
   setReceivingAccountId(id: number) {

@@ -66,12 +66,12 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
       );
   }
 
-  private async loadData() {
+  async loadData() {
     this.recurringTransactions = await this.recurringTransactionService.getRecurringTransactionsByFilter(
       Maybe.none(),
       Maybe.none(),
       Maybe.none(),
-      false
+      this.loadFinished
     );
     this.setTransactionList();
   }
@@ -146,7 +146,7 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
           type: "text"
         },
         startDate: {
-          title: "Date",
+          title: "Start Date",
           type: "custom",
           renderComponent: TableDateCellComponent,
           sort: false,
@@ -155,7 +155,7 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
           }
         },
         endDate: {
-          title: "Date",
+          title: "End Date",
           type: "custom",
           renderComponent: TableDateCellComponent,
           sort: false,

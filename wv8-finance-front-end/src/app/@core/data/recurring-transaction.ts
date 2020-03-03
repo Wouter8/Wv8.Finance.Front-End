@@ -63,5 +63,8 @@ export abstract class RecurringTransactionData {
     intervalUnit: IntervalUnit,
     needsConfirmation: boolean
   ): Promise<RecurringTransaction>;
-  abstract deleteRecurringTransaction(id: number): Promise<void>;
+  abstract deleteRecurringTransaction(
+    id: number,
+    deleteInstances: boolean
+  ): Promise<void>;
 }
