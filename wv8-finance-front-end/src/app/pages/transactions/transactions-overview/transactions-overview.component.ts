@@ -219,7 +219,8 @@ export class TransactionsOverviewComponent implements OnInit {
           sort: false,
           onComponentInitFunction: (instance: TableDateCellComponent) => {
             instance.showFutureIcon = true;
-            instance.determineIsFuture = () => instance.rowData.processed;
+            instance.determineIsFuture = () => !instance.rowData.processed;
+            instance.futureTooltipText = "Unprocessed";
           }
         },
         amount: {

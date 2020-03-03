@@ -11,12 +11,13 @@
       </td>
     </tr>
     <tr>
-      <th>Start Date</th>
+      <th>Period</th>
       <td>
-        <date-picker
-          [date]="recurringTransaction.startDate"
-          (dateChange)="startDateChanged($event)"
-        ></date-picker>
+        <period-picker
+          [start]="recurringTransaction.startDate"
+          [end]="recurringTransaction.endDate"
+          (periodChanged)="periodChanged($event)"
+        ></period-picker>
       </td>
     </tr>
     <tr>
@@ -51,7 +52,6 @@
       <th>Receiver</th>
       <td>
         <account-picker
-          [disabled]="this.editing"
           [selectDefault]="false"
           [fullWidth]="true"
           [account]="
@@ -103,7 +103,7 @@
       </th>
       <td>
         <nb-checkbox
-          [value]="recurringTransaction.needsConfirmation"
+          [(checked)]="recurringTransaction.needsConfirmation"
         ></nb-checkbox>
       </td>
     </tr>
@@ -117,7 +117,7 @@
         ></nb-icon>
       </th>
       <td>
-        <nb-checkbox [(value)]="updateInstances"></nb-checkbox>
+        <nb-checkbox [(checked)]="updateInstances"></nb-checkbox>
       </td>
     </tr>
   </tbody>

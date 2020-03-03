@@ -128,9 +128,14 @@ export class RecurringTransactionService extends RecurringTransactionData {
       .toPromise();
   }
 
-  deleteRecurringTransaction(id: number): Promise<void> {
+  deleteRecurringTransaction(
+    id: number,
+    deleteInstances: boolean
+  ): Promise<void> {
     const url = `${RecurringTransactionService.BaseUrl}/${id}`;
 
-    return this.http.delete<void>(url).toPromise();
+    return this.http
+      .delete<void>(url, { deleteInstances })
+      .toPromise();
   }
 }
