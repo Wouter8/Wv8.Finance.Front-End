@@ -19,5 +19,7 @@ jobs:
     - run: npm install --ignore-scripts
       env:
         NODE_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_PAT }} 
+      working-directory: ${{env.workingDirectory}}
     # build angular production configuration
     - run: npm run ng build --prod
+      working-directory: ${{env.workingDirectory}}
