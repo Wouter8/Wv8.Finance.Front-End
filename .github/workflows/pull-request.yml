@@ -1,0 +1,23 @@
+name: CI
+
+on: [pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      workingDirectory: ./Wv8.Finance.Front-End
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        registry-url: 'https://pkgs.dev.azure.com/woutervanacht/_packaging/Wv8-NuGet-Feed/nuget/v3/index.json'
+    # Skip post-install scripts here, as a malicious
+    # script could steal NODE_AUTH_TOKEN.
+    - run: npm install --ignore-scripts
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_PAT }} 
+    # build angular production configuration
+    - run: npm run ng build --prod
