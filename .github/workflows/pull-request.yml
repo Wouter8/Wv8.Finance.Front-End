@@ -28,5 +28,5 @@ jobs:
     - run: npm rebuild && npm run prepare --if-present
       working-directory: ${{env.workingDirectory}}
     # build angular production configuration
-    - run: npm run ng build --prod
+    - run: npm run "build:prod"
       working-directory: ${{env.workingDirectory}}
