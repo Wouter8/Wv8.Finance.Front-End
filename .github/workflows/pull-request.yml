@@ -7,7 +7,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      workingDirectory: ./Wv8.Finance.Front-End
+      workingDirectory: ./wv8-finance-front-end
 
     steps:
     - uses: actions/checkout@v2
