@@ -18,7 +18,7 @@ import { FontAwesomeIcon } from "../../../@theme/components/font-awesome-icon-pi
 import { IIcon } from "../../../@core/data/icon";
 import { Category } from "../../../@core/models/category.model";
 import { CategoryData } from "../../../@core/data/category";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { CategoryType } from "../../../@core/enums/category-type";
 
 @Component({

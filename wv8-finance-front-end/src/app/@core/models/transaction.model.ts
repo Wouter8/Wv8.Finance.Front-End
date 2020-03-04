@@ -1,7 +1,7 @@
 import { ITransaction } from "../data/transaction";
 import { TransactionType } from "../enums/transaction-type.enum";
 import { Category } from "./category.model";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { Account } from "./account.model";
 
 export class Transaction {

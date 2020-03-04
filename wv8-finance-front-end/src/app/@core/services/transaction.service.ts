@@ -9,7 +9,7 @@ import { map } from "rxjs/operators";
 import { environment } from "../../../environments/environment";
 import { HttpService } from "../utils/http.service";
 import { Transaction } from "../models/transaction.model";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { TransactionType } from "../enums/transaction-type.enum";
 import { TransactionGroup } from "../models/transaction-group.model";
 

@@ -9,7 +9,7 @@ import {
   EventEmitter
 } from "@angular/core";
 import { NbDatepicker, NbDateService, NbCalendarRange } from "@nebular/theme";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { RecurringTransaction } from "../../../../../@core/models/recurring-transaction.model";
 import { IntervalUnit } from "../../../../../@core/enums/interval-unit";
 

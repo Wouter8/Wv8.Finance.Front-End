@@ -8,7 +8,7 @@ import {
 } from "@angular/core";
 import { NbDatepicker, NbDateService } from "@nebular/theme";
 import { Transaction } from "../../../../@core/models/transaction.model";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { CategoryType } from "../../../../@core/enums/category-type";
 
 @Component({

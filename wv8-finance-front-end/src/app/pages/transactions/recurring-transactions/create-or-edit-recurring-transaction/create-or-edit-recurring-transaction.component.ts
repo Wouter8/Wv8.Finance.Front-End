@@ -15,7 +15,7 @@ import { RecurringTransactionData } from "../../../../@core/data/recurring-trans
 import { TransactionType } from "../../../../@core/enums/transaction-type.enum";
 import { CategoryType } from "../../../../@core/enums/category-type";
 import { Category } from "../../../../@core/models/category.model";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 
 @Component({
   selector: "create-or-edit-recurring-transaction",

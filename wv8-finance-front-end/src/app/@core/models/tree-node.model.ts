@@ -1,5 +1,5 @@
 import { Category } from "./category.model";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 
 export interface TreeNode<T> {
   data: T;

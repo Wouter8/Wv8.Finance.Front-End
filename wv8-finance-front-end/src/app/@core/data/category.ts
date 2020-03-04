@@ -1,6 +1,6 @@
 import { Observable } from "rxjs";
 import { Category } from "../models/category.model";
-import { Maybe, IMaybe } from "wv8.typescript.core";
+import { Maybe, IMaybe } from "@wv8/typescript.core";
 import { CategoryType } from "../enums/category-type";
 import { IIcon } from "./icon";
 

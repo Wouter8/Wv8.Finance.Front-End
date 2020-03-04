@@ -10,7 +10,7 @@ import {
 } from "@nebular/theme";
 import { CreateOrEditTransactionComponent } from "../../create-or-edit-transaction/create-or-edit-transaction.component";
 import { Transaction } from "../../../../@core/models/transaction.model";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { TransactionType } from "../../../../@core/enums/transaction-type.enum";
 import { CustomTableSettings } from "../../../../@theme/components/table/table-settings.model";
 import { TableNameCellComponent } from "../../../../@theme/components/table/table-name-cell/table-name-cell.component";

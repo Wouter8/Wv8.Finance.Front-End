@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NbDialogService, NbToastrService } from "@nebular/theme";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { ConfirmDialogComponent } from "../../../../@theme/components/confirm-dialog/confirm-dialog.component";
 import { CreateOrEditRecurringTransactionComponent } from "../create-or-edit-recurring-transaction/create-or-edit-recurring-transaction.component";
 import { RecurringTransaction } from "../../../../@core/models/recurring-transaction.model";

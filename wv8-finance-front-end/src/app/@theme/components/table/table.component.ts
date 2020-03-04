@@ -12,7 +12,7 @@ import {
   Pager
 } from "./table-settings.model";
 import { LocalDataSource } from "ng2-smart-table";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { TablePagination } from "./table-pagination-model";
 
 @Component({

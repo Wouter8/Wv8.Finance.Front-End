@@ -10,7 +10,7 @@ import {
 } from "@nebular/theme";
 import { Router } from "@angular/router";
 import { CreateOrEditTransactionComponent } from "../create-or-edit-transaction/create-or-edit-transaction.component";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { CustomTableSettings } from "../../../@theme/components/table/table-settings.model";
 import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
 import { TableEuroCellComponent } from "../../../@theme/components/table/table-euro-cell/table-euro-cell.component";

@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { IAccount, AccountData } from "../../../@core/data/account";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { NbDialogService, NbToastrService } from "@nebular/theme";
 import { CreateOrEditAccountComponent } from "../create-or-edit-account/create-or-edit-account.component";
 import { Account } from "../../../@core/models/account.model";

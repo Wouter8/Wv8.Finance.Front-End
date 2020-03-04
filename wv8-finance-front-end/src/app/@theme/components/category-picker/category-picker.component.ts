@@ -8,7 +8,7 @@ import {
 } from "@angular/core";
 import { CategoryData } from "../../../@core/data/category";
 import { Category } from "../../../@core/models/category.model";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { CategoryType } from "../../../@core/enums/category-type";
 
 @Component({

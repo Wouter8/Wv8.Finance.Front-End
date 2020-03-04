@@ -1,7 +1,7 @@
 import { ITransaction } from "../data/transaction";
 import { TransactionType } from "../enums/transaction-type.enum";
 import { Category } from "./category.model";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { Account } from "./account.model";
 import { IRecurringTransaction } from "../data/recurring-transaction";
 import { IntervalUnit } from "../enums/interval-unit";

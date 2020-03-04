@@ -6,7 +6,7 @@ import { environment } from "../../../environments/environment";
 import { HttpService } from "../utils/http.service";
 import { Category } from "../models/category.model";
 import { CategoryType } from "../enums/category-type";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 
 @Injectable()
 export class CategoryService extends CategoryData {

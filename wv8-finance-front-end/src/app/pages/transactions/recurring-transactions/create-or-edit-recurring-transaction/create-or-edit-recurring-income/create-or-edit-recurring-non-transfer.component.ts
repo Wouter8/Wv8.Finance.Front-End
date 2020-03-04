@@ -8,7 +8,7 @@ import {
   Output,
   EventEmitter
 } from "@angular/core";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { NbDatepicker, NbDateService, NbCalendarRange } from "@nebular/theme";
 import { RecurringTransaction } from "../../../../../@core/models/recurring-transaction.model";
 import { CategoryType } from "../../../../../@core/enums/category-type";

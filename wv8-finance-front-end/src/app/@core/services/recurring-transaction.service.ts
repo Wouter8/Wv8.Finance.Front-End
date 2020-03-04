@@ -1,7 +1,7 @@
 import { of as observableOf, Observable, from } from "rxjs";
 import { Injectable } from "@angular/core";
 import { HttpService } from "../utils/http.service";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { environment } from "../../../environments/environment";
 import { RecurringTransaction } from "../models/recurring-transaction.model";
 import { map } from "rxjs/operators";

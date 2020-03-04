@@ -5,7 +5,7 @@ import { map } from "rxjs/operators";
 import { environment } from "../../../environments/environment";
 import { HttpService } from "../utils/http.service";
 import { Budget } from "../models/budget.model";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 
 @Injectable()
 export class BudgetService extends BudgetData {

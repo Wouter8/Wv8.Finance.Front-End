@@ -10,7 +10,7 @@ import {
 } from "@nebular/theme";
 import { Budget } from "../../../@core/models/budget.model";
 import { BudgetData } from "../../../@core/data/budget";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { OverlappingType } from "../../../@core/enums/overlapping-type";
 
 @Component({

@@ -13,7 +13,7 @@ import {
   NbPosition,
   NbPopoverDirective
 } from "@nebular/theme";
-import { Wv8Array } from "wv8.typescript.core";
+import { Wv8Array } from "@wv8/typescript.core";
 import { FontAwesomeIcon } from "./font-awesome-icon";
 import { ColorPickerComponent } from "../color-picker/color-picker.component";
 

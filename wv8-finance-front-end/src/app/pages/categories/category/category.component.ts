@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ICategory, CategoryData } from "../../../@core/data/category";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { NbDialogService, NbToastrService } from "@nebular/theme";
 import { CreateOrEditCategoryComponent } from "../create-or-edit-category/create-or-edit-category.component";
 import { Category } from "../../../@core/models/category.model";

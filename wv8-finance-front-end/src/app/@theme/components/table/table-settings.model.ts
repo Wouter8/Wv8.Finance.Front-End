@@ -1,4 +1,4 @@
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { TableBooleanCellComponent } from "./table-boolean-cell/table-boolean-cell.component";
 import { TableEuroCellComponent } from "./table-euro-cell/table-euro-cell.component";
 import { Type } from "@angular/core";

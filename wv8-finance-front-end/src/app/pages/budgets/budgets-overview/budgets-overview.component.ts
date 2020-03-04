@@ -19,7 +19,7 @@ import { Budget } from "../../../@core/models/budget.model";
 import { TableDateCellComponent } from "../../../@theme/components/table/table-date-cell/table-date-cell.component";
 import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
 import { TableProgressCellComponent } from "../../../@theme/components/table/table-progress-cell/table-progress-cell.component";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 
 @Component({
   selector: "budgets-overview",

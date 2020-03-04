@@ -1,5 +1,5 @@
 import { ICategory } from "../data/category";
-import { Maybe, IMaybe } from "wv8.typescript.core";
+import { Maybe, IMaybe } from "@wv8/typescript.core";
 import { CategoryType } from "../enums/category-type";
 import { IIcon } from "../data/icon";
 

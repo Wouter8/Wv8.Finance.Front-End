@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 import { NbDialogService, NbToastrService } from "@nebular/theme";
 import { ConfirmDialogComponent } from "../../../@theme/components/confirm-dialog/confirm-dialog.component";
 import { Budget } from "../../../@core/models/budget.model";

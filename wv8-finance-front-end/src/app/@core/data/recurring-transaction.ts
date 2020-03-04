@@ -2,7 +2,7 @@ import { Observable } from "rxjs";
 import { TransactionType } from "../enums/transaction-type.enum";
 import { ICategory } from "./category";
 import { IntervalUnit } from "../enums/interval-unit";
-import { Maybe, IMaybe } from "wv8.typescript.core";
+import { Maybe, IMaybe } from "@wv8/typescript.core";
 import { Transaction } from "../models/transaction.model";
 import { IAccount } from "./account";
 import { TransactionGroup } from "../models/transaction-group.model";

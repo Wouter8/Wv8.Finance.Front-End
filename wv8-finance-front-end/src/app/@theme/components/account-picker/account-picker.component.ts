@@ -8,7 +8,7 @@ import {
 } from "@angular/core";
 import { AccountData } from "../../../@core/data/account";
 import { Account } from "../../../@core/models/account.model";
-import { Maybe } from "wv8.typescript.core";
+import { Maybe } from "@wv8/typescript.core";
 
 @Component({
   selector: "account-picker",
