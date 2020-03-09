@@ -6,6 +6,7 @@ import { Maybe, IMaybe } from "@wv8/typescript.core";
 import { Transaction } from "../models/transaction.model";
 import { IAccount } from "./account";
 import { TransactionGroup } from "../models/transaction-group.model";
+import { IRecurringTransaction } from "./recurring-transaction";
 
 export interface ITransaction {
   id: number;
@@ -21,6 +22,9 @@ export interface ITransaction {
   receivingAccount: IMaybe<IAccount>;
   processed: boolean;
   recurringTransactionId: IMaybe<number>;
+  recurringTransaction: IMaybe<IRecurringTransaction>;
+  needsConfirmation: boolean;
+  isConfirmed: IMaybe<boolean>;
 }
 
 export interface ITransactionGroup {
@@ -63,6 +67,11 @@ export abstract class TransactionData {
     amount: number,
     categoryId: Maybe<number>,
     receivingAccountId: Maybe<number>
+  ): Promise<Transaction>;
+  abstract confirmTransaction(
+    id: number,
+    date: Date,
+    amount: number
   ): Promise<Transaction>;
   abstract deleteTransaction(id: number): Promise<void>;
 }

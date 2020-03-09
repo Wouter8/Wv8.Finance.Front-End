@@ -28,6 +28,7 @@ import { CreateOrEditRecurringNonTransferComponent } from "./recurring-transacti
 import { CreateOrEditRecurringTransferComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-transfer/create-or-edit-recurring-transfer.component";
 import { RecurringTransactionComponent } from "./recurring-transactions/recurring-transaction/recurring-transaction.component";
 import { DeleteRecurringTransactionComponent } from "./recurring-transactions/delete-recurring-transaction/delete-recurring-transaction.component";
+import { ConfirmTransactionComponent } from "./confirm-transaction/confirm-transaction.component";
 @NgModule({
   imports: [
     TransactionsRoutingModule,
@@ -57,12 +58,14 @@ import { DeleteRecurringTransactionComponent } from "./recurring-transactions/de
     CreateOrEditRecurringTransactionComponent,
     CreateOrEditRecurringNonTransferComponent,
     CreateOrEditRecurringTransferComponent,
-    DeleteRecurringTransactionComponent
+    DeleteRecurringTransactionComponent,
+    ConfirmTransactionComponent
   ],
   entryComponents: [
     CreateOrEditTransactionComponent,
     CreateOrEditRecurringTransactionComponent,
-    DeleteRecurringTransactionComponent
+    DeleteRecurringTransactionComponent,
+    ConfirmTransactionComponent
   ]
 })
 export class TransactionsModule {}

@@ -54,6 +54,8 @@
             </div>
             <div class="col-sm-12 col-lg-6 col-xl-4 col-xxxl-2">
               <period-picker
+                [start]="rangeFilter.start"
+                [end]="rangeFilter.end"
                 (periodChanged)="onSetPeriod($event)"
               ></period-picker>
             </div>
