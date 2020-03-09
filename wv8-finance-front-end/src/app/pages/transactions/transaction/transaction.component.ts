@@ -6,6 +6,7 @@ import { NbDialogService, NbToastrService } from "@nebular/theme";
 import { Maybe } from "@wv8/typescript.core";
 import { ConfirmDialogComponent } from "../../../@theme/components/confirm-dialog/confirm-dialog.component";
 import { CreateOrEditTransactionComponent } from "../create-or-edit-transaction/create-or-edit-transaction.component";
+import { ConfirmTransactionComponent } from "../confirm-transaction/confirm-transaction.component";
 
 @Component({
   selector: "transaction",
@@ -52,6 +53,22 @@ export class TransactionComponent implements OnInit {
           this.router.navigateByUrl("/transactions");
         }
       });
+  }
+
+  async onConfirmClick() {
+    this.dialogService
+      .open(ConfirmTransactionComponent, {
+        context: { transaction: this.transaction.copy() }
+      })
+      .onClose.subscribe(
+        (data: { success: boolean; transaction: Transaction }) => {
+          if (data.success) {
+            this.transaction = data.transaction;
+
+            this.toasterService.success("", "Confirmed transaction");
+          }
+        }
+      );
   }
 
   onEditClick() {

@@ -3,6 +3,7 @@ import { TransactionType } from "../enums/transaction-type.enum";
 import { Category } from "./category.model";
 import { Maybe } from "@wv8/typescript.core";
 import { Account } from "./account.model";
+import { RecurringTransaction } from "./recurring-transaction.model";
 
 export class Transaction {
   id: number;
@@ -18,6 +19,9 @@ export class Transaction {
   receivingAccount: Maybe<Account> = Maybe.none();
   processed: boolean;
   recurringTransactionId: Maybe<number> = Maybe.none();
+  recurringTransaction: Maybe<RecurringTransaction> = Maybe.none();
+  needsConfirmation: boolean;
+  isConfirmed: Maybe<boolean> = Maybe.none();
 
   public static fromDto(dto: ITransaction): Transaction {
     let instance = new Transaction();
@@ -42,6 +46,11 @@ export class Transaction {
     instance.recurringTransactionId = Maybe.deserialize(
       dto.recurringTransactionId
     );
+    instance.needsConfirmation = dto.needsConfirmation;
+    instance.isConfirmed = Maybe.deserialize(dto.isConfirmed);
+    instance.recurringTransaction = Maybe.deserialize(
+      dto.recurringTransaction
+    ).map(rt => RecurringTransaction.fromDto(rt));
 
     return instance;
   }
@@ -66,6 +75,11 @@ export class Transaction {
     instance.recurringTransactionId = new Maybe(
       this.recurringTransactionId.valueOrElse(undefined)
     );
+    instance.recurringTransaction = this.recurringTransaction.map(rt =>
+      rt.copy()
+    );
+    instance.needsConfirmation = this.needsConfirmation;
+    instance.isConfirmed = new Maybe(this.isConfirmed.valueOrElse(undefined));
 
     return instance;
   }

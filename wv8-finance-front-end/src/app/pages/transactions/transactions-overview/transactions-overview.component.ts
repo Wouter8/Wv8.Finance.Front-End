@@ -55,11 +55,17 @@ export class TransactionsOverviewComponent implements OnInit {
     private accountService: AccountData,
     private router: Router,
     private dialogService: NbDialogService,
-    private toasterService: NbToastrService
+    private toasterService: NbToastrService,
+    private dateService: NbDateService<Date>
   ) {}
 
   async ngOnInit() {
     this.table.setSettings(this.getTableSettings());
+    let today = new Date();
+    this.rangeFilter = {
+      start: this.dateService.addDay(today, -21),
+      end: this.dateService.addDay(today, 7)
+    };
     this.filter();
 
     this.accounts = await this.accountService.getAccounts(true);

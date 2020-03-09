@@ -7,6 +7,19 @@
           <nb-icon icon="edit-outline"></nb-icon>
         </button>
         <button
+          *ngIf="
+            transaction.needsConfirmation && !transaction.isConfirmed.value
+          "
+          nbTooltip="Confirm"
+          nbTooltipPlacement="right"
+          nbButton
+          size="tiny"
+          status="warning"
+          (click)="onConfirmClick()"
+        >
+          <nb-icon icon="checkmark-outline"></nb-icon>
+        </button>
+        <button
           nbTooltip="Delete"
           nbTooltipPlacement="right"
           nbButton

@@ -107,6 +107,23 @@ export class TransactionService extends TransactionData {
       .toPromise();
   }
 
+  confirmTransaction(
+    id: number,
+    date: Date,
+    amount: number
+  ): Promise<Transaction> {
+    const url = `${TransactionService.BaseUrl}/${id}/confirm`;
+
+    return this.http
+      .put<ITransaction>(url, {
+        id,
+        date: date.toISOString(),
+        amount
+      })
+      .pipe(map(transaction => Transaction.fromDto(transaction)))
+      .toPromise();
+  }
+
   deleteTransaction(id: number): Promise<void> {
     const url = `${TransactionService.BaseUrl}/${id}`;
 

@@ -1,0 +1,51 @@
+<nb-card>
+  <nb-card-header>
+    Confirm transaction
+  </nb-card-header>
+  <nb-card-body>
+    <table>
+      <tbody>
+        <tr>
+          <th>Date</th>
+          <td>
+            <date-picker
+              [date]="transaction.date"
+              (dateChange)="dateChanged($event)"
+            ></date-picker>
+          </td>
+        </tr>
+        <tr>
+          <th>Amount</th>
+          <td>
+            <input
+              type="number"
+              step="1"
+              min="0"
+              placeholder="100,00"
+              nbInput
+              fieldSize="small"
+              fullWidth
+              [(ngModel)]="transaction.amount"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+  <nb-card-footer class="text-center">
+    <div class="row">
+      <div class="col-sm-6">
+        <button class="cancel" nbButton status="danger" (click)="cancel()">
+          Cancel
+          <nb-icon icon="close-outline"></nb-icon>
+        </button>
+      </div>
+      <div class="col-sm-6">
+        <button nbButton status="success" (click)="submit()">
+          Submit
+          <nb-icon icon="save-outline"></nb-icon>
+        </button>
+      </div>
+    </div>
+  </nb-card-footer>
+</nb-card>
