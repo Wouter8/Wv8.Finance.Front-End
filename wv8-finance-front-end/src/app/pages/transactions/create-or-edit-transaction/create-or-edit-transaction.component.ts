@@ -130,7 +130,8 @@ export class CreateOrEditTransactionComponent implements OnInit {
         this.transaction.date,
         amount,
         this.transaction.categoryId,
-        this.transaction.receivingAccountId
+        this.transaction.receivingAccountId,
+        this.transaction.needsConfirmation
       );
       this.dialogRef.close({ success: true, transaction: this.transaction });
     }

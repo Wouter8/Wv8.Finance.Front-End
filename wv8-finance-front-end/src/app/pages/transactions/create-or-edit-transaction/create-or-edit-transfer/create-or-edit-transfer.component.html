@@ -59,5 +59,21 @@
         ></account-picker>
       </td>
     </tr>
+    <tr>
+      <th>
+        Needs confirmation
+        <nb-icon
+          icon="info-outline"
+          nbTooltip="Check this if you don't know the exact date or amount."
+          status="info"
+        ></nb-icon>
+      </th>
+      <td>
+        <nb-checkbox
+          [disabled]="this.editing"
+          [(checked)]="transaction.needsConfirmation"
+        ></nb-checkbox>
+      </td>
+    </tr>
   </tbody>
 </table>

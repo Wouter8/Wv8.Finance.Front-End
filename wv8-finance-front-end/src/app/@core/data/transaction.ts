@@ -66,7 +66,8 @@ export abstract class TransactionData {
     date: Date,
     amount: number,
     categoryId: Maybe<number>,
-    receivingAccountId: Maybe<number>
+    receivingAccountId: Maybe<number>,
+    needsConfirmation: boolean
   ): Promise<Transaction>;
   abstract confirmTransaction(
     id: number,

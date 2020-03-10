@@ -89,7 +89,8 @@ export class TransactionService extends TransactionData {
     date: Date,
     amount: number,
     categoryId: Maybe<number>,
-    receivingAccountId: Maybe<number>
+    receivingAccountId: Maybe<number>,
+    needsConfirmation: boolean
   ): Promise<Transaction> {
     const url = `${TransactionService.BaseUrl}`;
 
@@ -101,7 +102,8 @@ export class TransactionService extends TransactionData {
         date: date.toISOString(),
         amount,
         categoryId: categoryId.asQueryParam(),
-        receivingAccountId: receivingAccountId.asQueryParam()
+        receivingAccountId: receivingAccountId.asQueryParam(),
+        needsConfirmation
       })
       .pipe(map(transaction => Transaction.fromDto(transaction)))
       .toPromise();
