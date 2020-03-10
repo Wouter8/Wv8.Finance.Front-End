@@ -20,7 +20,7 @@ export class Transaction {
   processed: boolean;
   recurringTransactionId: Maybe<number> = Maybe.none();
   recurringTransaction: Maybe<RecurringTransaction> = Maybe.none();
-  needsConfirmation: boolean;
+  needsConfirmation: boolean = false;
   isConfirmed: Maybe<boolean> = Maybe.none();
 
   public static fromDto(dto: ITransaction): Transaction {

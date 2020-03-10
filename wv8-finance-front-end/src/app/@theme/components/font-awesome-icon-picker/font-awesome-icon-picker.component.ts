@@ -99,16 +99,24 @@ export class FontAwesomeIconPickerComponent implements OnInit {
 
   filterIcons() {
     let fasIconsLength = this.fasIcons.filter(
-      i => this.filter.length == 0 || i.indexOf(this.filter) >= 0
+      i => this.filter.length == 0 || i.indexOf(this.filter.toLowerCase()) >= 0
     ).length;
     let farIconsLength = this.farIcons.filter(
-      i => this.filter.length == 0 || i.indexOf(this.filter) >= 0
+      i => this.filter.length == 0 || i.indexOf(this.filter.toLowerCase()) >= 0
+    ).length;
+    let fabIconsLength = this.fabIcons.filter(
+      i => this.filter.length == 0 || i.indexOf(this.filter.toLowerCase()) >= 0
     ).length;
 
     this.totalPages = Math.max(
       1,
-      Math.ceil((fasIconsLength + farIconsLength) / this.pageSize)
+      Math.ceil(
+        (fasIconsLength + farIconsLength + fabIconsLength) / this.pageSize
+      )
     );
+
+    // Reset so current page is never higher than total pages.
+    this.currentPage = 1;
 
     this.setIconsForPage();
   }
@@ -120,46 +128,35 @@ export class FontAwesomeIconPickerComponent implements OnInit {
 
     // Clone arrays because slice removes elements
     let fasIcons = this.fasIcons
-      .filter(i => this.filter.length == 0 || i.indexOf(this.filter) >= 0)
-      .slice();
-    let farIcons = this.farIcons
-      .filter(i => this.filter.length == 0 || i.indexOf(this.filter) >= 0)
-      .slice();
-
-    if (endIndex <= fasIcons.length) {
-      this.iconsForPage = fasIcons.splice(startIndex, this.pageSize).map(i => {
+      .filter(
+        i =>
+          this.filter.length == 0 || i.indexOf(this.filter.toLowerCase()) >= 0
+      )
+      .slice()
+      .map(i => {
         return { icon: i, iconPack: "fas" };
       });
-
-      return;
-    }
-
-    if (startIndex < fasIcons.length && endIndex > fasIcons.length) {
-      let farLength = endIndex - fasIcons.length;
-      let fas: FontAwesomeIcon[] = fasIcons
-        .splice(startIndex, this.pageSize)
-        .map(i => {
-          return { icon: i, iconPack: "fas" };
-        });
-      let far: FontAwesomeIcon[] = farIcons.splice(0, farLength).map(i => {
+    let farIcons = this.farIcons
+      .filter(
+        i =>
+          this.filter.length == 0 || i.indexOf(this.filter.toLowerCase()) >= 0
+      )
+      .slice()
+      .map(i => {
         return { icon: i, iconPack: "far" };
       });
-      this.iconsForPage = fas.concat(far);
+    let fabIcons = this.fabIcons
+      .filter(
+        i =>
+          this.filter.length == 0 || i.indexOf(this.filter.toLowerCase()) >= 0
+      )
+      .slice()
+      .map(i => {
+        return { icon: i, iconPack: "fab" };
+      });
 
-      return;
-    }
-
-    if (startIndex >= fasIcons.length) {
-      this.iconsForPage = farIcons
-        .splice(startIndex - fasIcons.length, this.pageSize)
-        .map(i => {
-          return { icon: i, iconPack: "far" };
-        });
-
-      return;
-    }
-
-    this.iconsForPage = [];
+    let filteredIcons = [...fasIcons, ...farIcons, ...fabIcons];
+    this.iconsForPage = filteredIcons.splice(startIndex, this.pageSize);
   }
 
   cancel() {}
