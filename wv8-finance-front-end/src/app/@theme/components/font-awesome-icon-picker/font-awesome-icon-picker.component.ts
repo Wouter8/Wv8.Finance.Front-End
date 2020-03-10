@@ -99,16 +99,19 @@ export class FontAwesomeIconPickerComponent implements OnInit {
 
   filterIcons() {
     let fasIconsLength = this.fasIcons.filter(
-      i => this.filter.length == 0 || i.indexOf(this.filter) >= 0
+      i => this.filter.length == 0 || i.indexOf(this.filter.toLowerCase()) >= 0
     ).length;
     let farIconsLength = this.farIcons.filter(
-      i => this.filter.length == 0 || i.indexOf(this.filter) >= 0
+      i => this.filter.length == 0 || i.indexOf(this.filter.toLowerCase()) >= 0
     ).length;
 
     this.totalPages = Math.max(
       1,
       Math.ceil((fasIconsLength + farIconsLength) / this.pageSize)
     );
+
+    // Reset so current page is never higher than total pages.
+    this.currentPage = 1;
 
     this.setIconsForPage();
   }
@@ -120,10 +123,16 @@ export class FontAwesomeIconPickerComponent implements OnInit {
 
     // Clone arrays because slice removes elements
     let fasIcons = this.fasIcons
-      .filter(i => this.filter.length == 0 || i.indexOf(this.filter) >= 0)
+      .filter(
+        i =>
+          this.filter.length == 0 || i.indexOf(this.filter.toLowerCase()) >= 0
+      )
       .slice();
     let farIcons = this.farIcons
-      .filter(i => this.filter.length == 0 || i.indexOf(this.filter) >= 0)
+      .filter(
+        i =>
+          this.filter.length == 0 || i.indexOf(this.filter.toLowerCase()) >= 0
+      )
       .slice();
 
     if (endIndex <= fasIcons.length) {
