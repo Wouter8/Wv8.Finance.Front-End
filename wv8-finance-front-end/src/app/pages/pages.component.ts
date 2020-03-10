@@ -38,6 +38,10 @@ export class PagesComponent {
       packClass: "fas",
       iconClassPrefix: "fa"
     });
+    this.iconService.registerFontPack("fab", {
+      packClass: "fab",
+      iconClassPrefix: "fa"
+    });
     this.iconService.registerFontPack("ion", { iconClassPrefix: "ion" });
     // this.iconService.setDefaultPack('fas');
   }
