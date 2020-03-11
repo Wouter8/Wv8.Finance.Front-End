@@ -122,10 +122,8 @@ export class TransactionsOverviewComponent implements OnInit {
   }
 
   onSetPeriod(event: NbCalendarRange<Date>) {
-    if (event.start && event.end) {
-      this.rangeFilter = event;
-      this.filter();
-    }
+    this.rangeFilter = event;
+    this.filter();
   }
 
   private async loadData(

@@ -1,3 +1,17 @@
 [nbInput].size-small {
   width: 208px;
 }
+
+nb-icon {
+  position: relative;
+  left: 3px;
+  top: 3px;
+}
+
+nb-icon:hover {
+  color: #598bff;
+}
+
+.clear-container {
+  display: inline-block;
+}

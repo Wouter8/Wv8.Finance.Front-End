@@ -37,6 +37,8 @@ export class PeriodPickerComponent implements OnInit {
   textAlign: "left" | "center" | "right" = "left";
   @Input()
   fieldSize: "small" | "normal" = "small";
+  @Input()
+  showClearButton: boolean = false;
 
   @Output()
   periodChanged = new EventEmitter<NbCalendarRange<Date>>();
@@ -82,5 +84,12 @@ export class PeriodPickerComponent implements OnInit {
       this.range = event;
       this.periodChanged.emit(this.range);
     }
+  }
+
+  onClear() {
+    this.range = { start: undefined, end: undefined };
+    this.periodPicker.range = this.range;
+    this.periodPickerInput.nativeElement.value = "";
+    this.periodChanged.emit(this.range);
   }
 }

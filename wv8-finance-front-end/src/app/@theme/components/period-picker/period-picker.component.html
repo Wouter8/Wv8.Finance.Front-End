@@ -11,3 +11,12 @@
   #periodPicker
   (rangeChange)="onSetPeriod($event)"
 ></nb-rangepicker>
+<div class="clear-container" (click)="onClear()">
+  <nb-icon
+    nbTooltip="Clear"
+    nbTooltipPlacement="right"
+    *ngIf="showClearButton"
+    class="clickable"
+    icon="close-circle-outline"
+  ></nb-icon>
+</div>
