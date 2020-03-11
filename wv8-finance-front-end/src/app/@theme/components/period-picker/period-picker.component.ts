@@ -62,15 +62,22 @@ export class PeriodPickerComponent implements OnInit {
     }
 
     this.periodPicker.range = this.range;
-    this.periodPickerInput.nativeElement.value = `${this.dateService.format(
-      this.range.start,
-      "d MMM yy"
-    )} - ${this.dateService.format(this.range.end, "d MMM yy")}`;
-
     this.onSetPeriod(this.range);
   }
 
   onSetPeriod(event: NbCalendarRange<Date>) {
+    let inputText = "";
+    if (event.start) {
+      inputText += this.dateService.format(event.start, "d MMM yy");
+    }
+    if (event.end) {
+      inputText += " - ";
+      inputText += this.dateService.format(event.end, "d MMM yy");
+    }
+    setTimeout(() => {
+      this.periodPickerInput.nativeElement.value = inputText;
+    });
+
     if (event.start && event.end) {
       this.range = event;
       this.periodChanged.emit(this.range);
