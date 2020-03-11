@@ -72,4 +72,8 @@
   tbody > tr > th {
     padding-right: 15px;
   }
+
+  nb-tab:focus {
+    outline: none;
+  }
 }
