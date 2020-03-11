@@ -13,19 +13,12 @@ import {
   styleUrls: ["pages.component.scss"],
   template: `
     <ngx-layout>
-      <nb-menu
-        [items]="menuItemsService.menuItems"
-        [autoCollapse]="true"
-      ></nb-menu>
       <router-outlet></router-outlet>
     </ngx-layout>
   `
 })
 export class PagesComponent {
-  constructor(
-    public menuItemsService: MenuItemsService,
-    private iconService: NbIconLibraries
-  ) {
+  constructor(private iconService: NbIconLibraries) {
     this.iconService.registerFontPack("fa", {
       packClass: "fa",
       iconClassPrefix: "fa"

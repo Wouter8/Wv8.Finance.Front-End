@@ -14,11 +14,8 @@ import { Subject } from "rxjs";
   styleUrls: ["./header.component.scss"],
   templateUrl: "./header.component.html"
 })
-export class HeaderComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject<void>();
+export class HeaderComponent {
   hideMenuButton: boolean = false;
-
-  menuOpen = false;
 
   constructor(
     private sidebarService: NbSidebarService,
@@ -28,38 +25,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-
     const { sm, xl } = this.breakpointService.getBreakpointsMap();
     this.themeService
       .onMediaQueryChange()
-      .pipe(
-        map(([, currentBreakpoint]) => currentBreakpoint.width < xl),
-        takeUntil(this.destroy$)
-      )
+      .pipe(map(([, currentBreakpoint]) => currentBreakpoint.width < xl))
       .subscribe((isLessThanXl: boolean) => {
         this.hideMenuButton = !isLessThanXl;
       });
-
-    this.sidebarService.onCollapse().subscribe(() => this.menuOpen = false);
-    this.sidebarService.onExpand().subscribe(() => this.menuOpen = true);
-    this.sidebarService.onToggle().subscribe(() => this.menuOpen = !this.menuOpen);
-
-    this.menuService
-      .onItemSelect()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        if (document.documentElement.clientWidth < sm) {
-          this.sidebarService.collapse("menu-sidebar");
-        }
-        else if (document.documentElement.clientWidth < xl && this.menuOpen) {
-          this.toggleSidebar();
-        }
-      });
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   toggleSidebar(): boolean {
