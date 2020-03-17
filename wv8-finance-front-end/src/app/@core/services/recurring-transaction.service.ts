@@ -73,8 +73,10 @@ export class RecurringTransactionService extends RecurringTransactionData {
         id,
         accountId,
         description,
-        startDate: startDate.toDateString(),
-        endDate: endDate.toDateString(),
+        startDate: `${startDate.getMonth() +
+          1}/${startDate.getDate()}/${startDate.getFullYear()}`,
+        endDate: `${endDate.getMonth() +
+          1}/${endDate.getDate()}/${endDate.getFullYear()}`,
         amount,
         categoryId: categoryId.asQueryParam(),
         receivingAccountId: receivingAccountId.asQueryParam(),
@@ -111,8 +113,10 @@ export class RecurringTransactionService extends RecurringTransactionData {
         accountId,
         type,
         description,
-        startDate: startDate.toDateString(),
-        endDate: endDate.toDateString(),
+        startDate: `${startDate.getMonth() +
+          1}/${startDate.getDate()}/${startDate.getFullYear()}`,
+        endDate: `${endDate.getMonth() +
+          1}/${endDate.getDate()}/${endDate.getFullYear()}`,
         amount,
         categoryId: categoryId.asQueryParam(),
         receivingAccountId: receivingAccountId.asQueryParam(),

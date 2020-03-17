@@ -48,8 +48,12 @@ export class TransactionService extends TransactionData {
         accountId: accountId.asQueryParam(),
         description: description.asQueryParam(),
         categoryId: categoryId.asQueryParam(),
-        startDate: startDate.map(d => d.toDateString()).asQueryParam(),
-        endDate: endDate.map(d => d.toDateString()).asQueryParam(),
+        startDate: startDate
+          .map(d => `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`)
+          .asQueryParam(),
+        endDate: endDate
+          .map(d => `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`)
+          .asQueryParam(),
         skip,
         take
       })
@@ -73,7 +77,7 @@ export class TransactionService extends TransactionData {
         id,
         accountId,
         description,
-        date: date.toDateString(),
+        date: `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`,
         amount,
         categoryId: categoryId.asQueryParam(),
         receivingAccountId: receivingAccountId.asQueryParam()
@@ -99,7 +103,7 @@ export class TransactionService extends TransactionData {
         accountId,
         type,
         description,
-        date: date.toDateString(),
+        date: `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`,
         amount,
         categoryId: categoryId.asQueryParam(),
         receivingAccountId: receivingAccountId.asQueryParam(),
@@ -119,7 +123,7 @@ export class TransactionService extends TransactionData {
     return this.http
       .put<ITransaction>(url, {
         id,
-        date: date.toDateString(),
+        date: `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`,
         amount
       })
       .pipe(map(transaction => Transaction.fromDto(transaction)))

@@ -43,8 +43,12 @@ export class BudgetService extends BudgetData {
     return this.http
       .get<IBudget[]>(url, {
         categoryId: categoryId.asQueryParam(),
-        startDate: startDate.map(d => d.toDateString()).asQueryParam(),
-        endDate: endDate.map(d => d.toDateString()).asQueryParam()
+        startDate: startDate
+          .map(d => `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`)
+          .asQueryParam(),
+        endDate: endDate
+          .map(d => `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`)
+          .asQueryParam()
       })
       .pipe(map(budgets => budgets.map(a => Budget.fromDto(a))))
       .toPromise();
@@ -61,8 +65,10 @@ export class BudgetService extends BudgetData {
     return this.http
       .put<IBudget>(url, {
         amount,
-        startDate: startDate.toDateString(),
-        endDate: endDate.toDateString()
+        startDate: `${startDate.getMonth() +
+          1}/${startDate.getDate()}/${startDate.getFullYear()}`,
+        endDate: `${endDate.getMonth() +
+          1}/${endDate.getDate()}/${endDate.getFullYear()}`
       })
       .pipe(map(budget => Budget.fromDto(budget)))
       .toPromise();
@@ -80,8 +86,10 @@ export class BudgetService extends BudgetData {
       .post<IBudget>(url, {
         categoryId,
         amount,
-        startDate: startDate.toDateString(),
-        endDate: endDate.toDateString()
+        startDate: `${startDate.getMonth() +
+          1}/${startDate.getDate()}/${startDate.getFullYear()}`,
+        endDate: `${endDate.getMonth() +
+          1}/${endDate.getDate()}/${endDate.getFullYear()}`
       })
       .pipe(map(budget => Budget.fromDto(budget)))
       .toPromise();
