@@ -33,6 +33,8 @@ export class ErrorInterceptor implements HttpInterceptor {
           duration: 6000
         });
 
+        console.error(err.error);
+
         return throwError(error);
       })
     );
