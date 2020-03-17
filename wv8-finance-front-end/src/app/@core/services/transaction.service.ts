@@ -48,8 +48,8 @@ export class TransactionService extends TransactionData {
         accountId: accountId.asQueryParam(),
         description: description.asQueryParam(),
         categoryId: categoryId.asQueryParam(),
-        startDate: startDate.map(d => d.toISOString()).asQueryParam(),
-        endDate: endDate.map(d => d.toISOString()).asQueryParam(),
+        startDate: startDate.map(d => d.toDateString()).asQueryParam(),
+        endDate: endDate.map(d => d.toDateString()).asQueryParam(),
         skip,
         take
       })
@@ -73,7 +73,7 @@ export class TransactionService extends TransactionData {
         id,
         accountId,
         description,
-        date: date.toISOString(),
+        date: date.toDateString(),
         amount,
         categoryId: categoryId.asQueryParam(),
         receivingAccountId: receivingAccountId.asQueryParam()
@@ -99,7 +99,7 @@ export class TransactionService extends TransactionData {
         accountId,
         type,
         description,
-        date: date.toISOString(),
+        date: date.toDateString(),
         amount,
         categoryId: categoryId.asQueryParam(),
         receivingAccountId: receivingAccountId.asQueryParam(),
@@ -119,7 +119,7 @@ export class TransactionService extends TransactionData {
     return this.http
       .put<ITransaction>(url, {
         id,
-        date: date.toISOString(),
+        date: date.toDateString(),
         amount
       })
       .pipe(map(transaction => Transaction.fromDto(transaction)))

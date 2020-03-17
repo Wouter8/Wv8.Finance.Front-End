@@ -43,8 +43,8 @@ export class BudgetService extends BudgetData {
     return this.http
       .get<IBudget[]>(url, {
         categoryId: categoryId.asQueryParam(),
-        startDate: startDate.map(d => d.toISOString()).asQueryParam(),
-        endDate: endDate.map(d => d.toISOString()).asQueryParam()
+        startDate: startDate.map(d => d.toDateString()).asQueryParam(),
+        endDate: endDate.map(d => d.toDateString()).asQueryParam()
       })
       .pipe(map(budgets => budgets.map(a => Budget.fromDto(a))))
       .toPromise();
@@ -61,8 +61,8 @@ export class BudgetService extends BudgetData {
     return this.http
       .put<IBudget>(url, {
         amount,
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString()
+        startDate: startDate.toDateString(),
+        endDate: endDate.toDateString()
       })
       .pipe(map(budget => Budget.fromDto(budget)))
       .toPromise();
@@ -80,8 +80,8 @@ export class BudgetService extends BudgetData {
       .post<IBudget>(url, {
         categoryId,
         amount,
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString()
+        startDate: startDate.toDateString(),
+        endDate: endDate.toDateString()
       })
       .pipe(map(budget => Budget.fromDto(budget)))
       .toPromise();
