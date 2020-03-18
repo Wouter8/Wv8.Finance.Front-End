@@ -51,6 +51,7 @@ export class CategoryService extends CategoryData {
     id: number,
     description: string,
     type: CategoryType,
+    expectedMonthlyAmount: Maybe<number>,
     parentCategoryId: Maybe<number>,
     iconPack: string,
     iconName: string,
@@ -62,6 +63,7 @@ export class CategoryService extends CategoryData {
       .put<ICategory>(url, {
         description,
         type,
+        expectedMonthlyAmount: expectedMonthlyAmount.asQueryParam(),
         parentCategoryId: parentCategoryId.asQueryParam(),
         iconPack,
         iconName,
@@ -74,6 +76,7 @@ export class CategoryService extends CategoryData {
   createCategory(
     description: string,
     type: CategoryType,
+    expectedMonthlyAmount: Maybe<number>,
     parentCategoryId: Maybe<number>,
     iconPack: string,
     iconName: string,
@@ -85,6 +88,7 @@ export class CategoryService extends CategoryData {
       .post<ICategory>(url, {
         description,
         type,
+        expectedMonthlyAmount: expectedMonthlyAmount.asQueryParam(),
         parentCategoryId: parentCategoryId.asQueryParam(),
         iconPack,
         iconName,

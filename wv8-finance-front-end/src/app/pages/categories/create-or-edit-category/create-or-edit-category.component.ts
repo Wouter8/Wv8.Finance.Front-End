@@ -36,9 +36,10 @@ export class CreateOrEditCategoryComponent implements OnInit {
   iconPickerContext: any;
 
   constructor(
+    private categoryService: CategoryData,
     protected dialogRef: NbDialogRef<CreateOrEditCategoryComponent>,
     private toasterService: NbToastrService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (this.category) {
@@ -55,20 +56,51 @@ export class CreateOrEditCategoryComponent implements OnInit {
     this.dialogRef.close({ success: false });
   }
 
-  submit() {
+  async submit() {
     let errors = this.validate();
     if (errors.length > 0) {
       this.toasterService.warning(errors[0], "Incorrect data");
       return;
     }
 
-    // TODO: Save to back-end here.
+    let expectedMonthlyAmount = this.category.expectedMonthlyAmount.map(a =>
+      this.category.type == CategoryType.Expense
+        ? -a
+        : a
+    );
 
-    this.dialogRef.close({ success: true, category: this.category });
+    if (this.editing) {
+      this.category = await this.categoryService.updateCategory(
+        this.category.id,
+        this.category.description,
+        this.category.type,
+        expectedMonthlyAmount,
+        this.category.parentCategoryId,
+        this.category.icon.pack,
+        this.category.icon.name,
+        this.category.icon.color,
+      );
+      this.dialogRef.close({ success: true, category: this.category });
+    } else {
+      this.category = await this.categoryService.createCategory(
+        this.category.description,
+        this.category.type,
+        expectedMonthlyAmount,
+        this.category.parentCategoryId,
+        this.category.icon.pack,
+        this.category.icon.name,
+        this.category.icon.color,
+      );
+      this.dialogRef.close({ success: true, category: this.category });
+    }
   }
 
   setParentCategory(categoryId: number) {
     this.category.parentCategoryId = new Maybe(categoryId);
+  }
+
+  setExpectedMonthlyAmount(amount: number) {
+    this.category.expectedMonthlyAmount = new Maybe(amount);
   }
 
   openIconChanger() {

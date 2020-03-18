@@ -71,15 +71,7 @@ export class CategoryComponent implements OnInit {
       .onClose.subscribe(
         async (data: { success: boolean; category: Category }) => {
           if (data && data.success) {
-            this.category = await this.categoryService.updateCategory(
-              data.category.id,
-              data.category.description,
-              data.category.type,
-              data.category.parentCategoryId,
-              data.category.icon.pack,
-              data.category.icon.name,
-              data.category.icon.color
-            );
+            this.category = data.category;
 
             this.toasterService.success("", "Updated category");
           }
