@@ -61,8 +61,6 @@ export class DashboardComponent implements OnInit {
             show: false,
             position: "center"
           },
-          max:
-            Math.max(...this.report.accounts.map(a => a.currentBalance)) * 2.05,
           areaStyle: {
             opacity: echarts.areaOpacity
           },
@@ -99,7 +97,7 @@ export class DashboardComponent implements OnInit {
         {
           type: "category",
           boundaryGap: false,
-          data: [...this.report.historicalBalance.keys()].map(d =>
+          data: Array.from(this.report.historicalBalance.keys()).map(d =>
             d.toISOString()
           ),
           axisTick: {
@@ -141,7 +139,7 @@ export class DashboardComponent implements OnInit {
           areaStyle: {
             opacity: echarts.areaOpacity
           },
-          data: [...this.report.historicalBalance.values()]
+          data: Array.from(this.report.historicalBalance.values())
         }
       ]
     };
