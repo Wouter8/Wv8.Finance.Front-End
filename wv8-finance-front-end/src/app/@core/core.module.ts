@@ -10,8 +10,6 @@ import { NbAuthModule, NbDummyAuthStrategy } from "@nebular/auth";
 import { NbSecurityModule, NbRoleProvider } from "@nebular/security";
 import { of as observableOf } from "rxjs";
 
-import { Ng2SmartTableModule } from "ng2-smart-table";
-
 import { throwIfAlreadyLoaded } from "./module-import-guard";
 import { AnalyticsService } from "./utils";
 import { MenuItemsService } from "./utils/menu-items.service";
@@ -26,13 +24,16 @@ import { TransactionData } from "./data/transaction";
 import { TransactionService } from "./services/transaction.service";
 import { RecurringTransactionService } from "./services/recurring-transaction.service";
 import { RecurringTransactionData } from "./data/recurring-transaction";
+import { ReportService } from "./services/report.service";
+import { ReportData } from "./data/report";
 
 const DATA_SERVICES = [
   { provide: AccountData, useClass: AccountService },
   { provide: CategoryData, useClass: CategoryService },
   { provide: BudgetData, useClass: BudgetService },
   { provide: TransactionData, useClass: TransactionService },
-  { provide: RecurringTransactionData, useClass: RecurringTransactionService }
+  { provide: RecurringTransactionData, useClass: RecurringTransactionService },
+  { provide: ReportData, useClass: ReportService }
 ];
 
 const UTIL_SERVICES = [AnalyticsService, MenuItemsService, HttpService];

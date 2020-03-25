@@ -66,11 +66,13 @@
       </nb-card-header>
 
       <nb-card-body>
-        <wv8-table
-          #table
-          (select)="onSelect($event)"
-          [onPageChange]="onPageChangeFunction"
-        ></wv8-table>
+        <transaction-table
+          *ngIf="transactionGroup"
+          [rowsPerPage]="rowsPerPage"
+          [totalRows]="transactionGroup.totalSearchResults"
+          [retrievalFunction]="retrievalFunction"
+          [transactions]="transactionGroup.transactions"
+        ></transaction-table>
       </nb-card-body>
     </nb-card>
   </div>

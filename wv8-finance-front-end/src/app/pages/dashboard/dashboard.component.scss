@@ -1,7 +1,15 @@
-@import '../../@theme/styles/themes';
+@import "../../@theme/styles/themes";
 
 @include nb-install-component() {
   .team-header {
     color: nb-theme(color-primary-800);
+  }
+}
+
+.chart-container {
+  height: 250x;
+
+  div {
+    height: 250px;
   }
 }

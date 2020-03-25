@@ -53,23 +53,15 @@ export class CategoriesOverviewComponent implements OnInit {
         context: { initialType: type }
       })
       .onClose.subscribe(
-        async (data: { success: boolean; category: Category }) => {
-          if (data && data.success) {
-            let category = await this.categoriesService.createCategory(
-              data.category.description,
-              data.category.type,
-              data.category.parentCategoryId,
-              data.category.icon.pack,
-              data.category.icon.name,
-              data.category.icon.color
-            );
-            if (category.parentCategoryId.isSome) {
+        (data: { success: boolean; category: Category }) => {
+          if (data.success) {
+            if (data.category.parentCategoryId.isSome) {
               let parent = this.categories.filter(
-                c => c.id == category.parentCategoryId.value
+                c => c.id == data.category.parentCategoryId.value
               )[0];
-              parent.children.push(category);
+              parent.children.push(data.category);
             } else {
-              this.categories.push(category);
+              this.categories.push(data.category);
             }
             this.setTableData();
 

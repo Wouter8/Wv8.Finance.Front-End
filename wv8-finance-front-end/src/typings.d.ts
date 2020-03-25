@@ -12,8 +12,6 @@ interface NodeModule {
 
 declare var tinymce: any;
 
-declare var echarts: any;
-
 interface Ng2SmartTable {
   grid: Ng2SmartTableGrid;
 }

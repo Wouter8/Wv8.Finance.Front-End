@@ -8,6 +8,7 @@ export interface ICategory {
   id: number;
   description: string;
   type: CategoryType;
+  expectedMonthlyAmount: IMaybe<number>;
   parentCategoryId: IMaybe<number>;
   parentCategory: IMaybe<ICategory>;
   isObsolete: boolean;
@@ -30,6 +31,7 @@ export abstract class CategoryData {
     id: number,
     description: string,
     type: CategoryType,
+    expectedMonthlyAmount: Maybe<number>,
     parentCategoryId: Maybe<number>,
     iconPack: string,
     iconName: string,
@@ -38,6 +40,7 @@ export abstract class CategoryData {
   abstract createCategory(
     description: string,
     type: CategoryType,
+    expectedMonthlyAmount: Maybe<number>,
     parentCategoryId: Maybe<number>,
     iconPack: string,
     iconName: string,

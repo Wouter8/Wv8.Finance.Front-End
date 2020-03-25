@@ -30,8 +30,7 @@ export class Transaction {
     instance.description = dto.description;
     instance.date = new Date(dto.date);
     instance.type = dto.type;
-    instance.amount =
-      dto.type == TransactionType.Expense ? -dto.amount : dto.amount;
+    instance.amount = Math.abs(dto.amount);
     instance.categoryId = Maybe.deserialize(dto.categoryId);
     instance.category = Maybe.deserialize(dto.category).map(c =>
       Category.fromDto(c)

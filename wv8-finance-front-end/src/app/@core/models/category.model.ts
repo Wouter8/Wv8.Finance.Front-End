@@ -7,6 +7,7 @@ export class Category {
   id: number;
   description: string = "";
   isObsolete: boolean = false;
+  expectedMonthlyAmount: Maybe<number> = Maybe.none();
   parentCategoryId: Maybe<number> = Maybe.none();
   parentCategory: Maybe<Category> = Maybe.none();
   type: CategoryType = CategoryType.Expense;
@@ -29,6 +30,7 @@ export class Category {
     instance.id = dto.id;
     instance.description = dto.description;
     instance.isObsolete = dto.isObsolete;
+    instance.expectedMonthlyAmount = Maybe.deserialize(dto.expectedMonthlyAmount).map(a => Math.abs(a));
     instance.parentCategoryId = Maybe.deserialize(dto.parentCategoryId);
     instance.parentCategory = Maybe.deserialize(dto.parentCategory).map(c =>
       Category.fromDto(c)
@@ -52,7 +54,8 @@ export class Category {
     instance.id = this.id;
     instance.description = this.description;
     instance.isObsolete = this.isObsolete;
-    instance.parentCategoryId = this.parentCategoryId.map(id => +id);
+    instance.expectedMonthlyAmount = this.expectedMonthlyAmount.map(a => a);
+    instance.parentCategoryId = this.parentCategoryId.map(id => id);
     instance.parentCategory = this.parentCategory.map(c => c.copy());
     instance.type = this.type;
     instance.icon = {

@@ -34,8 +34,21 @@
               fieldSize="small"
               fullWidth
               [(ngModel)]="category.description"
-              [disabled]="category.isObsolete"
               placeholder="Parties"
+            />
+          </td>
+        </tr>
+        <tr>
+          <th>Expected Monthly Amount</th>
+          <td>
+            <input
+              type="number"
+              nbInput
+              fieldSize="small"
+              fullWidth
+              [ngModel]="category.expectedMonthlyAmount.valueOrElse(undefined)"
+              (ngModelChange)="setExpectedMonthlyAmount($event)"
+              placeholder="350"
             />
           </td>
         </tr>
