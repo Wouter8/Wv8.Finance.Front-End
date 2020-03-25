@@ -1,1 +1,95 @@
-{{ env.production }}
+<div *ngIf="report">
+  <div class="row">
+    <div class="col-sm-12 col-xxxl-8">
+      <nb-card>
+        <nb-card-header>
+          Net worth
+          <div class="header-right">
+            <span>Total: {{ report.netWorth | currency: "EUR" }}</span>
+          </div>
+        </nb-card-header>
+        <nb-card-body>
+          <div class="row">
+            <div class="col-sm-12 col-xxxl-8">
+              <div class="chart-container">
+                <div
+                  echarts
+                  [options]="netWorthChartOptions"
+                  class="echart"
+                ></div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-xxxl-4">
+              <div class="chart-container">
+                <div
+                  echarts
+                  [options]="balanceChartOptions"
+                  class="echart"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-sm-12 col-xxxl-4">
+      <nb-card>
+        <nb-card-header>
+          Budgets
+        </nb-card-header>
+        <nb-card-body>
+          <budgets-table
+            [budgets]="report.budgets"
+            [showDates]="false"
+          ></budgets-table>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-sm-12 col-xl-6 col-xxxl-4">
+      <nb-card>
+        <nb-card-header>
+          Latest
+        </nb-card-header>
+        <nb-card-body>
+          <transaction-table
+            [showAccountColumn]="false"
+            [showDescriptionColumn]="false"
+            [transactions]="report.latestTransactions"
+          ></transaction-table>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-sm-12 col-xl-6 col-xxxl-4">
+      <nb-card>
+        <nb-card-header>
+          Upcoming
+        </nb-card-header>
+        <nb-card-body>
+          <transaction-table
+            [showAccountColumn]="false"
+            [showDescriptionColumn]="false"
+            [showDateColumnIcon]="false"
+            [italicOnUnprocessed]="false"
+            [transactions]="report.upcomingTransactions"
+          ></transaction-table>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-sm-12 col-xl-6 col-xxxl-4">
+      <nb-card>
+        <nb-card-header>
+          Unconfirmed
+        </nb-card-header>
+        <nb-card-body>
+          <transaction-table
+            [showAccountColumn]="false"
+            [showDescriptionColumn]="false"
+            [showDateColumnIcon]="false"
+            [italicOnUnprocessed]="false"
+            [transactions]="report.unconfirmedTransactions"
+          ></transaction-table>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+</div>

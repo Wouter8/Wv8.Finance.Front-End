@@ -27,9 +27,6 @@ import { Maybe } from "@wv8/typescript.core";
   styleUrls: ["./budgets-overview.component.scss"]
 })
 export class BudgetsOverviewComponent implements OnInit {
-  @ViewChild("table", { static: true })
-  table: TableComponent<Budget>;
-
   budgets: Budget[] = [];
 
   constructor(
@@ -39,13 +36,7 @@ export class BudgetsOverviewComponent implements OnInit {
     private toasterService: NbToastrService
   ) {}
 
-  ngOnInit() {
-    this.table.setSettings(this.getTableSettings());
-  }
-
-  onSelect(event: IBudget) {
-    this.router.navigateByUrl(`budgets/${event.id}`);
-  }
+  ngOnInit() {}
 
   onClickAdd(event: MouseEvent) {
     this.dialogService
@@ -76,60 +67,6 @@ export class BudgetsOverviewComponent implements OnInit {
   }
 
   private setBudgetList() {
-    this.table.setData(this.budgets);
-  }
-
-  private getTableSettings(): CustomTableSettings<Budget> {
-    return {
-      columns: {
-        description: {
-          title: "Description",
-          type: "custom",
-          renderComponent: TableNameCellComponent,
-          sort: false,
-
-          onComponentInitFunction: (
-            instance: TableNameCellComponent<Budget>
-          ) => {
-            instance.nameFunction = () =>
-              instance.typedData.category.getCompleteName();
-            instance.iconFunction = () => instance.typedData.category.icon;
-          }
-        },
-        amount: {
-          title: "Amount",
-          type: "custom",
-          renderComponent: TableEuroCellComponent,
-          sort: false
-        },
-        startDate: {
-          title: "Start Date",
-          type: "custom",
-          renderComponent: TableDateCellComponent,
-          sort: false
-        },
-        endDate: {
-          title: "End Date",
-          type: "custom",
-          renderComponent: TableDateCellComponent,
-          sort: false
-        },
-        spentPercentage: {
-          title: "Spent",
-          type: "custom",
-          renderComponent: TableProgressCellComponent,
-          sort: false,
-          onComponentInitFunction: (instance: TableProgressCellComponent) => {
-            instance.invertStatus = true;
-          }
-        }
-      },
-      hideFilter: true,
-      clickable: true,
-      rowClassFunction: (row: Budget) => {
-        let classes: string[] = [];
-        return classes;
-      }
-    };
+    this.budgets = [...this.budgets];
   }
 }

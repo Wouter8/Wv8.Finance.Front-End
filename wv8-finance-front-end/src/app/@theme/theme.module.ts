@@ -63,6 +63,8 @@ import { AccountPickerComponent } from "./components/account-picker/account-pick
 import { TableCategoryTypeIconCellComponent } from "./components/table/table-category-type-icon-cell/table-category-type-icon-cell.component";
 import { DatePickerComponent } from "./components/date-picker/date-picker.component";
 import { PeriodPickerComponent } from "./components/period-picker/period-picker.component";
+import { TransactionTableComponent } from "./components/transaction-table/transaction-table.component";
+import { BudgetsTableComponent } from "./components/budgets-table/budgets-table.component";
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -110,7 +112,9 @@ const COMPONENTS = [
   AccountPickerComponent,
   TableCategoryTypeIconCellComponent,
   DatePickerComponent,
-  PeriodPickerComponent
+  PeriodPickerComponent,
+  TransactionTableComponent,
+  BudgetsTableComponent
 ];
 const PIPES = [
   CapitalizePipe,

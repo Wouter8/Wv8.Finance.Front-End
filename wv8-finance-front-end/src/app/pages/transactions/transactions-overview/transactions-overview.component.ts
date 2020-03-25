@@ -32,9 +32,6 @@ import { TableTransactionTypeIconCellComponent } from "../../../@theme/component
   styleUrls: ["./transactions-overview.component.scss"]
 })
 export class TransactionsOverviewComponent implements OnInit {
-  @ViewChild("table", { static: true })
-  table: TableComponent<Transaction>;
-
   transactionGroup: TransactionGroup = undefined;
 
   accounts: Account[] = [];
@@ -48,7 +45,7 @@ export class TransactionsOverviewComponent implements OnInit {
 
   rowsPerPage: number = 15;
 
-  onPageChangeFunction = this.filter.bind(this);
+  retrievalFunction = this.filter.bind(this);
 
   constructor(
     private transactionservice: TransactionData,
@@ -60,7 +57,6 @@ export class TransactionsOverviewComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.table.setSettings(this.getTableSettings());
     let today = new Date();
     this.rangeFilter = {
       start: this.dateService.addDay(today, -21),
@@ -71,10 +67,6 @@ export class TransactionsOverviewComponent implements OnInit {
     this.accounts = await this.accountService.getAccounts(true);
   }
 
-  onSelect(event: ITransaction) {
-    this.router.navigateByUrl(`transactions/${event.id}`);
-  }
-
   onClickAdd(event: MouseEvent) {
     this.dialogService
       .open(CreateOrEditTransactionComponent)
@@ -82,7 +74,11 @@ export class TransactionsOverviewComponent implements OnInit {
         (data: { success: boolean; transaction: Transaction }) => {
           if (data.success) {
             this.transactionGroup.transactions.unshift(data.transaction);
-            this.setTransactionList();
+
+            // Reset to trigger changes in table component.
+            this.transactionGroup.transactions = [
+              ...this.transactionGroup.transactions
+            ];
 
             this.toasterService.success("", "Added transaction");
           }
@@ -113,12 +109,6 @@ export class TransactionsOverviewComponent implements OnInit {
       new Maybe(range.end),
       pageNumber
     );
-
-    this.setTransactionList();
-    this.table.totalPages = Math.ceil(
-      this.transactionGroup.totalSearchResults / this.rowsPerPage
-    );
-    this.table.currentPage = pageNumber;
   }
 
   onSetPeriod(event: NbCalendarRange<Date>) {
@@ -145,114 +135,5 @@ export class TransactionsOverviewComponent implements OnInit {
       (pageNumber - 1) * this.rowsPerPage,
       this.rowsPerPage
     );
-  }
-
-  private setTransactionList() {
-    this.table.setData(this.transactionGroup.transactions);
-  }
-
-  private getTableSettings(): CustomTableSettings<Transaction> {
-    return {
-      columns: {
-        accountId: {
-          title: "Account",
-          type: "custom",
-          renderComponent: TableNameCellComponent,
-          sort: false,
-          onComponentInitFunction: (
-            instance: TableNameCellComponent<Transaction>
-          ) => {
-            instance.nameFunction = () =>
-              instance.typedData.account.description;
-            instance.iconFunction = () => instance.typedData.account.icon;
-
-            instance.showDefaultIcon = false;
-            instance.iconSize = "small";
-          }
-        },
-        categoryId: {
-          title: "Category",
-          type: "custom",
-          renderComponent: TableNameCellComponent,
-          sort: false,
-          onComponentInitFunction: (
-            instance: TableNameCellComponent<Transaction>
-          ) => {
-            instance.nameFunction = () =>
-              instance.typedData.category
-                .map(c => c.getCompleteName())
-                .valueOrElse("-");
-            instance.iconFunction = () =>
-              instance.typedData.category
-                .map(c => c.icon)
-                .valueOrElse(undefined);
-
-            instance.showDefaultIcon = false;
-            instance.iconSize = "small";
-          }
-        },
-        receivingAccountId: {
-          title: "Receiver",
-          type: "custom",
-          renderComponent: TableNameCellComponent,
-          sort: false,
-          onComponentInitFunction: (
-            instance: TableNameCellComponent<Transaction>
-          ) => {
-            instance.nameFunction = () =>
-              instance.typedData.receivingAccount
-                .map(a => a.description)
-                .valueOrElse("-");
-            instance.iconFunction = () =>
-              instance.typedData.receivingAccount
-                .map(a => a.icon)
-                .valueOrElse(undefined);
-
-            instance.showDefaultIcon = false;
-            instance.iconSize = "small";
-          }
-        },
-        description: {
-          title: "Description",
-          type: "text"
-        },
-        date: {
-          title: "Date",
-          type: "custom",
-          renderComponent: TableDateCellComponent,
-          sort: false,
-          onComponentInitFunction: (instance: TableDateCellComponent) => {
-            instance.showFutureIcon = true;
-            instance.determineIsFuture = () => !instance.rowData.processed;
-            instance.futureTooltipText = "Unprocessed";
-          }
-        },
-        amount: {
-          title: "Amount",
-          type: "custom",
-          renderComponent: TableEuroCellComponent,
-          sort: false
-        },
-        type: {
-          title: "Type",
-          type: "custom",
-          renderComponent: TableTransactionTypeIconCellComponent,
-          sort: false
-        }
-      },
-      hideFilter: true,
-      clickable: true,
-      rowClassFunction: (row: Transaction) => {
-        let classes: string[] = [];
-
-        if (!row.processed) classes.push("obsolete");
-
-        return classes;
-      },
-      pager: {
-        display: true,
-        perPage: this.rowsPerPage
-      }
-    };
   }
 }
