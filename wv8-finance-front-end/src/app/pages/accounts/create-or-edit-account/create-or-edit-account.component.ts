@@ -24,7 +24,7 @@ export class CreateOrEditAccountComponent implements OnInit {
   editing = false;
   header: string = "Creating new account";
 
-  @ViewChild(NbPopoverDirective, { static: false })
+  @ViewChild(NbPopoverDirective)
   popover: NbPopoverDirective;
   iconPickerComponent = FontAwesomeIconPickerComponent;
   iconPickerContext: any;

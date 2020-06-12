@@ -38,7 +38,7 @@ export class FontAwesomeIconPickerComponent implements OnInit {
   @Input()
   onColorChange = (color: string) => null;
 
-  @ViewChild(NbPopoverDirective, { static: false }) popover: NbPopoverDirective;
+  @ViewChild(NbPopoverDirective) popover: NbPopoverDirective;
 
   filter = "";
 

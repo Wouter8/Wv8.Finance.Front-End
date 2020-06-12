@@ -39,4 +39,8 @@ export class CreateOrEditRecurringTransferComponent implements OnInit {
   setReceivingAccountId(id: number) {
     this.recurringTransaction.receivingAccountId = new Maybe(id);
   }
+
+  onUpdateInstanceChange(val: boolean) {
+    this.updateInstancesChange.emit(val);
+  }
 }

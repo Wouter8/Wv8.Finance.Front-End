@@ -117,7 +117,7 @@
         ></nb-icon>
       </th>
       <td>
-        <nb-checkbox [(checked)]="updateInstances"></nb-checkbox>
+        <nb-checkbox [checked]="updateInstances" (checkedChange)="onUpdateInstanceChange($event)"></nb-checkbox>
       </td>
     </tr>
   </tbody>

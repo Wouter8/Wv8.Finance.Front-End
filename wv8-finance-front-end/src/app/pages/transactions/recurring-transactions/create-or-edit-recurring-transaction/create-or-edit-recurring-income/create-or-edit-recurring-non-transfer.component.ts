@@ -42,7 +42,7 @@ export class CreateOrEditRecurringNonTransferComponent implements OnInit {
     this.recurringTransaction.categoryId = new Maybe(id);
   }
 
-  onUpdateInstanceChange($event) {
-    this.updateInstancesChange.emit();
+  onUpdateInstanceChange(val: boolean) {
+    this.updateInstancesChange.emit(val);
   }
 }
