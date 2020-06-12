@@ -30,7 +30,7 @@ export class CreateOrEditCategoryComponent implements OnInit {
   editing = false;
   header: string = "Creating new category";
 
-  @ViewChild(NbPopoverDirective, { static: false })
+  @ViewChild(NbPopoverDirective)
   popover: NbPopoverDirective;
   iconPickerComponent = FontAwesomeIconPickerComponent;
   iconPickerContext: any;
