@@ -47,7 +47,9 @@ export class TableComponent<T> implements OnInit {
     pager: {
       display: false
     },
-    tableClass: "table"
+    attr: {
+      class: "table",
+    }
   };
 
   constructor() {}

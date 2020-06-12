@@ -76,4 +76,14 @@
   nb-tab:focus {
     outline: none;
   }
+
+  button.add-button {
+    position: absolute;
+    padding: 5px !important;
+    top: 14px;
+  }
+
+  .cdk-overlay-pane {
+    transform: unset !important;
+  }
 }

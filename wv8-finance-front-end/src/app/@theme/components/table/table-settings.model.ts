@@ -29,7 +29,6 @@ export interface TableSettings {
   pager?: Pager;
   rowClassFunction?: Function;
   selectMode?: false | "single" | "multi";
-  tableClass: "table";
 }
 
 export interface Columns {

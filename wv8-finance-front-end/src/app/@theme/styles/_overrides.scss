@@ -9,47 +9,44 @@
     }
   }
 
-  [nbButton].size-tiny {
-    padding: 1px 6px !important;
-
-    nb-icon {
-      font-size: 16px;
-    }
-  }
-
-  ng2-smart-table table tr td {
+  .table tr td {
     padding: 0.5em 1em;
   }
 
-  ng2-smart-table table tr th,
-  ng2-smart-table table tr th a,
-  ng2-smart-table table tr.ng2-smart-titles th a.sort.asc,
-  ng2-smart-table table tr.ng2-smart-titles th a.sort.desc {
+  .table tr th,
+  .table tr th a,
+  .table tr.ng2-smart-titles th a.sort.asc,
+  .table tr.ng2-smart-titles th a.sort.desc {
     font-weight: bold;
   }
 
-  .nb-tree-grid-row:nth-child(2n):not(:hover) {
+  .nb-tree-grid-row:nth-child(2n):not(:hover),
+  .table tbody tr:nth-child(2n) {
     background-color: #f7f9fc;
   }
 
-  table.table tbody tr:nth-child(2n) {
-    background-color: #f7f9fc;
+  .table tbody tr:hover,
+  .table tbody tr.selected:hover {
+    background-color: #edf1f7 !important;
   }
 
-  table.table tbody tr:hover {
-    background: #edf1f7 !important;
+  .table tbody tr.selected {
+    background-color: unset !important;
   }
 
-  table.table tr td,
-  table.table tr th {
+  .table tr td,
+  .table tr th {
     position: relative;
-    padding: 0.875rem 1.25rem;
     border: 1px solid #edf1f7 !important;
     vertical-align: middle;
   }
 
   [nbInput].size-small::placeholder {
     font-size: 0.8125rem;
+  }
+
+  nb-option:focus {
+    background-color: unset;
   }
 
   .cdk-overlay-pane {

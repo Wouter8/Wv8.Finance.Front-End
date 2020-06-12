@@ -17,7 +17,8 @@ import {
   NbPopoverModule,
   NbProgressBarModule,
   NbDatepickerModule,
-  NbInputModule
+  NbInputModule,
+  NbAutocompleteModule
 } from "@nebular/theme";
 import { NbEvaIconsModule } from "@nebular/eva-icons";
 import { NbSecurityModule } from "@nebular/security";
@@ -85,7 +86,8 @@ const NB_MODULES = [
   NbPopoverModule,
   NbProgressBarModule,
   NbDatepickerModule,
-  NbInputModule
+  NbInputModule,
+  NbAutocompleteModule
 ];
 const COMPONENTS = [
   SwitcherComponent,
