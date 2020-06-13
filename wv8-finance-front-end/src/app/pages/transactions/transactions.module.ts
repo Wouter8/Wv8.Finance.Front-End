@@ -10,7 +10,8 @@ import {
   NbTooltipModule,
   NbDatepickerModule,
   NbTabsetModule,
-  NbSelectModule
+  NbSelectModule,
+  NbFormFieldModule
 } from "@nebular/theme";
 import { ThemeModule } from "../../@theme/theme.module";
 import { Ng2SmartTableModule } from "ng2-smart-table";
@@ -44,7 +45,8 @@ import { ConfirmTransactionComponent } from "./confirm-transaction/confirm-trans
     NbTooltipModule,
     NbDatepickerModule,
     NbTabsetModule,
-    NbSelectModule
+    NbSelectModule,
+    NbFormFieldModule
   ],
   declarations: [
     TransactionsComponent,

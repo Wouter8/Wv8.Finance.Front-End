@@ -41,15 +41,20 @@
         <tr>
           <th>Expected Monthly Amount</th>
           <td>
-            <input
-              type="number"
-              nbInput
-              fieldSize="small"
-              fullWidth
-              [ngModel]="category.expectedMonthlyAmount.valueOrElse(undefined)"
-              (ngModelChange)="setExpectedMonthlyAmount($event)"
-              placeholder="350"
-            />
+            <nb-form-field>
+              <nb-icon nbPrefix icon="euro-sign" pack="fas"></nb-icon>
+              <input
+                type="number"
+                nbInput
+                fieldSize="small"
+                fullWidth
+                [ngModel]="
+                  category.expectedMonthlyAmount.valueOrElse(undefined)
+                "
+                (ngModelChange)="setExpectedMonthlyAmount($event)"
+                placeholder="350"
+              />
+            </nb-form-field>
           </td>
         </tr>
         <tr>

@@ -32,16 +32,19 @@
             <tr>
               <th>Amount</th>
               <td>
-                <input
-                  type="number"
-                  step="1"
-                  placeholder="100,00"
-                  nbInput
-                  fieldSize="small"
-                  fullWidth
-                  [(ngModel)]="budget.amount"
-                  [disabled]="!budget.categoryId"
-                />
+                <nb-form-field>
+                  <nb-icon nbPrefix icon="euro-sign" pack="fas"></nb-icon>
+                  <input
+                    type="number"
+                    step="1"
+                    placeholder="100,00"
+                    nbInput
+                    fieldSize="small"
+                    fullWidth
+                    [(ngModel)]="budget.amount"
+                    [disabled]="!budget.categoryId"
+                  />
+                </nb-form-field>
               </td>
             </tr>
           </tbody>
