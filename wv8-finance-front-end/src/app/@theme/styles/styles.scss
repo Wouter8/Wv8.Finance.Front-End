@@ -83,7 +83,15 @@
     top: 14px;
   }
 
+  .header-button {
+    padding: 5px 10px !important;
+  }
+
   .cdk-overlay-pane {
     transform: unset !important;
+  }
+
+  nb-select {
+    width: 100%;
   }
 }

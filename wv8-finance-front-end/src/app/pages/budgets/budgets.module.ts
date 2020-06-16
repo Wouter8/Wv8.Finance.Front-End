@@ -9,7 +9,8 @@ import {
   NbInputModule,
   NbTooltipModule,
   NbDatepickerModule,
-  NbStepperModule
+  NbStepperModule,
+  NbFormFieldModule
 } from "@nebular/theme";
 import { ThemeModule } from "../../@theme/theme.module";
 import { Ng2SmartTableModule } from "ng2-smart-table";
@@ -33,7 +34,8 @@ import { BudgetsOverviewComponent } from "./budgets-overview/budgets-overview.co
     FormsModule,
     NbTooltipModule,
     NbDatepickerModule,
-    NbStepperModule
+    NbStepperModule,
+    NbFormFieldModule
   ],
   declarations: [
     BudgetsComponent,

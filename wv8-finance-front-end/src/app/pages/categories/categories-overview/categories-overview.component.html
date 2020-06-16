@@ -1,9 +1,9 @@
 <div class="row">
-  <div class="col-sm-12 col-xxxl-6">
+  <div class="col-sm-12">
     <nb-card>
       <nb-card-header>
-        <span class="title">Expense Categories</span>
-        <button nbButton class="add-button" size="small" status="primary" (click)="onClickAdd(categoryTypes.Expense, $event)">
+        <span class="title">Categories</span>
+        <button nbButton class="header-button" size="tiny" status="primary" (click)="onClickAdd($event)">
           <nb-icon icon="plus-outline"></nb-icon>
         </button>
 
@@ -15,7 +15,7 @@
       </nb-card-header>
 
       <nb-card-body>
-        <table class="table" [nbTreeGrid]="expenseCategoryGrid">
+        <table class="table" [nbTreeGrid]="categoryGrid">
           <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
           <tr
             nbTreeGridRow
@@ -59,100 +59,6 @@
                   [ngClass]="{ 'child-row': row.data.parentCategoryId.isSome }"
                 ></table-name-cell>
               </div>
-            </td>
-          </ng-container>
-          <ng-container
-            *ngFor="let column of otherColumns"
-            [nbTreeGridColumnDef]="column"
-          >
-            <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
-              {{ column | titlecase }}
-            </th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              <table-category-type-icon-cell
-                [value]="row.data[column]"
-                [rowData]="row.data"
-              ></table-category-type-icon-cell>
-            </td>
-          </ng-container>
-        </table>
-      </nb-card-body>
-    </nb-card>
-  </div>
-  <div class="col-sm-12 col-xxxl-6">
-    <nb-card>
-      <nb-card-header>
-        <span class="title">Income Categories</span>
-        <button nbButton class="add-button" size="small" status="primary" (click)="onClickAdd(categoryTypes.Income, $event)">
-          <nb-icon icon="plus-outline"></nb-icon>
-        </button>
-
-        <div class="header-right">
-          <nb-checkbox status="primary" (checkedChange)="loadData($event)"
-            >Show obsolete</nb-checkbox
-          >
-        </div>
-      </nb-card-header>
-
-      <nb-card-body>
-        <table class="table" [nbTreeGrid]="incomeCategoryGrid">
-          <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-          <tr
-            nbTreeGridRow
-            [clickToToggle]="false"
-            *nbTreeGridRowDef="let row; columns: allColumns"
-            class="clickable"
-            [ngClass]="{ obsolete: row.data.isObsolete }"
-            (click)="openCategory(row.data.id)"
-          ></tr>
-
-          <ng-container [nbTreeGridColumnDef]="this.firstColumn">
-            <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
-              {{ this.firstColumn | titlecase }}
-            </th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              <div class="toggle">
-                <div
-                  nbTreeGridRowToggle
-                  class="expand-toggle-container"
-                  *ngIf="row.hasChildren()"
-                  [attr.aria-label]="row.expanded ? 'collapse' : 'expand'"
-                >
-                  <nb-icon
-                    *ngIf="!row.expanded"
-                    icon="chevron-right"
-                    pack="fas"
-                    class="fa-fw"
-                  ></nb-icon>
-                  <nb-icon
-                    *ngIf="row.expanded"
-                    icon="chevron-down"
-                    pack="fas"
-                    class="fa-fw"
-                  ></nb-icon>
-                </div>
-              </div>
-              <div class="category-description-container">
-                <table-name-cell
-                  [value]="row.data[this.firstColumn]"
-                  [rowData]="row.data"
-                  [ngClass]="{ 'child-row': row.data.parentCategoryId.isSome }"
-                ></table-name-cell>
-              </div>
-            </td>
-          </ng-container>
-          <ng-container
-            *ngFor="let column of otherColumns"
-            [nbTreeGridColumnDef]="column"
-          >
-            <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
-              {{ column | titlecase }}
-            </th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              <table-category-type-icon-cell
-                [value]="row.data[column]"
-                [rowData]="row.data"
-              ></table-category-type-icon-cell>
             </td>
           </ng-container>
         </table>

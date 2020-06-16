@@ -6,7 +6,6 @@ import { NbDialogService, NbToastrService } from "@nebular/theme";
 import { CreateOrEditCategoryComponent } from "../create-or-edit-category/create-or-edit-category.component";
 import { Category } from "../../../@core/models/category.model";
 import { ConfirmDialogComponent } from "../../../@theme/components/confirm-dialog/confirm-dialog.component";
-import { CategoryType } from "../../../@core/enums/category-type";
 
 @Component({
   selector: "category",
@@ -77,9 +76,5 @@ export class CategoryComponent implements OnInit {
           }
         }
       );
-  }
-
-  getTypeString() {
-    return CategoryType.getCategoryTypeString(this.category.type);
   }
 }

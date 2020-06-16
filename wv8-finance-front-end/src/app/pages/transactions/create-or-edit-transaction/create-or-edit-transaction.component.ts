@@ -8,7 +8,7 @@ import {
   NbCalendarRange,
   NbDatepicker,
   NbTabComponent,
-  NbTabsetComponent
+  NbTabsetComponent,
 } from "@nebular/theme";
 import { Transaction } from "../../../@core/models/transaction.model";
 import { OverlappingType } from "../../../@core/enums/overlapping-type";
@@ -19,20 +19,17 @@ import { IIcon } from "../../../@core/data/icon";
 import { Category } from "../../../@core/models/category.model";
 import { CategoryData } from "../../../@core/data/category";
 import { Maybe } from "@wv8/typescript.core";
-import { CategoryType } from "../../../@core/enums/category-type";
 
 @Component({
   selector: "create-or-edit-transaction",
   templateUrl: "./create-or-edit-transaction.component.html",
-  styleUrls: ["./create-or-edit-transaction.component.scss"]
+  styleUrls: ["./create-or-edit-transaction.component.scss"],
 })
 export class CreateOrEditTransactionComponent implements OnInit {
-  @ViewChild("expenseTab", { static: true })
-  expenseTab: NbTabComponent;
-  @ViewChild("incomeTab", { static: true })
-  incomeTab: NbTabComponent;
-  @ViewChild("transferTab", { static: true })
-  transferTab: NbTabComponent;
+  @ViewChild("externalTab", { static: true })
+  externalTab: NbTabComponent;
+  @ViewChild("internalTab", { static: true })
+  internalTab: NbTabComponent;
 
   @Input()
   transaction: Transaction;
@@ -41,7 +38,6 @@ export class CreateOrEditTransactionComponent implements OnInit {
   header: string = "Creating transaction";
 
   transactionTypes = TransactionType;
-  categoryTypes = CategoryType;
   categories: Category[];
 
   constructor(
@@ -57,14 +53,11 @@ export class CreateOrEditTransactionComponent implements OnInit {
       this.header = `Editing transaction`;
 
       switch (this.transaction.type) {
-        case TransactionType.Expense:
-          this.expenseTab.active = true;
+        case TransactionType.External:
+          this.externalTab.active = true;
           break;
-        case TransactionType.Income:
-          this.incomeTab.active = true;
-          break;
-        case TransactionType.Transfer:
-          this.transferTab.active = true;
+        case TransactionType.Internal:
+          this.internalTab.active = true;
           break;
       }
     } else {
@@ -83,12 +76,11 @@ export class CreateOrEditTransactionComponent implements OnInit {
     this.transaction.type = this.transactionTypes[selectedTab.tabTitle];
 
     switch (this.transaction.type) {
-      case TransactionType.Expense:
-      case TransactionType.Income:
+      case TransactionType.External:
         this.transaction.category = Maybe.none();
         this.transaction.categoryId = Maybe.none();
         break;
-      case TransactionType.Transfer:
+      case TransactionType.Internal:
         this.transaction.receivingAccount = Maybe.none();
         this.transaction.receivingAccountId = Maybe.none();
         break;
@@ -102,14 +94,9 @@ export class CreateOrEditTransactionComponent implements OnInit {
   async submit() {
     let errors = this.validate().reverse();
     if (errors.length > 0) {
-      errors.map(e => this.toasterService.warning(e, "Incorrect data"));
+      errors.map((e) => this.toasterService.warning(e, "Incorrect data"));
       return;
     }
-
-    let amount =
-      this.transaction.type == TransactionType.Expense
-        ? -this.transaction.amount
-        : this.transaction.amount;
 
     if (this.editing) {
       this.transaction = await this.transactionService.updateTransaction(
@@ -117,7 +104,7 @@ export class CreateOrEditTransactionComponent implements OnInit {
         this.transaction.accountId,
         this.transaction.description,
         this.transaction.date,
-        amount,
+        this.transaction.amount,
         this.transaction.categoryId,
         this.transaction.receivingAccountId
       );
@@ -125,10 +112,9 @@ export class CreateOrEditTransactionComponent implements OnInit {
     } else {
       this.transaction = await this.transactionService.createTransaction(
         this.transaction.accountId,
-        this.transaction.type,
         this.transaction.description,
         this.transaction.date,
-        amount,
+        this.transaction.amount,
         this.transaction.categoryId,
         this.transaction.receivingAccountId,
         this.transaction.needsConfirmation
@@ -151,16 +137,18 @@ export class CreateOrEditTransactionComponent implements OnInit {
       this.transaction.description.trim().length < 3
     )
       messages.push("Enter a description.");
-    if (!this.transaction.amount || this.transaction.amount <= 0)
-      messages.push("Amount must be greater than 0.");
+    if (
+      this.transaction.type == TransactionType.Internal &&
+      (!this.transaction.amount || this.transaction.amount <= 0)
+    )
+      messages.push("Amount must be greater than 0 for internal transactions.");
 
     switch (this.transaction.type) {
-      case TransactionType.Expense:
-      case TransactionType.Income:
+      case TransactionType.External:
         if (this.transaction.categoryId.isNone)
           messages.push("No category selected.");
         break;
-      case TransactionType.Transfer:
+      case TransactionType.Internal:
         if (this.transaction.receivingAccountId.isNone)
           messages.push("No receiver selected.");
         break;

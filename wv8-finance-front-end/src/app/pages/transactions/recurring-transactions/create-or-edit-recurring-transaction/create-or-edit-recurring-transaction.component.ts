@@ -8,27 +8,24 @@ import {
   NbCalendarRange,
   NbDatepicker,
   NbTabComponent,
-  NbTabsetComponent
+  NbTabsetComponent,
 } from "@nebular/theme";
 import { RecurringTransaction } from "../../../../@core/models/recurring-transaction.model";
 import { RecurringTransactionData } from "../../../../@core/data/recurring-transaction";
 import { TransactionType } from "../../../../@core/enums/transaction-type.enum";
-import { CategoryType } from "../../../../@core/enums/category-type";
 import { Category } from "../../../../@core/models/category.model";
 import { Maybe } from "@wv8/typescript.core";
 
 @Component({
   selector: "create-or-edit-recurring-transaction",
   templateUrl: "./create-or-edit-recurring-transaction.component.html",
-  styleUrls: ["./create-or-edit-recurring-transaction.component.scss"]
+  styleUrls: ["./create-or-edit-recurring-transaction.component.scss"],
 })
 export class CreateOrEditRecurringTransactionComponent implements OnInit {
-  @ViewChild("expenseTab", { static: true })
-  expenseTab: NbTabComponent;
-  @ViewChild("incomeTab", { static: true })
-  incomeTab: NbTabComponent;
-  @ViewChild("transferTab", { static: true })
-  transferTab: NbTabComponent;
+  @ViewChild("externalTab", { static: true })
+  externalTab: NbTabComponent;
+  @ViewChild("internalTab", { static: true })
+  internalTab: NbTabComponent;
 
   @Input()
   recurringTransaction: RecurringTransaction;
@@ -39,7 +36,6 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
   updateInstances: boolean = true;
 
   transactionTypes = TransactionType;
-  categoryTypes = CategoryType;
   categories: Category[];
 
   constructor(
@@ -55,14 +51,11 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       this.header = `Editing recurring transaction`;
 
       switch (this.recurringTransaction.type) {
-        case TransactionType.Expense:
-          this.expenseTab.active = true;
+        case TransactionType.External:
+          this.externalTab.active = true;
           break;
-        case TransactionType.Income:
-          this.incomeTab.active = true;
-          break;
-        case TransactionType.Transfer:
-          this.transferTab.active = true;
+        case TransactionType.Internal:
+          this.internalTab.active = true;
           break;
       }
     } else {
@@ -85,12 +78,11 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
     ];
 
     switch (this.recurringTransaction.type) {
-      case TransactionType.Expense:
-      case TransactionType.Income:
+      case TransactionType.External:
         this.recurringTransaction.category = Maybe.none();
         this.recurringTransaction.categoryId = Maybe.none();
         break;
-      case TransactionType.Transfer:
+      case TransactionType.Internal:
         this.recurringTransaction.receivingAccount = Maybe.none();
         this.recurringTransaction.receivingAccountId = Maybe.none();
         break;
@@ -104,14 +96,9 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
   async submit() {
     let errors = this.validate().reverse();
     if (errors.length > 0) {
-      errors.map(e => this.toasterService.warning(e, "Incorrect data"));
+      errors.map((e) => this.toasterService.warning(e, "Incorrect data"));
       return;
     }
-
-    let amount =
-      this.recurringTransaction.type == TransactionType.Expense
-        ? -this.recurringTransaction.amount
-        : this.recurringTransaction.amount;
 
     if (this.editing) {
       this.recurringTransaction = await this.recurringTransactionService.updateRecurringTransaction(
@@ -120,7 +107,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
         this.recurringTransaction.description,
         this.recurringTransaction.startDate,
         this.recurringTransaction.endDate,
-        amount,
+        this.recurringTransaction.amount,
         this.recurringTransaction.categoryId,
         this.recurringTransaction.receivingAccountId,
         this.recurringTransaction.interval,
@@ -130,16 +117,15 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       );
       this.dialogRef.close({
         success: true,
-        recurringTransaction: this.recurringTransaction
+        recurringTransaction: this.recurringTransaction,
       });
     } else {
       this.recurringTransaction = await this.recurringTransactionService.createRecurringTransaction(
         this.recurringTransaction.accountId,
-        this.recurringTransaction.type,
         this.recurringTransaction.description,
         this.recurringTransaction.startDate,
         this.recurringTransaction.endDate,
-        amount,
+        this.recurringTransaction.amount,
         this.recurringTransaction.categoryId,
         this.recurringTransaction.receivingAccountId,
         this.recurringTransaction.interval,
@@ -148,7 +134,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       );
       this.dialogRef.close({
         success: true,
-        recurringTransaction: this.recurringTransaction
+        recurringTransaction: this.recurringTransaction,
       });
     }
   }
@@ -169,18 +155,18 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
     )
       messages.push("Enter a description.");
     if (
-      !this.recurringTransaction.amount ||
-      this.recurringTransaction.amount <= 0
+      this.recurringTransaction.type == TransactionType.Internal &&
+      (!this.recurringTransaction.amount ||
+        this.recurringTransaction.amount <= 0)
     )
       messages.push("Amount must be greater than 0.");
 
     switch (this.recurringTransaction.type) {
-      case TransactionType.Expense:
-      case TransactionType.Income:
+      case TransactionType.External:
         if (this.recurringTransaction.categoryId.isNone)
           messages.push("No category selected.");
         break;
-      case TransactionType.Transfer:
+      case TransactionType.Internal:
         if (this.recurringTransaction.receivingAccountId.isNone)
           messages.push("No receiver selected.");
         break;

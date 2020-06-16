@@ -1,7 +1,3 @@
-[nbInput].size-small {
-  width: 208px;
-}
-
 nb-icon {
   position: relative;
   left: 3px;
@@ -18,4 +14,10 @@ nb-icon:hover {
 
 input {
   cursor: pointer;
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  padding: unset;
 }

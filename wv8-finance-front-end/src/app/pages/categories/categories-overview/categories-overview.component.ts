@@ -8,31 +8,26 @@ import {
   NbTreeGridDataService,
   NbTreeGridDataSource,
   NbTreeGridDataSourceBuilder,
-  NbGetters
+  NbGetters,
 } from "@nebular/theme";
 import { CreateOrEditCategoryComponent } from "../create-or-edit-category/create-or-edit-category.component";
 import { Category } from "../../../@core/models/category.model";
 import { CustomTableSettings } from "../../../@theme/components/table/table-settings.model";
 import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
 import { TreeNode } from "../../../@core/models/tree-node.model";
-import { CategoryType } from "../../../@core/enums/category-type";
 
 @Component({
   selector: "categories-overview",
   templateUrl: "./categories-overview.component.html",
-  styleUrls: ["./categories-overview.component.scss"]
+  styleUrls: ["./categories-overview.component.scss"],
 })
 export class CategoriesOverviewComponent implements OnInit {
-  expenseCategoryGrid: TreeNode<Category>[];
-  incomeCategoryGrid: TreeNode<Category>[];
+  categoryGrid: TreeNode<Category>[];
 
   firstColumn = "description";
-  otherColumns = ["type"];
-  allColumns = [this.firstColumn, ...this.otherColumns];
+  allColumns = [this.firstColumn];
 
   categories: Category[] = [];
-
-  categoryTypes = CategoryType;
 
   showObsolete: boolean = false;
 
@@ -47,28 +42,24 @@ export class CategoriesOverviewComponent implements OnInit {
     this.loadData(this.showObsolete);
   }
 
-  async onClickAdd(type: CategoryType, event: MouseEvent) {
+  async onClickAdd(event: MouseEvent) {
     this.dialogService
-      .open(CreateOrEditCategoryComponent, {
-        context: { initialType: type }
-      })
-      .onClose.subscribe(
-        (data: { success: boolean; category: Category }) => {
-          if (data.success) {
-            if (data.category.parentCategoryId.isSome) {
-              let parent = this.categories.filter(
-                c => c.id == data.category.parentCategoryId.value
-              )[0];
-              parent.children.push(data.category);
-            } else {
-              this.categories.push(data.category);
-            }
-            this.setTableData();
-
-            this.toasterService.success("", "Added category");
+      .open(CreateOrEditCategoryComponent, {})
+      .onClose.subscribe((data: { success: boolean; category: Category }) => {
+        if (data.success) {
+          if (data.category.parentCategoryId.isSome) {
+            let parent = this.categories.filter(
+              (c) => c.id == data.category.parentCategoryId.value
+            )[0];
+            parent.children.push(data.category);
+          } else {
+            this.categories.push(data.category);
           }
+          this.setTableData();
+
+          this.toasterService.success("", "Added category");
         }
-      );
+      });
   }
 
   openCategory(id: number) {
@@ -84,11 +75,6 @@ export class CategoriesOverviewComponent implements OnInit {
   }
 
   private setTableData() {
-    this.expenseCategoryGrid = TreeNode.fromCategories(
-      this.categories.filter(c => c.type == CategoryType.Expense)
-    );
-    this.incomeCategoryGrid = TreeNode.fromCategories(
-      this.categories.filter(c => c.type == CategoryType.Income)
-    );
+    this.categoryGrid = TreeNode.fromCategories(this.categories);
   }
 }

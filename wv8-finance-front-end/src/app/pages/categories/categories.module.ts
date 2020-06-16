@@ -15,7 +15,8 @@ import {
   NbTooltipModule,
   NbPopoverModule,
   NbSelectModule,
-  NbTreeGridModule
+  NbTreeGridModule,
+  NbFormFieldModule
 } from "@nebular/theme";
 import { ThemeModule } from "../../@theme/theme.module";
 import { Ng2SmartTableModule } from "ng2-smart-table";
@@ -36,7 +37,8 @@ import { FormsModule } from "@angular/forms";
     FormsModule,
     NbTooltipModule,
     NbPopoverModule,
-    NbSelectModule
+    NbSelectModule,
+    NbFormFieldModule
   ],
   declarations: [
     CategoryComponent,

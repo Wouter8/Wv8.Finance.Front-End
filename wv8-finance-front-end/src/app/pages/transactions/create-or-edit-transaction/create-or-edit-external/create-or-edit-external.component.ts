@@ -8,18 +8,15 @@ import {
 } from "@angular/core";
 import { Transaction } from "../../../../@core/models/transaction.model";
 import { Maybe } from "@wv8/typescript.core";
-import { CategoryType } from "../../../../@core/enums/category-type";
-import { NbDatepicker, NbDateService } from "@nebular/theme";
 
 @Component({
-  selector: "create-or-edit-non-transfer",
-  templateUrl: "./create-or-edit-non-transfer.component.html",
-  styleUrls: ["./create-or-edit-non-transfer.component.scss"]
+  selector: "create-or-edit-external",
+  templateUrl: "./create-or-edit-external.component.html",
+  styleUrls: ["./create-or-edit-external.component.scss"]
 })
-export class CreateOrEditNonTransferComponent implements OnInit {
+export class CreateOrEditExternalComponent implements OnInit {
   @Input() transaction: Transaction;
   @Input() editing: boolean;
-  @Input() categoryType: CategoryType;
 
   constructor() {}
 

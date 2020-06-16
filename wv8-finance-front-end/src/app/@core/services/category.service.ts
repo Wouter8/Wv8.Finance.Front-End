@@ -5,7 +5,6 @@ import { map } from "rxjs/operators";
 import { environment } from "../../../environments/environment";
 import { HttpService } from "../utils/http.service";
 import { Category } from "../models/category.model";
-import { CategoryType } from "../enums/category-type";
 import { Maybe } from "@wv8/typescript.core";
 
 @Injectable()
@@ -36,13 +35,12 @@ export class CategoryService extends CategoryData {
 
   getCategoriesByFilter(
     includeObsolete: boolean,
-    type: CategoryType,
     group: boolean
   ): Promise<Category[]> {
     const url = `${CategoryService.BaseUrl}/filter`;
 
     return this.http
-      .get<ICategory[]>(url, { includeObsolete, type, group })
+      .get<ICategory[]>(url, { includeObsolete, group })
       .pipe(map(categories => categories.map(a => Category.fromDto(a))))
       .toPromise();
   }
@@ -50,7 +48,6 @@ export class CategoryService extends CategoryData {
   updateCategory(
     id: number,
     description: string,
-    type: CategoryType,
     expectedMonthlyAmount: Maybe<number>,
     parentCategoryId: Maybe<number>,
     iconPack: string,
@@ -62,7 +59,6 @@ export class CategoryService extends CategoryData {
     return this.http
       .put<ICategory>(url, {
         description,
-        type,
         expectedMonthlyAmount: expectedMonthlyAmount.asQueryParam(),
         parentCategoryId: parentCategoryId.asQueryParam(),
         iconPack,
@@ -75,7 +71,6 @@ export class CategoryService extends CategoryData {
 
   createCategory(
     description: string,
-    type: CategoryType,
     expectedMonthlyAmount: Maybe<number>,
     parentCategoryId: Maybe<number>,
     iconPack: string,
@@ -87,7 +82,6 @@ export class CategoryService extends CategoryData {
     return this.http
       .post<ICategory>(url, {
         description,
-        type,
         expectedMonthlyAmount: expectedMonthlyAmount.asQueryParam(),
         parentCategoryId: parentCategoryId.asQueryParam(),
         iconPack,

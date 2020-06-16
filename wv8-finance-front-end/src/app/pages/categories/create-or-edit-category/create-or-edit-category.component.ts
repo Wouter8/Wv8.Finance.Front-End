@@ -11,7 +11,6 @@ import {
 } from "@nebular/theme";
 import { FontAwesomeIconPickerComponent } from "../../../@theme/components/font-awesome-icon-picker/font-awesome-icon-picker.component";
 import { FontAwesomeIcon } from "../../../@theme/components/font-awesome-icon-picker/font-awesome-icon";
-import { CategoryType } from "../../../@core/enums/category-type";
 import { Maybe } from "@wv8/typescript.core";
 
 @Component({
@@ -22,10 +21,6 @@ import { Maybe } from "@wv8/typescript.core";
 export class CreateOrEditCategoryComponent implements OnInit {
   @Input()
   category: Category;
-  @Input()
-  initialType: CategoryType = undefined;
-
-  types = CategoryType;
 
   editing = false;
   header: string = "Creating new category";
@@ -48,7 +43,6 @@ export class CreateOrEditCategoryComponent implements OnInit {
       this.header = `Editing ${this.category.description}`;
     } else {
       this.category = new Category();
-      if (this.initialType) this.category.type = this.initialType;
     }
   }
 
@@ -63,18 +57,11 @@ export class CreateOrEditCategoryComponent implements OnInit {
       return;
     }
 
-    let expectedMonthlyAmount = this.category.expectedMonthlyAmount.map(a =>
-      this.category.type == CategoryType.Expense
-        ? -a
-        : a
-    );
-
     if (this.editing) {
       this.category = await this.categoryService.updateCategory(
         this.category.id,
         this.category.description,
-        this.category.type,
-        expectedMonthlyAmount,
+        this.category.expectedMonthlyAmount,
         this.category.parentCategoryId,
         this.category.icon.pack,
         this.category.icon.name,
@@ -84,8 +71,7 @@ export class CreateOrEditCategoryComponent implements OnInit {
     } else {
       this.category = await this.categoryService.createCategory(
         this.category.description,
-        this.category.type,
-        expectedMonthlyAmount,
+        this.category.expectedMonthlyAmount,
         this.category.parentCategoryId,
         this.category.icon.pack,
         this.category.icon.name,

@@ -36,29 +36,29 @@
     <tr>
       <th>Amount</th>
       <td>
-        <input
-          type="number"
-          step="1"
-          min="0"
-          placeholder="100,00"
-          nbInput
-          fieldSize="small"
-          fullWidth
-          [(ngModel)]="recurringTransaction.amount"
-        />
+        <nb-form-field>
+          <nb-icon nbPrefix icon="euro-sign" pack="fas"></nb-icon>
+          <input
+            type="number"
+            step="1"
+            min="0"
+            placeholder="100,00"
+            nbInput
+            fieldSize="small"
+            fullWidth
+            [(ngModel)]="recurringTransaction.amount"
+          />
+        </nb-form-field>
       </td>
     </tr>
     <tr>
-      <th>Receiver</th>
+      <th>Category</th>
       <td>
-        <account-picker
-          [selectDefault]="false"
+        <category-picker
           [fullWidth]="true"
-          [account]="
-            recurringTransaction.receivingAccountId.valueOrElse(undefined)
-          "
-          (accountChange)="setReceivingAccountId($event)"
-        ></account-picker>
+          [category]="recurringTransaction.categoryId.valueOrElse(undefined)"
+          (categoryChange)="setCategoryId($event)"
+        ></category-picker>
       </td>
     </tr>
     <tr>
@@ -117,7 +117,10 @@
         ></nb-icon>
       </th>
       <td>
-        <nb-checkbox [checked]="updateInstances" (checkedChange)="onUpdateInstanceChange($event)"></nb-checkbox>
+        <nb-checkbox
+          [checked]="updateInstances"
+          (checkedChange)="onUpdateInstanceChange($event)"
+        ></nb-checkbox>
       </td>
     </tr>
   </tbody>

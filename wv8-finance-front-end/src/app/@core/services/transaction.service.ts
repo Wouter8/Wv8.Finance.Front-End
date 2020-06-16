@@ -88,7 +88,6 @@ export class TransactionService extends TransactionData {
 
   createTransaction(
     accountId: number,
-    type: TransactionType,
     description: string,
     date: Date,
     amount: number,
@@ -101,7 +100,6 @@ export class TransactionService extends TransactionData {
     return this.http
       .post<ITransaction>(url, {
         accountId,
-        type,
         description,
         date: `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`,
         amount,

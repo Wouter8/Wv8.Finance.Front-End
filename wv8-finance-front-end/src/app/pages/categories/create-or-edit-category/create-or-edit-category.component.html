@@ -41,38 +41,26 @@
         <tr>
           <th>Expected Monthly Amount</th>
           <td>
-            <input
-              type="number"
-              nbInput
-              fieldSize="small"
-              fullWidth
-              [ngModel]="category.expectedMonthlyAmount.valueOrElse(undefined)"
-              (ngModelChange)="setExpectedMonthlyAmount($event)"
-              placeholder="350"
-            />
-          </td>
-        </tr>
-        <tr>
-          <th>Type</th>
-          <td>
-            <nb-select
-              placeholder="Type"
-              [(selected)]="category.type"
-              size="small"
-            >
-              <nb-option
-                *ngFor="let type of types | enumToArray"
-                [value]="type.index"
-                >{{ type.name }}</nb-option
-              >
-            </nb-select>
+            <nb-form-field>
+              <nb-icon nbPrefix icon="euro-sign" pack="fas"></nb-icon>
+              <input
+                type="number"
+                nbInput
+                fieldSize="small"
+                fullWidth
+                [ngModel]="
+                  category.expectedMonthlyAmount.valueOrElse(undefined)
+                "
+                (ngModelChange)="setExpectedMonthlyAmount($event)"
+                placeholder="350"
+              />
+            </nb-form-field>
           </td>
         </tr>
         <tr>
           <th>Parent</th>
           <td>
             <category-picker
-              [typeFilter]="category.type"
               [category]="category.parentCategoryId.valueOrElse(undefined)"
               [showResetOption]="true"
               [showSubCategories]="false"

@@ -10,7 +10,8 @@ import {
   NbTooltipModule,
   NbDatepickerModule,
   NbTabsetModule,
-  NbSelectModule
+  NbSelectModule,
+  NbFormFieldModule,
 } from "@nebular/theme";
 import { ThemeModule } from "../../@theme/theme.module";
 import { Ng2SmartTableModule } from "ng2-smart-table";
@@ -20,15 +21,15 @@ import { TransactionComponent } from "./transaction/transaction.component";
 import { CreateOrEditTransactionComponent } from "./create-or-edit-transaction/create-or-edit-transaction.component";
 import { TransactionsRoutingModule } from "./transactions-routing.module";
 import { TransactionsComponent } from "./transactions.component";
-import { CreateOrEditNonTransferComponent } from "./create-or-edit-transaction/create-or-edit-income/create-or-edit-non-transfer.component";
-import { CreateOrEditTransferComponent } from "./create-or-edit-transaction/create-or-edit-transfer/create-or-edit-transfer.component";
+import { CreateOrEditExternalComponent } from "./create-or-edit-transaction/create-or-edit-external/create-or-edit-external.component";
+import { CreateOrEditInternalComponent } from "./create-or-edit-transaction/create-or-edit-internal/create-or-edit-internal.component";
 import { RecurringTransactionsOverviewComponent } from "./recurring-transactions/recurring-transactions-overview/recurring-transactions-overview.component";
 import { CreateOrEditRecurringTransactionComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-transaction.component";
-import { CreateOrEditRecurringNonTransferComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-income/create-or-edit-recurring-non-transfer.component";
-import { CreateOrEditRecurringTransferComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-transfer/create-or-edit-recurring-transfer.component";
 import { RecurringTransactionComponent } from "./recurring-transactions/recurring-transaction/recurring-transaction.component";
 import { DeleteRecurringTransactionComponent } from "./recurring-transactions/delete-recurring-transaction/delete-recurring-transaction.component";
 import { ConfirmTransactionComponent } from "./confirm-transaction/confirm-transaction.component";
+import { CreateOrEditRecurringExternalComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-external/create-or-edit-recurring-external.component";
+import { CreateOrEditRecurringInternalComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-internal/create-or-edit-recurring-internal.component";
 @NgModule({
   imports: [
     TransactionsRoutingModule,
@@ -44,28 +45,29 @@ import { ConfirmTransactionComponent } from "./confirm-transaction/confirm-trans
     NbTooltipModule,
     NbDatepickerModule,
     NbTabsetModule,
-    NbSelectModule
+    NbSelectModule,
+    NbFormFieldModule,
   ],
   declarations: [
     TransactionsComponent,
     TransactionsOverviewComponent,
     TransactionComponent,
     CreateOrEditTransactionComponent,
-    CreateOrEditNonTransferComponent,
-    CreateOrEditTransferComponent,
+    CreateOrEditExternalComponent,
+    CreateOrEditInternalComponent,
     RecurringTransactionsOverviewComponent,
     RecurringTransactionComponent,
     CreateOrEditRecurringTransactionComponent,
-    CreateOrEditRecurringNonTransferComponent,
-    CreateOrEditRecurringTransferComponent,
+    CreateOrEditRecurringExternalComponent,
+    CreateOrEditRecurringInternalComponent,
     DeleteRecurringTransactionComponent,
-    ConfirmTransactionComponent
+    ConfirmTransactionComponent,
   ],
   entryComponents: [
     CreateOrEditTransactionComponent,
     CreateOrEditRecurringTransactionComponent,
     DeleteRecurringTransactionComponent,
-    ConfirmTransactionComponent
-  ]
+    ConfirmTransactionComponent,
+  ],
 })
 export class TransactionsModule {}

@@ -14,6 +14,8 @@
         ></wv8-obsolete-container>
         <button
           *ngIf="!account.isObsolete"
+          nbTooltip="Edit"
+          nbTooltipPlacement="right"
           nbButton
           size="tiny"
           (click)="onEditClick()"

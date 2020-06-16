@@ -2,8 +2,14 @@
   <div class="col-sm-12">
     <nb-card>
       <nb-card-header>
-        <span>{{ recurringTransaction.description }}</span>
-        <button nbButton size="tiny" (click)="onEditClick()">
+        <span class="title">{{ recurringTransaction.description }}</span>
+        <button
+          nbButton
+          nbTooltip="Edit"
+          nbTooltipPlacement="right"
+          size="tiny"
+          (click)="onEditClick()"
+        >
           <nb-icon icon="edit-outline"></nb-icon>
         </button>
         <button

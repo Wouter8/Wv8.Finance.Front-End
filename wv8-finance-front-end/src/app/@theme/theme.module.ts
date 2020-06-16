@@ -61,7 +61,6 @@ import { CategoryPickerComponent } from "./components/category-picker/category-p
 import { FormsModule } from "@angular/forms";
 import { TableTransactionTypeIconCellComponent } from "./components/table/table-transaction-type-icon-cell/table-transaction-type-icon-cell.component";
 import { AccountPickerComponent } from "./components/account-picker/account-picker.component";
-import { TableCategoryTypeIconCellComponent } from "./components/table/table-category-type-icon-cell/table-category-type-icon-cell.component";
 import { DatePickerComponent } from "./components/date-picker/date-picker.component";
 import { PeriodPickerComponent } from "./components/period-picker/period-picker.component";
 import { TransactionTableComponent } from "./components/transaction-table/transaction-table.component";
@@ -112,7 +111,6 @@ const COMPONENTS = [
   CategoryPickerComponent,
   TableTransactionTypeIconCellComponent,
   AccountPickerComponent,
-  TableCategoryTypeIconCellComponent,
   DatePickerComponent,
   PeriodPickerComponent,
   TransactionTableComponent,
@@ -139,7 +137,6 @@ const ENTRY_COMPONENTS = [
   TableDateCellComponent,
   TableProgressCellComponent,
   TableTransactionTypeIconCellComponent,
-  TableCategoryTypeIconCellComponent
 ];
 const IMPORT_MODULES = [FormsModule];
 
