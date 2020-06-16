@@ -7,8 +7,7 @@ import { ICategory } from "../data/category";
 export class TransactionGroup {
   totalSearchResults: number;
   totalSum: number;
-  sumPerIncomeCategory: Map<Category, number>;
-  sumPerExpenseCategory: Map<Category, number>;
+  sumPerCategory: Map<Category, number>;
   transactionsPerCategory: Map<Category, Transaction[]>;
   transactionsPerType: Map<TransactionType, Transaction[]>;
   transactions: Transaction[];
@@ -22,8 +21,7 @@ export class TransactionGroup {
     instance.totalSearchResults = dto.totalSearchResults;
 
     instance.categories = new Map();
-    instance.sumPerExpenseCategory = new Map();
-    instance.sumPerIncomeCategory = new Map();
+    instance.sumPerCategory = new Map();
     instance.transactionsPerCategory = new Map();
     instance.transactionsPerType = new Map();
 
@@ -32,18 +30,13 @@ export class TransactionGroup {
       let category = Category.fromDto(dto.categories[key]);
       instance.categories.set(id, category);
     }
-    for (let key in dto.sumPerExpenseCategory) {
+    for (let key in dto.sumPerCategory) {
       let categoryId = +key;
-      let value = dto.sumPerExpenseCategory[key];
-      instance.sumPerExpenseCategory.set(
+      let value = dto.sumPerCategory[key];
+      instance.sumPerCategory.set(
         instance.categories[categoryId],
         value
       );
-    }
-    for (let key in dto.sumPerIncomeCategory) {
-      let categoryId = +key;
-      let value = dto.sumPerIncomeCategory[key];
-      instance.sumPerIncomeCategory.set(instance.categories[categoryId], value);
     }
     for (let key in dto.transactionsPerCategory) {
       let categoryId = +key;

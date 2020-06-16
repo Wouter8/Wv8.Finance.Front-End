@@ -9,7 +9,6 @@ import {
 import { CategoryData } from "../../../@core/data/category";
 import { Category } from "../../../@core/models/category.model";
 import { Maybe } from "@wv8/typescript.core";
-import { CategoryType } from "../../../@core/enums/category-type";
 
 @Component({
   selector: "category-picker",
@@ -21,7 +20,6 @@ export class CategoryPickerComponent implements OnInit, OnChanges {
 
   inputIsObject = false;
 
-  @Input() typeFilter: CategoryType = CategoryType.Expense;
   @Input() placeholderText: string = "Select category";
   @Input() disabled: boolean = false;
   @Input() fullWidth: boolean = false;
@@ -50,7 +48,6 @@ export class CategoryPickerComponent implements OnInit, OnChanges {
     this.categories = (
       await this.categoryService.getCategoriesByFilter(
         this.includeObsolete,
-        this.typeFilter,
         false
       )
     ).filter(c => this.filterCategories.indexOf(c.id) < 0);

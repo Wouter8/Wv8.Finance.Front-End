@@ -1,23 +1,25 @@
-<input
-  #periodPickerInput
-  nbInput
-  readonly
-  [fieldSize]="fieldSize"
-  placeholder="Filter period"
-  [nbDatepicker]="periodPicker"
-  class="period-picker-input"
-  [ngStyle]="{ 'text-align': textAlign }"
-/>
-<nb-rangepicker
-  #periodPicker
-  (rangeChange)="onSetPeriod($event)"
-></nb-rangepicker>
-<div class="clear-container" (click)="onClear()">
-  <nb-icon
-    nbTooltip="Clear"
-    nbTooltipPlacement="right"
-    *ngIf="showClearButton"
-    class="clickable"
-    icon="close-circle-outline"
-  ></nb-icon>
+<div class="container">
+  <input
+    #periodPickerInput
+    nbInput
+    readonly
+    [fieldSize]="fieldSize"
+    placeholder="Filter period"
+    [nbDatepicker]="periodPicker"
+    class="period-picker-input"
+    [ngStyle]="{ 'text-align': textAlign }"
+  />
+  <nb-rangepicker
+    #periodPicker
+    (rangeChange)="onSetPeriod($event)"
+  ></nb-rangepicker>
+  <div class="clear-container" (click)="onClear()">
+    <nb-icon
+      nbTooltip="Clear"
+      nbTooltipPlacement="right"
+      *ngIf="showClearButton"
+      class="clickable"
+      icon="close-circle-outline"
+    ></nb-icon>
+  </div>
 </div>

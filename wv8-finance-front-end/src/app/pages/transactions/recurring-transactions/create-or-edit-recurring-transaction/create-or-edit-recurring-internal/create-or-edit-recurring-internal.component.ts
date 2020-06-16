@@ -2,27 +2,25 @@ import {
   Component,
   OnInit,
   OnChanges,
-  Input,
   ViewChild,
   ElementRef,
+  Input,
   Output,
   EventEmitter
 } from "@angular/core";
-import { Maybe } from "@wv8/typescript.core";
 import { NbDatepicker, NbDateService, NbCalendarRange } from "@nebular/theme";
+import { Maybe } from "@wv8/typescript.core";
 import { RecurringTransaction } from "../../../../../@core/models/recurring-transaction.model";
-import { CategoryType } from "../../../../../@core/enums/category-type";
 import { IntervalUnit } from "../../../../../@core/enums/interval-unit";
 
 @Component({
-  selector: "create-or-edit-recurring-non-transfer",
-  templateUrl: "./create-or-edit-recurring-non-transfer.component.html",
-  styleUrls: ["./create-or-edit-recurring-non-transfer.component.scss"]
+  selector: "create-or-edit-recurring-internal",
+  templateUrl: "./create-or-edit-recurring-internal.component.html",
+  styleUrls: ["./create-or-edit-recurring-internal.component.scss"]
 })
-export class CreateOrEditRecurringNonTransferComponent implements OnInit {
+export class CreateOrEditRecurringInternalComponent implements OnInit {
   @Input() recurringTransaction: RecurringTransaction;
   @Input() editing: boolean;
-  @Input() categoryType: CategoryType;
 
   @Input() updateInstances: boolean;
   @Output() updateInstancesChange = new EventEmitter<boolean>();
@@ -38,8 +36,8 @@ export class CreateOrEditRecurringNonTransferComponent implements OnInit {
     this.recurringTransaction.endDate = new Date(period.end);
   }
 
-  setCategoryId(id: number) {
-    this.recurringTransaction.categoryId = new Maybe(id);
+  setReceivingAccountId(id: number) {
+    this.recurringTransaction.receivingAccountId = new Maybe(id);
   }
 
   onUpdateInstanceChange(val: boolean) {

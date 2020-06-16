@@ -56,7 +56,6 @@
       <td>
         <category-picker
           [fullWidth]="true"
-          [typeFilter]="categoryType"
           [category]="recurringTransaction.categoryId.valueOrElse(undefined)"
           (categoryChange)="setCategoryId($event)"
         ></category-picker>

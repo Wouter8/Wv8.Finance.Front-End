@@ -95,7 +95,6 @@ export class RecurringTransactionService extends RecurringTransactionData {
 
   createRecurringTransaction(
     accountId: number,
-    type: TransactionType,
     description: string,
     startDate: Date,
     endDate: Date,
@@ -111,7 +110,6 @@ export class RecurringTransactionService extends RecurringTransactionData {
     return this.http
       .post<IRecurringTransaction>(url, {
         accountId,
-        type,
         description,
         startDate: `${startDate.getMonth() +
           1}/${startDate.getDate()}/${startDate.getFullYear()}`,

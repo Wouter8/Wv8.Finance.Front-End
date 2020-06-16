@@ -52,7 +52,6 @@ export abstract class RecurringTransactionData {
   ): Promise<RecurringTransaction>;
   abstract createRecurringTransaction(
     accountId: number,
-    type: TransactionType,
     description: string,
     startDate: Date,
     endDate: Date,

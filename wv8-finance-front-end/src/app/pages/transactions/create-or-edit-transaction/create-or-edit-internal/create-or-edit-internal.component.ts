@@ -9,14 +9,13 @@ import {
 import { NbDatepicker, NbDateService } from "@nebular/theme";
 import { Transaction } from "../../../../@core/models/transaction.model";
 import { Maybe } from "@wv8/typescript.core";
-import { CategoryType } from "../../../../@core/enums/category-type";
 
 @Component({
-  selector: "create-or-edit-transfer",
-  templateUrl: "./create-or-edit-transfer.component.html",
-  styleUrls: ["./create-or-edit-transfer.component.scss"]
+  selector: "create-or-edit-internal",
+  templateUrl: "./create-or-edit-internal.component.html",
+  styleUrls: ["./create-or-edit-internal.component.scss"]
 })
-export class CreateOrEditTransferComponent implements OnInit {
+export class CreateOrEditInternalComponent implements OnInit {
   @Input() transaction: Transaction;
   @Input() editing: boolean;
 

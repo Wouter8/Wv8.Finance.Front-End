@@ -1,13 +1,11 @@
 import { Observable } from "rxjs";
 import { Category } from "../models/category.model";
 import { Maybe, IMaybe } from "@wv8/typescript.core";
-import { CategoryType } from "../enums/category-type";
 import { IIcon } from "./icon";
 
 export interface ICategory {
   id: number;
   description: string;
-  type: CategoryType;
   expectedMonthlyAmount: IMaybe<number>;
   parentCategoryId: IMaybe<number>;
   parentCategory: IMaybe<ICategory>;
@@ -24,13 +22,11 @@ export abstract class CategoryData {
   ): Promise<Category[]>;
   abstract getCategoriesByFilter(
     includeObsolete: boolean,
-    type: CategoryType,
     group: boolean
   ): Promise<Category[]>;
   abstract updateCategory(
     id: number,
     description: string,
-    type: CategoryType,
     expectedMonthlyAmount: Maybe<number>,
     parentCategoryId: Maybe<number>,
     iconPack: string,
@@ -39,7 +35,6 @@ export abstract class CategoryData {
   ): Promise<Category>;
   abstract createCategory(
     description: string,
-    type: CategoryType,
     expectedMonthlyAmount: Maybe<number>,
     parentCategoryId: Maybe<number>,
     iconPack: string,

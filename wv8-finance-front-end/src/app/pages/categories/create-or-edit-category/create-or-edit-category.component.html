@@ -58,26 +58,9 @@
           </td>
         </tr>
         <tr>
-          <th>Type</th>
-          <td>
-            <nb-select
-              placeholder="Type"
-              [(selected)]="category.type"
-              size="small"
-            >
-              <nb-option
-                *ngFor="let type of types | enumToArray"
-                [value]="type.index"
-                >{{ type.name }}</nb-option
-              >
-            </nb-select>
-          </td>
-        </tr>
-        <tr>
           <th>Parent</th>
           <td>
             <category-picker
-              [typeFilter]="category.type"
               [category]="category.parentCategoryId.valueOrElse(undefined)"
               [showResetOption]="true"
               [showSubCategories]="false"

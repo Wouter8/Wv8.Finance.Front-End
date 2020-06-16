@@ -7,7 +7,7 @@ import { TransactionType } from "../../../@core/enums/transaction-type.enum";
 @Component({
   selector: "confirm-transaction",
   templateUrl: "./confirm-transaction.component.html",
-  styleUrls: ["./confirm-transaction.component.scss"]
+  styleUrls: ["./confirm-transaction.component.scss"],
 })
 export class ConfirmTransactionComponent implements OnInit {
   @Input()
@@ -29,19 +29,14 @@ export class ConfirmTransactionComponent implements OnInit {
   async submit() {
     let errors = this.validate().reverse();
     if (errors.length > 0) {
-      errors.map(e => this.toasterService.warning(e, "Incorrect data"));
+      errors.map((e) => this.toasterService.warning(e, "Incorrect data"));
       return;
     }
-
-    let amount =
-      this.transaction.type == TransactionType.Expense
-        ? -this.transaction.amount
-        : this.transaction.amount;
 
     this.transaction = await this.transactionService.confirmTransaction(
       this.transaction.id,
       this.transaction.date,
-      amount
+      this.transaction.amount
     );
     this.dialogRef.close({ success: true, transaction: this.transaction });
   }

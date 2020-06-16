@@ -4,12 +4,14 @@ import { Category } from "./category.model";
 import { Maybe } from "@wv8/typescript.core";
 import { Account } from "./account.model";
 import { RecurringTransaction } from "./recurring-transaction.model";
+import { TransactionFlowType } from '../enums/transaction-flow-type.enum';
 
 export class Transaction {
   id: number;
   description: string;
   date: Date;
   type: TransactionType;
+  flowType: TransactionFlowType;
   amount: number;
   categoryId: Maybe<number> = Maybe.none();
   category: Maybe<Category> = Maybe.none();
@@ -30,17 +32,22 @@ export class Transaction {
     instance.description = dto.description;
     instance.date = new Date(dto.date);
     instance.type = dto.type;
-    instance.amount = Math.abs(dto.amount);
+    instance.flowType = dto.type == TransactionType.Internal
+      ? TransactionFlowType.Transfer
+      : dto.amount > 0
+        ? TransactionFlowType.Income
+        : TransactionFlowType.Expense;
+    instance.amount = dto.amount;
     instance.categoryId = Maybe.deserialize(dto.categoryId);
-    instance.category = Maybe.deserialize(dto.category).map(c =>
+    instance.category = Maybe.deserialize(dto.category).map((c) =>
       Category.fromDto(c)
     );
     instance.accountId = dto.accountId;
     instance.account = Account.fromDto(dto.account);
     instance.receivingAccountId = Maybe.deserialize(dto.receivingAccountId);
-    instance.receivingAccount = Maybe.deserialize(dto.receivingAccount).map(a =>
-      Account.fromDto(a)
-    );
+    instance.receivingAccount = Maybe.deserialize(
+      dto.receivingAccount
+    ).map((a) => Account.fromDto(a));
     instance.processed = dto.processed;
     instance.recurringTransactionId = Maybe.deserialize(
       dto.recurringTransactionId
@@ -49,7 +56,7 @@ export class Transaction {
     instance.isConfirmed = Maybe.deserialize(dto.isConfirmed);
     instance.recurringTransaction = Maybe.deserialize(
       dto.recurringTransaction
-    ).map(rt => RecurringTransaction.fromDto(rt));
+    ).map((rt) => RecurringTransaction.fromDto(rt));
 
     return instance;
   }
@@ -63,18 +70,18 @@ export class Transaction {
     instance.type = this.type;
     instance.amount = this.amount;
     instance.categoryId = new Maybe(this.categoryId.valueOrElse(undefined));
-    instance.category = this.category.map(c => c.copy());
+    instance.category = this.category.map((c) => c.copy());
     instance.accountId = this.accountId;
     instance.account = this.account.copy();
     instance.receivingAccountId = new Maybe(
       this.receivingAccountId.valueOrElse(undefined)
     );
-    instance.receivingAccount = this.receivingAccount.map(a => a.copy());
+    instance.receivingAccount = this.receivingAccount.map((a) => a.copy());
     instance.processed = this.processed;
     instance.recurringTransactionId = new Maybe(
       this.recurringTransactionId.valueOrElse(undefined)
     );
-    instance.recurringTransaction = this.recurringTransaction.map(rt =>
+    instance.recurringTransaction = this.recurringTransaction.map((rt) =>
       rt.copy()
     );
     instance.needsConfirmation = this.needsConfirmation;

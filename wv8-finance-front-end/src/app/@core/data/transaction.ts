@@ -30,8 +30,7 @@ export interface ITransaction {
 export interface ITransactionGroup {
   totalSearchResults: number;
   totalSum: number;
-  sumPerIncomeCategory: Map<number, number>;
-  sumPerExpenseCategory: Map<number, number>;
+  sumPerCategory: Map<number, number>;
   transactionsPerCategory: Map<number, ITransaction[]>;
   transactionsPerType: Map<TransactionType, ITransaction[]>;
   transactions: ITransaction[];
@@ -61,7 +60,6 @@ export abstract class TransactionData {
   ): Promise<Transaction>;
   abstract createTransaction(
     accountId: number,
-    type: TransactionType,
     description: string,
     date: Date,
     amount: number,

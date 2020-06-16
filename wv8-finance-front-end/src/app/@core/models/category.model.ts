@@ -1,6 +1,5 @@
 import { ICategory } from "../data/category";
 import { Maybe, IMaybe } from "@wv8/typescript.core";
-import { CategoryType } from "../enums/category-type";
 import { IIcon } from "../data/icon";
 
 export class Category {
@@ -10,7 +9,6 @@ export class Category {
   expectedMonthlyAmount: Maybe<number> = Maybe.none();
   parentCategoryId: Maybe<number> = Maybe.none();
   parentCategory: Maybe<Category> = Maybe.none();
-  type: CategoryType = CategoryType.Expense;
   icon: IIcon = {
     name: "home",
     pack: "fas",
@@ -35,7 +33,6 @@ export class Category {
     instance.parentCategory = Maybe.deserialize(dto.parentCategory).map(c =>
       Category.fromDto(c)
     );
-    instance.type = dto.type;
     instance.icon = dto.icon
       ? {
           name: dto.icon.name,
@@ -57,7 +54,6 @@ export class Category {
     instance.expectedMonthlyAmount = this.expectedMonthlyAmount.map(a => a);
     instance.parentCategoryId = this.parentCategoryId.map(id => id);
     instance.parentCategory = this.parentCategory.map(c => c.copy());
-    instance.type = this.type;
     instance.icon = {
       name: this.icon.name,
       pack: this.icon.pack,

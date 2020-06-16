@@ -1,7 +1,6 @@
 export enum TransactionType {
-  Expense = 1,
-  Income = 2,
-  Transfer = 3,
+  External = 1,
+  Internal = 2
 }
 
 export namespace TransactionType {
@@ -12,12 +11,10 @@ export namespace TransactionType {
 
   export function getTransactionTypeString(type: TransactionType): string {
     switch (type) {
-      case TransactionType.Expense:
-        return "Expense";
-      case TransactionType.Income:
-        return "Income";
-      case TransactionType.Transfer:
-        return "Transfer";
+      case TransactionType.External:
+        return "External";
+      case TransactionType.Internal:
+        return "Internal";
 
       default:
         return "Unknown transaction type";

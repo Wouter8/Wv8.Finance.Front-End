@@ -2,23 +2,23 @@ import {
   Component,
   OnInit,
   OnChanges,
+  Input,
   ViewChild,
   ElementRef,
-  Input,
   Output,
   EventEmitter
 } from "@angular/core";
-import { NbDatepicker, NbDateService, NbCalendarRange } from "@nebular/theme";
 import { Maybe } from "@wv8/typescript.core";
+import { NbDatepicker, NbDateService, NbCalendarRange } from "@nebular/theme";
 import { RecurringTransaction } from "../../../../../@core/models/recurring-transaction.model";
 import { IntervalUnit } from "../../../../../@core/enums/interval-unit";
 
 @Component({
-  selector: "create-or-edit-recurring-transfer",
-  templateUrl: "./create-or-edit-recurring-transfer.component.html",
-  styleUrls: ["./create-or-edit-recurring-transfer.component.scss"]
+  selector: "create-or-edit-recurring-external",
+  templateUrl: "./create-or-edit-recurring-external.component.html",
+  styleUrls: ["./create-or-edit-recurring-external.component.scss"]
 })
-export class CreateOrEditRecurringTransferComponent implements OnInit {
+export class CreateOrEditRecurringExternalComponent implements OnInit {
   @Input() recurringTransaction: RecurringTransaction;
   @Input() editing: boolean;
 
@@ -36,8 +36,8 @@ export class CreateOrEditRecurringTransferComponent implements OnInit {
     this.recurringTransaction.endDate = new Date(period.end);
   }
 
-  setReceivingAccountId(id: number) {
-    this.recurringTransaction.receivingAccountId = new Maybe(id);
+  setCategoryId(id: number) {
+    this.recurringTransaction.categoryId = new Maybe(id);
   }
 
   onUpdateInstanceChange(val: boolean) {
