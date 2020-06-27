@@ -44,9 +44,6 @@ export class ConfirmTransactionComponent implements OnInit {
   private validate() {
     let messages: string[] = [];
 
-    if (!this.transaction.amount || this.transaction.amount <= 0)
-      messages.push("Amount must be greater than 0.");
-
     return messages;
   }
 
