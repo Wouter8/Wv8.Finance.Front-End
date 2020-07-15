@@ -58,8 +58,7 @@ export class DashboardComponent implements OnInit {
           radius: ["50%", "70%"],
           type: "pie",
           label: {
-            show: false,
-            position: "center"
+            show: true
           },
           areaStyle: {
             opacity: echarts.areaOpacity
