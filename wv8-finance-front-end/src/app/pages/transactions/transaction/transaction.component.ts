@@ -5,8 +5,8 @@ import { TransactionData } from "../../../@core/data/transaction";
 import { NbDialogService, NbToastrService } from "@nebular/theme";
 import { Maybe } from "@wv8/typescript.core";
 import { ConfirmDialogComponent } from "../../../@theme/components/confirm-dialog/confirm-dialog.component";
-import { CreateOrEditTransactionComponent } from "../create-or-edit-transaction/create-or-edit-transaction.component";
 import { ConfirmTransactionComponent } from "../confirm-transaction/confirm-transaction.component";
+import { CreateOrEditTransactionComponent } from '../../../@theme/components/create-or-edit-transaction/create-or-edit-transaction.component';
 
 @Component({
   selector: "transaction",

@@ -12,7 +12,7 @@ export interface IRecurringTransaction {
   id: number;
   description: string;
   startDate: string;
-  endDate: string;
+  endDate: IMaybe<string>;
   type: TransactionType;
   amount: number;
   categoryId: IMaybe<number>;
@@ -41,7 +41,7 @@ export abstract class RecurringTransactionData {
     accountId: number,
     description: string,
     startDate: Date,
-    endDate: Date,
+    endDate: Maybe<Date>,
     amount: number,
     categoryId: Maybe<number>,
     receivingAccountId: Maybe<number>,
@@ -54,7 +54,7 @@ export abstract class RecurringTransactionData {
     accountId: number,
     description: string,
     startDate: Date,
-    endDate: Date,
+    endDate: Maybe<Date>,
     amount: number,
     categoryId: Maybe<number>,
     receivingAccountId: Maybe<number>,

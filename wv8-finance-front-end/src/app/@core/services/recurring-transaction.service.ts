@@ -11,6 +11,7 @@ import {
 } from "../data/recurring-transaction";
 import { TransactionType } from "../enums/transaction-type.enum";
 import { IntervalUnit } from "../enums/interval-unit";
+import { start } from 'repl';
 
 @Injectable()
 export class RecurringTransactionService extends RecurringTransactionData {
@@ -57,7 +58,7 @@ export class RecurringTransactionService extends RecurringTransactionData {
     accountId: number,
     description: string,
     startDate: Date,
-    endDate: Date,
+    endDate: Maybe<Date>,
     amount: number,
     categoryId: Maybe<number>,
     receivingAccountId: Maybe<number>,
@@ -73,10 +74,8 @@ export class RecurringTransactionService extends RecurringTransactionData {
         id,
         accountId,
         description,
-        startDate: `${startDate.getMonth() +
-          1}/${startDate.getDate()}/${startDate.getFullYear()}`,
-        endDate: `${endDate.getMonth() +
-          1}/${endDate.getDate()}/${endDate.getFullYear()}`,
+        startDate: startDate.toDateString(),
+        endDate: endDate.map(d => d.toDateString()).asQueryParam(),
         amount,
         categoryId: categoryId.asQueryParam(),
         receivingAccountId: receivingAccountId.asQueryParam(),
@@ -97,7 +96,7 @@ export class RecurringTransactionService extends RecurringTransactionData {
     accountId: number,
     description: string,
     startDate: Date,
-    endDate: Date,
+    endDate: Maybe<Date>,
     amount: number,
     categoryId: Maybe<number>,
     receivingAccountId: Maybe<number>,
@@ -111,10 +110,8 @@ export class RecurringTransactionService extends RecurringTransactionData {
       .post<IRecurringTransaction>(url, {
         accountId,
         description,
-        startDate: `${startDate.getMonth() +
-          1}/${startDate.getDate()}/${startDate.getFullYear()}`,
-        endDate: `${endDate.getMonth() +
-          1}/${endDate.getDate()}/${endDate.getFullYear()}`,
+        startDate: startDate.toDateString(),
+        endDate: endDate.map(d => d.toDateString()).asQueryParam(),
         amount,
         categoryId: categoryId.asQueryParam(),
         receivingAccountId: receivingAccountId.asQueryParam(),

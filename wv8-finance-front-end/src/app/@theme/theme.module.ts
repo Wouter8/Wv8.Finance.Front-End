@@ -18,7 +18,10 @@ import {
   NbProgressBarModule,
   NbDatepickerModule,
   NbInputModule,
-  NbAutocompleteModule
+  NbAutocompleteModule,
+  NbTabsetModule,
+  NbFormFieldModule,
+  NbCheckboxModule
 } from "@nebular/theme";
 import { NbEvaIconsModule } from "@nebular/eva-icons";
 import { NbSecurityModule } from "@nebular/security";
@@ -65,6 +68,10 @@ import { DatePickerComponent } from "./components/date-picker/date-picker.compon
 import { PeriodPickerComponent } from "./components/period-picker/period-picker.component";
 import { TransactionTableComponent } from "./components/transaction-table/transaction-table.component";
 import { BudgetsTableComponent } from "./components/budgets-table/budgets-table.component";
+import { CreateOrEditExternalComponent } from './components/create-or-edit-transaction/create-or-edit-external/create-or-edit-external.component';
+import { CreateOrEditInternalComponent } from './components/create-or-edit-transaction/create-or-edit-internal/create-or-edit-internal.component';
+import { CreateOrEditTransactionComponent } from './components/create-or-edit-transaction/create-or-edit-transaction.component';
+import { TableMaybeDateCellComponent } from './components/table/table-maybe-date-cell/table-maybe-date-cell.component';
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -86,7 +93,10 @@ const NB_MODULES = [
   NbProgressBarModule,
   NbDatepickerModule,
   NbInputModule,
-  NbAutocompleteModule
+  NbAutocompleteModule,
+  NbTabsetModule,
+  NbFormFieldModule,
+  NbCheckboxModule,
 ];
 const COMPONENTS = [
   SwitcherComponent,
@@ -114,7 +124,11 @@ const COMPONENTS = [
   DatePickerComponent,
   PeriodPickerComponent,
   TransactionTableComponent,
-  BudgetsTableComponent
+  BudgetsTableComponent,
+  CreateOrEditExternalComponent,
+  CreateOrEditInternalComponent,
+  CreateOrEditTransactionComponent,
+  TableMaybeDateCellComponent
 ];
 const PIPES = [
   CapitalizePipe,

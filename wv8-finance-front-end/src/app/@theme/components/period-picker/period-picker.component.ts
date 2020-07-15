@@ -30,6 +30,8 @@ export class PeriodPickerComponent implements OnInit {
   @Input()
   end: Date = undefined;
   @Input()
+  allowOnlyStart: boolean = false;
+  @Input()
   disabled: boolean = false;
   @Input()
   setInitialValue: boolean = true;
@@ -50,7 +52,7 @@ export class PeriodPickerComponent implements OnInit {
   ngOnInit() {
     if (!this.setInitialValue) return;
 
-    if (this.start && this.end) {
+    if (this.start) {
       this.range = {
         start: this.start,
         end: this.end
@@ -80,7 +82,11 @@ export class PeriodPickerComponent implements OnInit {
       this.periodPickerInput.nativeElement.value = inputText;
     });
 
-    if (event.start && event.end) {
+    var startSet = event.start != undefined && event.start != null;
+    var endSet = event.end != undefined && event.end != null;
+    var complete = (this.allowOnlyStart && startSet) || (startSet && endSet);
+
+    if (complete) {
       this.range = event;
       this.periodChanged.emit(this.range);
     }

@@ -9,22 +9,14 @@ import {
   NbCalendarViewMode
 } from "@nebular/theme";
 import { Router } from "@angular/router";
-import { CreateOrEditTransactionComponent } from "../create-or-edit-transaction/create-or-edit-transaction.component";
 import { Maybe } from "@wv8/typescript.core";
-import { CustomTableSettings } from "../../../@theme/components/table/table-settings.model";
-import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
-import { TableEuroCellComponent } from "../../../@theme/components/table/table-euro-cell/table-euro-cell.component";
-import { TableDateCellComponent } from "../../../@theme/components/table/table-date-cell/table-date-cell.component";
-import { TableProgressCellComponent } from "../../../@theme/components/table/table-progress-cell/table-progress-cell.component";
 import { Transaction } from "../../../@core/models/transaction.model";
-import { TransactionData, ITransaction } from "../../../@core/data/transaction";
+import { TransactionData } from "../../../@core/data/transaction";
 import { TransactionGroup } from "../../../@core/models/transaction-group.model";
 import { Account } from "../../../@core/models/account.model";
-import { TableBooleanCellComponent } from "../../../@theme/components/table/table-boolean-cell/table-boolean-cell.component";
 import { TransactionType } from "../../../@core/enums/transaction-type.enum";
-import { AccountService } from "../../../@core/services/account.service";
 import { AccountData } from "../../../@core/data/account";
-import { TableTransactionTypeIconCellComponent } from "../../../@theme/components/table/table-transaction-type-icon-cell/table-transaction-type-icon-cell.component";
+import { CreateOrEditTransactionComponent } from '../../../@theme/components/create-or-edit-transaction/create-or-edit-transaction.component';
 
 @Component({
   selector: "transactions-overview",
