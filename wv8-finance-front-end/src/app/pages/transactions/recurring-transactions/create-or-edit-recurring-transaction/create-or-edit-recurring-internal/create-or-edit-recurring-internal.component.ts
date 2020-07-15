@@ -33,7 +33,7 @@ export class CreateOrEditRecurringInternalComponent implements OnInit {
 
   periodChanged(period: NbCalendarRange<Date>) {
     this.recurringTransaction.startDate = new Date(period.start);
-    this.recurringTransaction.endDate = new Date(period.end);
+    this.recurringTransaction.endDate = new Maybe(period.end).map(s => new Date(s));
   }
 
   setReceivingAccountId(id: number) {

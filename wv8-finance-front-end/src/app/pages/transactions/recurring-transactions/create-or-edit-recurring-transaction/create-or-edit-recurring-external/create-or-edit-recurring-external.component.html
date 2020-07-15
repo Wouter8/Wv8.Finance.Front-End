@@ -15,7 +15,8 @@
       <td>
         <period-picker
           [start]="recurringTransaction.startDate"
-          [end]="recurringTransaction.endDate"
+          [end]="recurringTransaction.endDate.valueOrElse(undefined)"
+          [allowOnlyStart]="true"
           (periodChanged)="periodChanged($event)"
         ></period-picker>
       </td>

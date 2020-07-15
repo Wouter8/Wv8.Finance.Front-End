@@ -10,7 +10,7 @@ export class RecurringTransaction {
   id: number;
   description: string;
   startDate: Date;
-  endDate: Date;
+  endDate: Maybe<Date>;
   type: TransactionType;
   amount: number;
   categoryId: Maybe<number> = Maybe.none();
@@ -31,7 +31,7 @@ export class RecurringTransaction {
     instance.id = dto.id;
     instance.description = dto.description;
     instance.startDate = new Date(dto.startDate);
-    instance.endDate = new Date(dto.endDate);
+    instance.endDate = Maybe.deserialize(dto.endDate).map(d => new Date(d));
     instance.type = dto.type;
     instance.amount = dto.amount;
     instance.categoryId = Maybe.deserialize(dto.categoryId);
@@ -61,7 +61,7 @@ export class RecurringTransaction {
     instance.id = this.id;
     instance.description = this.description;
     instance.startDate = new Date(this.startDate);
-    instance.endDate = new Date(this.endDate);
+    instance.endDate = this.endDate.map(d => new Date(d));
     instance.type = this.type;
     instance.amount = this.amount;
     instance.categoryId = new Maybe(this.categoryId.valueOrElse(undefined));

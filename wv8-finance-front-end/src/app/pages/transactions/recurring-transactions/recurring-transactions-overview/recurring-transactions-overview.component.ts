@@ -17,6 +17,7 @@ import { TableDateCellComponent } from "../../../../@theme/components/table/tabl
 import { TableEuroCellComponent } from "../../../../@theme/components/table/table-euro-cell/table-euro-cell.component";
 import { TableTransactionTypeIconCellComponent } from "../../../../@theme/components/table/table-transaction-type-icon-cell/table-transaction-type-icon-cell.component";
 import { CreateOrEditRecurringTransactionComponent } from "../create-or-edit-recurring-transaction/create-or-edit-recurring-transaction.component";
+import { TableMaybeDateCellComponent } from '../../../../@theme/components/table/table-maybe-date-cell/table-maybe-date-cell.component';
 
 @Component({
   selector: "recurring-transactions-overview",
@@ -156,13 +157,8 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
         endDate: {
           title: "End Date",
           type: "custom",
-          renderComponent: TableDateCellComponent,
-          sort: false,
-          onComponentInitFunction: (instance: TableDateCellComponent) => {
-            instance.showFutureIcon = true;
-            instance.determineIsFuture = () => instance.rowData.finished;
-            instance.futureTooltipText = "Finished";
-          }
+          renderComponent: TableMaybeDateCellComponent,
+          sort: false
         },
         amount: {
           title: "Amount",

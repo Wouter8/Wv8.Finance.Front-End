@@ -63,7 +63,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       let today = new Date();
       today.setHours(0, 0, 0, 0);
       this.recurringTransaction.startDate = today;
-      this.recurringTransaction.endDate = this.dateService.addMonth(today, 1);
+      this.recurringTransaction.endDate = Maybe.some(this.dateService.addMonth(today, 1));
       this.recurringTransaction.categoryId = Maybe.none();
       this.recurringTransaction.receivingAccountId = Maybe.none();
       this.recurringTransaction.needsConfirmation = false;

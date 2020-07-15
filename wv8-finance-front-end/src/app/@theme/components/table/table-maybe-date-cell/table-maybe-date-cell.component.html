@@ -1,0 +1,6 @@
+<div *ngIf="typedValue.isSome">
+  {{ typedValue.value | date: "dd-MM-yyyy" }}
+</div>
+<div *ngIf="!typedValue.isSome">
+  -
+</div>

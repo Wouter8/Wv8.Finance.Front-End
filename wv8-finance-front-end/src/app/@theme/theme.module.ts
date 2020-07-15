@@ -71,6 +71,7 @@ import { BudgetsTableComponent } from "./components/budgets-table/budgets-table.
 import { CreateOrEditExternalComponent } from './components/create-or-edit-transaction/create-or-edit-external/create-or-edit-external.component';
 import { CreateOrEditInternalComponent } from './components/create-or-edit-transaction/create-or-edit-internal/create-or-edit-internal.component';
 import { CreateOrEditTransactionComponent } from './components/create-or-edit-transaction/create-or-edit-transaction.component';
+import { TableMaybeDateCellComponent } from './components/table/table-maybe-date-cell/table-maybe-date-cell.component';
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -126,7 +127,8 @@ const COMPONENTS = [
   BudgetsTableComponent,
   CreateOrEditExternalComponent,
   CreateOrEditInternalComponent,
-  CreateOrEditTransactionComponent
+  CreateOrEditTransactionComponent,
+  TableMaybeDateCellComponent
 ];
 const PIPES = [
   CapitalizePipe,
