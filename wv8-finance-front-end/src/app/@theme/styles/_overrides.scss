@@ -41,6 +41,7 @@
     vertical-align: middle;
   }
 
+  nb-select[size="small"] .select-button.placeholder,
   [nbInput].size-small::placeholder {
     font-size: 0.8125rem;
   }
@@ -52,4 +53,6 @@
   .cdk-overlay-pane {
     z-index: 1100;
   }
+
+
 }

@@ -18,11 +18,8 @@ import { Ng2SmartTableModule } from "ng2-smart-table";
 import { FormsModule } from "@angular/forms";
 import { TransactionsOverviewComponent } from "./transactions-overview/transactions-overview.component";
 import { TransactionComponent } from "./transaction/transaction.component";
-import { CreateOrEditTransactionComponent } from "./create-or-edit-transaction/create-or-edit-transaction.component";
 import { TransactionsRoutingModule } from "./transactions-routing.module";
 import { TransactionsComponent } from "./transactions.component";
-import { CreateOrEditExternalComponent } from "./create-or-edit-transaction/create-or-edit-external/create-or-edit-external.component";
-import { CreateOrEditInternalComponent } from "./create-or-edit-transaction/create-or-edit-internal/create-or-edit-internal.component";
 import { RecurringTransactionsOverviewComponent } from "./recurring-transactions/recurring-transactions-overview/recurring-transactions-overview.component";
 import { CreateOrEditRecurringTransactionComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-transaction.component";
 import { RecurringTransactionComponent } from "./recurring-transactions/recurring-transaction/recurring-transaction.component";
@@ -52,9 +49,6 @@ import { CreateOrEditRecurringInternalComponent } from "./recurring-transactions
     TransactionsComponent,
     TransactionsOverviewComponent,
     TransactionComponent,
-    CreateOrEditTransactionComponent,
-    CreateOrEditExternalComponent,
-    CreateOrEditInternalComponent,
     RecurringTransactionsOverviewComponent,
     RecurringTransactionComponent,
     CreateOrEditRecurringTransactionComponent,
@@ -64,7 +58,6 @@ import { CreateOrEditRecurringInternalComponent } from "./recurring-transactions
     ConfirmTransactionComponent,
   ],
   entryComponents: [
-    CreateOrEditTransactionComponent,
     CreateOrEditRecurringTransactionComponent,
     DeleteRecurringTransactionComponent,
     ConfirmTransactionComponent,

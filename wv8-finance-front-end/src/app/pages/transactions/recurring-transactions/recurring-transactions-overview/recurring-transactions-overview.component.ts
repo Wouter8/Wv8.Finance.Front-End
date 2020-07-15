@@ -8,7 +8,6 @@ import {
   NbToastrService,
   NbCalendarRange
 } from "@nebular/theme";
-import { CreateOrEditTransactionComponent } from "../../create-or-edit-transaction/create-or-edit-transaction.component";
 import { Transaction } from "../../../../@core/models/transaction.model";
 import { Maybe } from "@wv8/typescript.core";
 import { TransactionType } from "../../../../@core/enums/transaction-type.enum";

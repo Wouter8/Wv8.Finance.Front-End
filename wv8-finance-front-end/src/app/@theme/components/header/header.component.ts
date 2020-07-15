@@ -3,11 +3,15 @@ import {
   NbMediaBreakpointsService,
   NbMenuService,
   NbSidebarService,
-  NbThemeService
+  NbThemeService,
+  NbToastrService,
+  NbDialogService
 } from "@nebular/theme";
 
 import { map, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
+import { CreateOrEditTransactionComponent } from '../create-or-edit-transaction/create-or-edit-transaction.component';
+import { Transaction } from '../../../@core/models/transaction.model';
 
 @Component({
   selector: "ngx-header",
@@ -21,7 +25,9 @@ export class HeaderComponent {
     private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
     private themeService: NbThemeService,
-    private breakpointService: NbMediaBreakpointsService
+    private breakpointService: NbMediaBreakpointsService,
+    private toasterService: NbToastrService,
+    private dialogService: NbDialogService
   ) {}
 
   ngOnInit() {
@@ -43,5 +49,17 @@ export class HeaderComponent {
   navigateHome() {
     this.menuService.navigateHome();
     return false;
+  }
+
+  onClickAddTransaction(event: MouseEvent) {
+    this.dialogService
+      .open(CreateOrEditTransactionComponent)
+      .onClose.subscribe(
+        (data: { success: boolean; transaction: Transaction }) => {
+          if (data.success) {
+            this.toasterService.success("", "Added transaction");
+          }
+        }
+      );
   }
 }
