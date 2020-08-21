@@ -1,16 +1,16 @@
 <div [nbTooltip]="tooltipText" nbTooltipPlacement="right">
   <nb-icon
-    *ngIf="typedRowData.flowType == transactionFlowType.Expense"
+    *ngIf="typedRowData.type == transactionType.Expense"
     icon="trending-down-outline"
     status="danger"
   ></nb-icon>
   <nb-icon
-    *ngIf="typedRowData.flowType == transactionFlowType.Income"
+    *ngIf="typedRowData.type == transactionType.Income"
     icon="trending-up-outline"
     status="success"
   ></nb-icon>
   <nb-icon
-    *ngIf="typedRowData.flowType == transactionFlowType.Transfer"
+    *ngIf="typedRowData.type == transactionType.Transfer"
     icon="swap-outline"
     status="primary"
   ></nb-icon>

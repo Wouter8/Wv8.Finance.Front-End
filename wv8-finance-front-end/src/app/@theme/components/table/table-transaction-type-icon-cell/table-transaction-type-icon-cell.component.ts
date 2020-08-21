@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { ViewCell } from "ng2-smart-table";
 import { TransactionType } from "../../../../@core/enums/transaction-type.enum";
 import { Transaction } from '../../../../@core/models/transaction.model';
-import { TransactionFlowType } from '../../../../@core/enums/transaction-flow-type.enum';
 
 @Component({
   selector: "table-transaction-type-icon-cell",
@@ -16,14 +15,13 @@ export class TableTransactionTypeIconCellComponent implements OnInit, ViewCell {
   typedRowData: Transaction;
 
   tooltipText: string = "";
-
-  transactionFlowType = TransactionFlowType;
+  transactionType = TransactionType;
 
   constructor() {
   }
 
   ngOnInit() {
     this.typedRowData = this.rowData;
-    this.tooltipText = TransactionFlowType.getTransactionTypeString(this.typedRowData.flowType);
+    this.tooltipText = TransactionType.getTransactionTypeString(this.typedRowData.type);
   }
 }

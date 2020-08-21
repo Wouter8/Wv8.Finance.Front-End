@@ -4,14 +4,12 @@ import { Category } from "./category.model";
 import { Maybe } from "@wv8/typescript.core";
 import { Account } from "./account.model";
 import { RecurringTransaction } from "./recurring-transaction.model";
-import { TransactionFlowType } from '../enums/transaction-flow-type.enum';
 
 export class Transaction {
   id: number;
   description: string;
   date: Date;
   type: TransactionType;
-  flowType: TransactionFlowType;
   amount: number;
   categoryId: Maybe<number> = Maybe.none();
   category: Maybe<Category> = Maybe.none();
@@ -32,11 +30,6 @@ export class Transaction {
     instance.description = dto.description;
     instance.date = new Date(dto.date);
     instance.type = dto.type;
-    instance.flowType = dto.type == TransactionType.Internal
-      ? TransactionFlowType.Transfer
-      : dto.amount > 0
-        ? TransactionFlowType.Income
-        : TransactionFlowType.Expense;
     instance.amount = dto.amount;
     instance.categoryId = Maybe.deserialize(dto.categoryId);
     instance.category = Maybe.deserialize(dto.category).map((c) =>

@@ -25,8 +25,9 @@ import { CreateOrEditRecurringTransactionComponent } from "./recurring-transacti
 import { RecurringTransactionComponent } from "./recurring-transactions/recurring-transaction/recurring-transaction.component";
 import { DeleteRecurringTransactionComponent } from "./recurring-transactions/delete-recurring-transaction/delete-recurring-transaction.component";
 import { ConfirmTransactionComponent } from "./confirm-transaction/confirm-transaction.component";
-import { CreateOrEditRecurringExternalComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-external/create-or-edit-recurring-external.component";
-import { CreateOrEditRecurringInternalComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-internal/create-or-edit-recurring-internal.component";
+import { CreateOrEditRecurringExpenseComponent } from './recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-expense/create-or-edit-recurring-expense.component';
+import { CreateOrEditRecurringIncomeComponent } from './recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-income/create-or-edit-recurring-income.component';
+import { CreateOrEditRecurringTransferComponent } from './recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-transfer/create-or-edit-recurring-transfer.component';
 @NgModule({
   imports: [
     TransactionsRoutingModule,
@@ -52,8 +53,9 @@ import { CreateOrEditRecurringInternalComponent } from "./recurring-transactions
     RecurringTransactionsOverviewComponent,
     RecurringTransactionComponent,
     CreateOrEditRecurringTransactionComponent,
-    CreateOrEditRecurringExternalComponent,
-    CreateOrEditRecurringInternalComponent,
+    CreateOrEditRecurringExpenseComponent,
+    CreateOrEditRecurringIncomeComponent,
+    CreateOrEditRecurringTransferComponent,
     DeleteRecurringTransactionComponent,
     ConfirmTransactionComponent,
   ],

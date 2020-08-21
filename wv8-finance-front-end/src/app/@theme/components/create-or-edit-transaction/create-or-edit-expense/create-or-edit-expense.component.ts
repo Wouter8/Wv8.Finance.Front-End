@@ -10,11 +10,11 @@ import { Transaction } from "../../../../@core/models/transaction.model";
 import { Maybe } from "@wv8/typescript.core";
 
 @Component({
-  selector: "create-or-edit-external",
-  templateUrl: "./create-or-edit-external.component.html",
-  styleUrls: ["./create-or-edit-external.component.scss"]
+  selector: "create-or-edit-expense",
+  templateUrl: "./create-or-edit-expense.component.html",
+  styleUrls: ["./create-or-edit-expense.component.scss"]
 })
-export class CreateOrEditExternalComponent implements OnInit {
+export class CreateOrEditExpenseComponent implements OnInit {
   @Input() transaction: Transaction;
   @Input() editing: boolean;
 
