@@ -4,7 +4,6 @@
       <th>Account</th>
       <td>
         <account-picker
-          [disabled]="this.editing"
           [fullWidth]="true"
           [(account)]="transaction.accountId"
         ></account-picker>
@@ -54,7 +53,6 @@
       <th>Receiver</th>
       <td>
         <account-picker
-          [disabled]="this.editing"
           [selectDefault]="false"
           [fullWidth]="true"
           [account]="transaction.receivingAccountId.valueOrElse(undefined)"

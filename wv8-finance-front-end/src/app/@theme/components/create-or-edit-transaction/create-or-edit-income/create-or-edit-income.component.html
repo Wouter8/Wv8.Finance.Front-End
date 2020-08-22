@@ -4,7 +4,6 @@
       <th>Account</th>
       <td>
         <account-picker
-          [disabled]="this.editing"
           [fullWidth]="true"
           [(account)]="transaction.accountId"
         ></account-picker>
@@ -54,7 +53,6 @@
       <th>Category</th>
       <td>
         <category-picker
-          [disabled]="this.editing"
           [fullWidth]="true"
           [category]="transaction.categoryId.valueOrElse(undefined)"
           (categoryChange)="setCategoryId($event)"

@@ -12,6 +12,8 @@ import { Transaction } from "../models/transaction.model";
 import { Maybe } from "@wv8/typescript.core";
 import { TransactionType } from "../enums/transaction-type.enum";
 import { TransactionGroup } from "../models/transaction-group.model";
+import { InputTransaction } from '../datatransfer/input-transaction';
+import { EditTransaction } from '../datatransfer/edit-transaction';
 
 @Injectable()
 export class TransactionService extends TransactionData {
@@ -61,52 +63,20 @@ export class TransactionService extends TransactionData {
       .toPromise();
   }
 
-  updateTransaction(
-    id: number,
-    accountId: number,
-    description: string,
-    date: Date,
-    amount: number,
-    categoryId: Maybe<number>,
-    receivingAccountId: Maybe<number>
-  ): Promise<Transaction> {
-    const url = `${TransactionService.BaseUrl}/${id}`;
+  updateTransaction(input: EditTransaction): Promise<Transaction> {
+    const url = `${TransactionService.BaseUrl}/${input.id}`;
 
     return this.http
-      .put<ITransaction>(url, {
-        id,
-        accountId,
-        description,
-        date: `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`,
-        amount,
-        categoryId: categoryId.asQueryParam(),
-        receivingAccountId: receivingAccountId.asQueryParam()
-      })
+      .put<ITransaction>(url, null, input.serialize())
       .pipe(map(transaction => Transaction.fromDto(transaction)))
       .toPromise();
   }
 
-  createTransaction(
-    accountId: number,
-    description: string,
-    date: Date,
-    amount: number,
-    categoryId: Maybe<number>,
-    receivingAccountId: Maybe<number>,
-    needsConfirmation: boolean
-  ): Promise<Transaction> {
+  createTransaction(input: InputTransaction): Promise<Transaction> {
     const url = `${TransactionService.BaseUrl}`;
 
     return this.http
-      .post<ITransaction>(url, {
-        accountId,
-        description,
-        date: `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`,
-        amount,
-        categoryId: categoryId.asQueryParam(),
-        receivingAccountId: receivingAccountId.asQueryParam(),
-        needsConfirmation
-      })
+      .post<ITransaction>(url, null, input.serialize())
       .pipe(map(transaction => Transaction.fromDto(transaction)))
       .toPromise();
   }

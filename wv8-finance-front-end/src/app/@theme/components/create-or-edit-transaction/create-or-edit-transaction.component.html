@@ -9,6 +9,7 @@
         tabTitle="Expense"
         [tabindex]="transactionTypes.Expense"
         tabIcon="trending-down-outline"
+        [disabled]="editing && transaction.type != transactionTypes.Expense"
       >
         <create-or-edit-expense
           [transaction]="transaction"
@@ -21,6 +22,7 @@
         tabTitle="Income"
         [tabindex]="transactionTypes.Income"
         tabIcon="trending-up-outline"
+        [disabled]="editing && transaction.type != transactionTypes.Income"
       >
         <create-or-edit-income
           [transaction]="transaction"
@@ -33,6 +35,7 @@
         tabTitle="Transfer"
         [tabindex]="transactionTypes.Transfer"
         tabIcon="swap-outline"
+        [disabled]="editing && transaction.type != transactionTypes.Transfer"
       >
         <create-or-edit-transfer
           [transaction]="transaction"

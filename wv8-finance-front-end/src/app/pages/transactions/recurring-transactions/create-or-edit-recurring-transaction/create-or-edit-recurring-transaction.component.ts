@@ -106,6 +106,8 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       return;
     }
 
+    var amount = this.recurringTransaction.type == TransactionType.Expense ? -this.recurringTransaction.amount : this.recurringTransaction.amount;
+
     if (this.editing) {
       this.recurringTransaction = await this.recurringTransactionService.updateRecurringTransaction(
         this.recurringTransaction.id,
@@ -113,7 +115,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
         this.recurringTransaction.description,
         this.recurringTransaction.startDate,
         this.recurringTransaction.endDate,
-        this.recurringTransaction.amount,
+        amount,
         this.recurringTransaction.categoryId,
         this.recurringTransaction.receivingAccountId,
         this.recurringTransaction.interval,
@@ -131,7 +133,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
         this.recurringTransaction.description,
         this.recurringTransaction.startDate,
         this.recurringTransaction.endDate,
-        this.recurringTransaction.amount,
+        amount,
         this.recurringTransaction.categoryId,
         this.recurringTransaction.receivingAccountId,
         this.recurringTransaction.interval,
@@ -161,7 +163,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
     )
       messages.push("Enter a description.");
     if (!this.recurringTransaction.amount || this.recurringTransaction.amount <= 0)
-      messages.push("Amount must be greater than 0.");
+      messages.push("Enter a positive amount.");
 
     switch (this.recurringTransaction.type) {
       case TransactionType.Expense:

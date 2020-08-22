@@ -19,6 +19,8 @@ import { IIcon } from "../../../@core/data/icon";
 import { Category } from "../../../@core/models/category.model";
 import { CategoryData } from "../../../@core/data/category";
 import { Maybe } from "@wv8/typescript.core";
+import { InputTransaction } from "../../../@core/datatransfer/input-transaction";
+import { EditTransaction } from "../../../@core/datatransfer/edit-transaction";
 
 @Component({
   selector: "create-or-edit-transaction",
@@ -58,9 +60,9 @@ export class CreateOrEditTransactionComponent implements OnInit {
         case TransactionType.Expense:
           this.expenseTab.active = true;
           break;
-          case TransactionType.Income:
-            this.incomeTab.active = true;
-            break;
+        case TransactionType.Income:
+          this.incomeTab.active = true;
+          break;
         case TransactionType.Transfer:
           this.transferTab.active = true;
           break;
@@ -104,26 +106,38 @@ export class CreateOrEditTransactionComponent implements OnInit {
       return;
     }
 
+    var amount =
+      this.transaction.type == TransactionType.Expense
+        ? -this.transaction.amount
+        : this.transaction.amount;
+
     if (this.editing) {
       this.transaction = await this.transactionService.updateTransaction(
-        this.transaction.id,
-        this.transaction.accountId,
-        this.transaction.description,
-        this.transaction.date,
-        this.transaction.amount,
-        this.transaction.categoryId,
-        this.transaction.receivingAccountId
+        new EditTransaction(
+          this.transaction.id,
+          this.transaction.accountId,
+          this.transaction.description,
+          this.transaction.date,
+          amount,
+          this.transaction.categoryId,
+          this.transaction.receivingAccountId,
+          this.transaction.needsConfirmation, // TODO: Back-end does not support updating needs confirmation.
+          []
+        )
       );
       this.dialogRef.close({ success: true, transaction: this.transaction });
     } else {
       this.transaction = await this.transactionService.createTransaction(
-        this.transaction.accountId,
-        this.transaction.description,
-        this.transaction.date,
-        this.transaction.amount,
-        this.transaction.categoryId,
-        this.transaction.receivingAccountId,
-        this.transaction.needsConfirmation
+        new InputTransaction(
+          this.transaction.accountId,
+          this.transaction.description,
+          this.transaction.date,
+          amount,
+          this.transaction.categoryId,
+          this.transaction.receivingAccountId,
+          this.transaction.needsConfirmation,
+          []
+        )
       );
       this.dialogRef.close({ success: true, transaction: this.transaction });
     }
@@ -143,8 +157,9 @@ export class CreateOrEditTransactionComponent implements OnInit {
       this.transaction.description.trim().length < 3
     )
       messages.push("Enter a description.");
+
     if (!this.transaction.amount || this.transaction.amount <= 0)
-      messages.push("Amount must be greater than 0.");
+      messages.push("Enter a positive amount.");
 
     switch (this.transaction.type) {
       case TransactionType.Expense:

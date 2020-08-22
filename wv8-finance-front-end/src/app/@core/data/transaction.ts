@@ -7,6 +7,8 @@ import { Transaction } from "../models/transaction.model";
 import { IAccount } from "./account";
 import { TransactionGroup } from "../models/transaction-group.model";
 import { IRecurringTransaction } from "./recurring-transaction";
+import { InputTransaction } from '../datatransfer/input-transaction';
+import { EditTransaction } from '../datatransfer/edit-transaction';
 
 export interface ITransaction {
   id: number;
@@ -49,24 +51,8 @@ export abstract class TransactionData {
     skip: number,
     take: number
   ): Promise<TransactionGroup>;
-  abstract updateTransaction(
-    id: number,
-    accountId: number,
-    description: string,
-    date: Date,
-    amount: number,
-    categoryId: Maybe<number>,
-    receivingAccountId: Maybe<number>
-  ): Promise<Transaction>;
-  abstract createTransaction(
-    accountId: number,
-    description: string,
-    date: Date,
-    amount: number,
-    categoryId: Maybe<number>,
-    receivingAccountId: Maybe<number>,
-    needsConfirmation: boolean
-  ): Promise<Transaction>;
+  abstract updateTransaction(input: EditTransaction): Promise<Transaction>;
+  abstract createTransaction(input: InputTransaction): Promise<Transaction>;
   abstract confirmTransaction(
     id: number,
     date: Date,
