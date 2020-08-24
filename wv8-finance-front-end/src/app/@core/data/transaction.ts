@@ -27,6 +27,20 @@ export interface ITransaction {
   recurringTransaction: IMaybe<IRecurringTransaction>;
   needsConfirmation: boolean;
   isConfirmed: IMaybe<boolean>;
+  paymentRequests: IPaymentRequest[];
+  personalAmount: number;
+}
+
+export interface IPaymentRequest {
+  id: number;
+  transactionId: number;
+  amount: number;
+  name: string;
+  count: number;
+  paidCount: number;
+  amountDue: number;
+  complete: boolean;
+  transaction: ITransaction;
 }
 
 export interface ITransactionGroup {
