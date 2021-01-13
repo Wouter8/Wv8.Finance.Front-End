@@ -40,7 +40,6 @@ export interface IPaymentRequest {
   paidCount: number;
   amountDue: number;
   complete: boolean;
-  transaction: ITransaction;
 }
 
 export interface ITransactionGroup {
