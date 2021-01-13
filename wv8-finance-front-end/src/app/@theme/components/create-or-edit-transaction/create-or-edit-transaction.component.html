@@ -5,28 +5,43 @@
   <nb-card-body>
     <nb-tabset #tabSet fullWidth (changeTab)="onTypeChange($event)">
       <nb-tab
-        #externalTab
-        tabTitle="External"
-        [tabindex]="transactionTypes.External"
+        #expenseTab
+        tabTitle="Expense"
+        [tabindex]="transactionTypes.Expense"
         tabIcon="trending-down-outline"
+        [disabled]="editing && transaction.type != transactionTypes.Expense"
       >
-        <create-or-edit-external
+        <create-or-edit-expense
           [transaction]="transaction"
           [editing]="editing"
         >
-        </create-or-edit-external>
+        </create-or-edit-expense>
       </nb-tab>
       <nb-tab
-        #internalTab
-        tabTitle="Internal"
-        [tabindex]="transactionTypes.Internal"
-        tabIcon="swap-outline"
+        #incomeTab
+        tabTitle="Income"
+        [tabindex]="transactionTypes.Income"
+        tabIcon="trending-up-outline"
+        [disabled]="editing && transaction.type != transactionTypes.Income"
       >
-        <create-or-edit-internal
+        <create-or-edit-income
           [transaction]="transaction"
           [editing]="editing"
         >
-        </create-or-edit-internal>
+        </create-or-edit-income>
+      </nb-tab>
+      <nb-tab
+        #transferTab
+        tabTitle="Transfer"
+        [tabindex]="transactionTypes.Transfer"
+        tabIcon="swap-outline"
+        [disabled]="editing && transaction.type != transactionTypes.Transfer"
+      >
+        <create-or-edit-transfer
+          [transaction]="transaction"
+          [editing]="editing"
+        >
+        </create-or-edit-transfer>
       </nb-tab>
     </nb-tabset>
   </nb-card-body>

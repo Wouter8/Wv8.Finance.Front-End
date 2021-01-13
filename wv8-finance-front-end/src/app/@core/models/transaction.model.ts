@@ -3,15 +3,14 @@ import { TransactionType } from "../enums/transaction-type.enum";
 import { Category } from "./category.model";
 import { Maybe } from "@wv8/typescript.core";
 import { Account } from "./account.model";
+import { PaymentRequest } from "./payment-request.model";
 import { RecurringTransaction } from "./recurring-transaction.model";
-import { TransactionFlowType } from '../enums/transaction-flow-type.enum';
 
 export class Transaction {
   id: number;
   description: string;
   date: Date;
   type: TransactionType;
-  flowType: TransactionFlowType;
   amount: number;
   categoryId: Maybe<number> = Maybe.none();
   category: Maybe<Category> = Maybe.none();
@@ -24,6 +23,8 @@ export class Transaction {
   recurringTransaction: Maybe<RecurringTransaction> = Maybe.none();
   needsConfirmation: boolean = false;
   isConfirmed: Maybe<boolean> = Maybe.none();
+  paymentRequests: PaymentRequest[];
+  personalAmount: number;
 
   public static fromDto(dto: ITransaction): Transaction {
     let instance = new Transaction();
@@ -32,12 +33,7 @@ export class Transaction {
     instance.description = dto.description;
     instance.date = new Date(dto.date);
     instance.type = dto.type;
-    instance.flowType = dto.type == TransactionType.Internal
-      ? TransactionFlowType.Transfer
-      : dto.amount > 0
-        ? TransactionFlowType.Income
-        : TransactionFlowType.Expense;
-    instance.amount = dto.amount;
+    instance.amount = Math.abs(dto.amount);
     instance.categoryId = Maybe.deserialize(dto.categoryId);
     instance.category = Maybe.deserialize(dto.category).map((c) =>
       Category.fromDto(c)
@@ -57,6 +53,8 @@ export class Transaction {
     instance.recurringTransaction = Maybe.deserialize(
       dto.recurringTransaction
     ).map((rt) => RecurringTransaction.fromDto(rt));
+    instance.paymentRequests = dto.paymentRequests.map(pr => PaymentRequest.fromDto(pr));
+    instance.personalAmount = dto.personalAmount;
 
     return instance;
   }
@@ -86,6 +84,7 @@ export class Transaction {
     );
     instance.needsConfirmation = this.needsConfirmation;
     instance.isConfirmed = new Maybe(this.isConfirmed.valueOrElse(undefined));
+    instance.paymentRequests = this.paymentRequests.map(pr => pr.copy());
 
     return instance;
   }

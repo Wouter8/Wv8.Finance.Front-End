@@ -4,7 +4,6 @@
       <th>Account</th>
       <td>
         <account-picker
-          [disabled]="this.editing"
           [fullWidth]="true"
           [(account)]="recurringTransaction.accountId"
         ></account-picker>
@@ -53,16 +52,13 @@
       </td>
     </tr>
     <tr>
-      <th>Receiver</th>
+      <th>Category</th>
       <td>
-        <account-picker
-          [selectDefault]="false"
+        <category-picker
           [fullWidth]="true"
-          [account]="
-            recurringTransaction.receivingAccountId.valueOrElse(undefined)
-          "
-          (accountChange)="setReceivingAccountId($event)"
-        ></account-picker>
+          [category]="recurringTransaction.categoryId.valueOrElse(undefined)"
+          (categoryChange)="setCategoryId($event)"
+        ></category-picker>
       </td>
     </tr>
     <tr>

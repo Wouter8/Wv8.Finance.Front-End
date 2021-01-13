@@ -5,36 +5,52 @@
   <nb-card-body>
     <nb-tabset #tabSet fullWidth (changeTab)="onTypeChange($event)">
       <nb-tab
-        #externalTab
-        tabTitle="External"
-        [tabindex]="transactionTypes.External"
+        #expenseTab
+        tabTitle="Expense"
+        [tabindex]="transactionTypes.Expense"
         tabIcon="trending-down-outline"
         [disabled]="
-          editing && recurringTransaction.type != transactionTypes.External
+          editing && recurringTransaction.type != transactionTypes.Expense
         "
       >
-        <create-or-edit-recurring-external
+        <create-or-edit-recurring-expense
           [recurringTransaction]="recurringTransaction"
           [editing]="editing"
           [(updateInstances)]="updateInstances"
         >
-        </create-or-edit-recurring-external>
+        </create-or-edit-recurring-expense>
+      </nb-tab>
+      <nb-tab
+        #incomeTab
+        tabTitle="Income"
+        [tabindex]="transactionTypes.Income"
+        tabIcon="trending-up-outline"
+        [disabled]="
+          editing && recurringTransaction.type != transactionTypes.Income
+        "
+      >
+        <create-or-edit-recurring-income
+          [recurringTransaction]="recurringTransaction"
+          [editing]="editing"
+          [(updateInstances)]="updateInstances"
+        >
+        </create-or-edit-recurring-income>
       </nb-tab>
       <nb-tab
         #internalTab
         tabTitle="Transfer"
-        [tabindex]="transactionTypes.Internal"
+        [tabindex]="transactionTypes.Transfer"
         tabIcon="swap-outline"
         [disabled]="
-          editing && recurringTransaction.type != transactionTypes.Internal
+          editing && recurringTransaction.type != transactionTypes.Transfer
         "
       >
-        <create-or-edit-recurring-internal
+        <create-or-edit-recurring-transfer
           [recurringTransaction]="recurringTransaction"
           [editing]="editing"
           [(updateInstances)]="updateInstances"
         >
-        </create-or-edit-recurring-internal>
+        </create-or-edit-recurring-transfer>
       </nb-tab>
     </nb-tabset>
   </nb-card-body>

@@ -14,11 +14,11 @@ import { RecurringTransaction } from "../../../../../@core/models/recurring-tran
 import { IntervalUnit } from "../../../../../@core/enums/interval-unit";
 
 @Component({
-  selector: "create-or-edit-recurring-internal",
-  templateUrl: "./create-or-edit-recurring-internal.component.html",
-  styleUrls: ["./create-or-edit-recurring-internal.component.scss"]
+  selector: "create-or-edit-recurring-transfer",
+  templateUrl: "./create-or-edit-recurring-transfer.component.html",
+  styleUrls: ["./create-or-edit-recurring-transfer.component.scss"]
 })
-export class CreateOrEditRecurringInternalComponent implements OnInit {
+export class CreateOrEditRecurringTransferComponent implements OnInit {
   @Input() recurringTransaction: RecurringTransaction;
   @Input() editing: boolean;
 

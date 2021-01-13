@@ -22,10 +22,12 @@ import { Maybe } from "@wv8/typescript.core";
   styleUrls: ["./create-or-edit-recurring-transaction.component.scss"],
 })
 export class CreateOrEditRecurringTransactionComponent implements OnInit {
-  @ViewChild("externalTab", { static: true })
-  externalTab: NbTabComponent;
-  @ViewChild("internalTab", { static: true })
-  internalTab: NbTabComponent;
+  @ViewChild("expenseTab", { static: true })
+  expenseTab: NbTabComponent;
+  @ViewChild("incomeTab", { static: true })
+  incomeTab: NbTabComponent;
+  @ViewChild("transferTab", { static: true })
+  transferTab: NbTabComponent;
 
   @Input()
   recurringTransaction: RecurringTransaction;
@@ -51,11 +53,14 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       this.header = `Editing recurring transaction`;
 
       switch (this.recurringTransaction.type) {
-        case TransactionType.External:
-          this.externalTab.active = true;
+        case TransactionType.Expense:
+          this.expenseTab.active = true;
           break;
-        case TransactionType.Internal:
-          this.internalTab.active = true;
+        case TransactionType.Income:
+          this.incomeTab.active = true;
+          break;
+        case TransactionType.Transfer:
+          this.transferTab.active = true;
           break;
       }
     } else {
@@ -78,11 +83,12 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
     ];
 
     switch (this.recurringTransaction.type) {
-      case TransactionType.External:
+      case TransactionType.Expense:
+      case TransactionType.Income:
         this.recurringTransaction.category = Maybe.none();
         this.recurringTransaction.categoryId = Maybe.none();
         break;
-      case TransactionType.Internal:
+      case TransactionType.Transfer:
         this.recurringTransaction.receivingAccount = Maybe.none();
         this.recurringTransaction.receivingAccountId = Maybe.none();
         break;
@@ -100,6 +106,8 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       return;
     }
 
+    var amount = this.recurringTransaction.type == TransactionType.Expense ? -this.recurringTransaction.amount : this.recurringTransaction.amount;
+
     if (this.editing) {
       this.recurringTransaction = await this.recurringTransactionService.updateRecurringTransaction(
         this.recurringTransaction.id,
@@ -107,7 +115,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
         this.recurringTransaction.description,
         this.recurringTransaction.startDate,
         this.recurringTransaction.endDate,
-        this.recurringTransaction.amount,
+        amount,
         this.recurringTransaction.categoryId,
         this.recurringTransaction.receivingAccountId,
         this.recurringTransaction.interval,
@@ -125,7 +133,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
         this.recurringTransaction.description,
         this.recurringTransaction.startDate,
         this.recurringTransaction.endDate,
-        this.recurringTransaction.amount,
+        amount,
         this.recurringTransaction.categoryId,
         this.recurringTransaction.receivingAccountId,
         this.recurringTransaction.interval,
@@ -154,19 +162,16 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       this.recurringTransaction.description.trim().length < 3
     )
       messages.push("Enter a description.");
-    if (
-      this.recurringTransaction.type == TransactionType.Internal &&
-      (!this.recurringTransaction.amount ||
-        this.recurringTransaction.amount <= 0)
-    )
-      messages.push("Amount must be greater than 0.");
+    if (!this.recurringTransaction.amount || this.recurringTransaction.amount <= 0)
+      messages.push("Enter a positive amount.");
 
     switch (this.recurringTransaction.type) {
-      case TransactionType.External:
+      case TransactionType.Expense:
+      case TransactionType.Income:
         if (this.recurringTransaction.categoryId.isNone)
           messages.push("No category selected.");
         break;
-      case TransactionType.Internal:
+      case TransactionType.Transfer:
         if (this.recurringTransaction.receivingAccountId.isNone)
           messages.push("No receiver selected.");
         break;

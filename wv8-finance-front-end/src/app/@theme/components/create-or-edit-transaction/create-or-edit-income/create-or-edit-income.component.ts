@@ -2,20 +2,19 @@ import {
   Component,
   OnInit,
   OnChanges,
+  Input,
   ViewChild,
-  ElementRef,
-  Input
+  ElementRef
 } from "@angular/core";
-import { NbDatepicker, NbDateService } from "@nebular/theme";
 import { Transaction } from "../../../../@core/models/transaction.model";
 import { Maybe } from "@wv8/typescript.core";
 
 @Component({
-  selector: "create-or-edit-internal",
-  templateUrl: "./create-or-edit-internal.component.html",
-  styleUrls: ["./create-or-edit-internal.component.scss"]
+  selector: "create-or-edit-income",
+  templateUrl: "./create-or-edit-income.component.html",
+  styleUrls: ["./create-or-edit-income.component.scss"]
 })
-export class CreateOrEditInternalComponent implements OnInit {
+export class CreateOrEditIncomeComponent implements OnInit {
   @Input() transaction: Transaction;
   @Input() editing: boolean;
 
@@ -27,7 +26,7 @@ export class CreateOrEditInternalComponent implements OnInit {
     this.transaction.date = new Date(date);
   }
 
-  setReceivingAccountId(id: number) {
-    this.transaction.receivingAccountId = new Maybe(id);
+  setCategoryId(id: number) {
+    this.transaction.categoryId = new Maybe(id);
   }
 }
