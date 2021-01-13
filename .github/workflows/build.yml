@@ -3,7 +3,9 @@ name: Pull Request - Build production
 on:
   push:
     branches: 
-      - develop
+      - '*'
+      - '*/*' # match all feature/ and fix/ branches
+      - '!master' # exclude master
 
 jobs:
   build:
@@ -14,7 +16,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1.4.0
+    - uses: actions/setup-node@v2.1.4
     # Remove custom npmrc
     - run: rm .npmrc
       working-directory: ${{env.workingDirectory}}
