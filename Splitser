@@ -1,0 +1,37 @@
+Splitser
+
+Goals:
+    - Know which part of transaction is for me personally --> reports
+    - Add all transactions, even though someone else paid for me
+    - Know correct balance at all times
+
+Idea:
+    - Introduce splitser account which mimics balance on Splitser
+    - Import transactions from Splitser to reduce work of copying all transactions in app
+
+Situations:
+    - I paid for someone else
+        - Transaction visible in Rabobank app
+        - Manually add transaction to Splitser app
+        - Import transactions from Splitser
+        - Add expense transaction for full amount to default account, no category and unconfirmed
+        - Personal amount is full amount - splitsed amount.
+        - Store splitsed transaction with expense transaction (to id it later)
+
+    - Someone else paid for me 
+        - Transactions visible in Splitser app
+        - Import transactions from Splitser
+        - Add expense transaction for splitser account, unconfirmed
+        - Confirm transaction and specify category
+
+        
+    - Balance for splitser account is sum of all splitsed amounts of linked splitser transactions + sum of expense transactions
+    - It is not possible to create/edit transactions for splitser account in Finance app. Everything is imported
+    - Should have a page to confirm splitsed transactions --> Button to reload splitser transactions
+
+
+Import splitsed transactions as transactions with splitsed amount.
+    - Not editable
+    - Edited splitsed transaction can update transaction
+    - Add transaction to Splitser app. It will be imported within an hour, still have to add category
+
