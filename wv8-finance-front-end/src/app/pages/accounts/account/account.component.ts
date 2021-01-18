@@ -70,15 +70,6 @@ export class AccountComponent implements OnInit {
       .onClose.subscribe(
         async (data: { success: boolean; account: Account }) => {
           if (data && data.success) {
-            this.account = await this.accountService.updateAccount(
-              data.account.id,
-              data.account.description,
-              data.account.isDefault,
-              data.account.icon.pack,
-              data.account.icon.name,
-              data.account.icon.color
-            );
-
             this.toasterService.success("", "Updated account");
           }
         }

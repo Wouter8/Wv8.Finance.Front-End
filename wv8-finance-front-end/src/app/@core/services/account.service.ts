@@ -5,6 +5,7 @@ import { Account } from "../models/account.model";
 import { map } from "rxjs/operators";
 import { environment } from "../../../environments/environment";
 import { HttpService } from "../utils/http.service";
+import { AccountType } from "../enums/account-type.enum";
 
 @Injectable()
 export class AccountService extends AccountData {
@@ -55,6 +56,7 @@ export class AccountService extends AccountData {
   }
 
   createAccount(
+    type: AccountType,
     description: string,
     iconPack: string,
     iconName: string,
@@ -64,6 +66,7 @@ export class AccountService extends AccountData {
 
     return this.http
       .post<IAccount>(url, {
+        type,
         description,
         iconPack,
         iconName,

@@ -11,6 +11,7 @@ import { CreateOrEditAccountComponent } from "../create-or-edit-account/create-o
 import { Account } from "../../../@core/models/account.model";
 import { TableIconCellComponent } from "../../../@theme/components/table/table-icon-cell/table-icon-cell.component";
 import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
+import { AccountType } from "../../../@core/enums/account-type.enum";
 
 @Component({
   selector: "accounts-overview",
@@ -51,14 +52,7 @@ export class AccountsOverviewComponent implements OnInit {
       .onClose.subscribe(
         async (data: { success: boolean; account: Account }) => {
           if (data.success) {
-            let account = await this.accountService.createAccount(
-              data.account.description,
-              data.account.icon.pack,
-              data.account.icon.name,
-              data.account.icon.color
-            );
-
-            this.accounts.push(account);
+            this.accounts.push(data.account);
             this.loadData();
 
             this.toasterService.success("", "Added account");

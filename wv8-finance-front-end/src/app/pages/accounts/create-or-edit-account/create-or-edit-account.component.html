@@ -26,6 +26,23 @@
           </td>
         </tr>
         <tr>
+          <th>Type</th>
+          <td>
+            <nb-select
+              placeholder="Select type"
+              [(selected)]="account.type"
+              [disabled]="editing"
+              size="small"
+            >
+              <nb-option
+                *ngFor="let type of accountTypes | enumToArray"
+                [value]="type.index"
+                >{{ type.name }}</nb-option
+              >
+            </nb-select>
+          </td>
+        </tr>
+        <tr>
           <th>Description</th>
           <td>
             <input
@@ -44,7 +61,7 @@
           <td>
             <nb-checkbox
               [(checked)]="account.isDefault"
-              [disabled]="account.isObsolete"
+              [disabled]="account.isObsolete || account.type == accountTypes.Splitwise"
             ></nb-checkbox>
           </td>
         </tr>

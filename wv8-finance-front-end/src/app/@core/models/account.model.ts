@@ -1,8 +1,10 @@
 import { IAccount } from "../data/account";
 import { IIcon } from "../data/icon";
+import { AccountType } from "../enums/account-type.enum";
 
 export class Account {
   id: number;
+  type: AccountType = AccountType.Normal;
   description: string = "";
   isObsolete: boolean = false;
   currentBalance: number = 0;
@@ -17,6 +19,7 @@ export class Account {
     let instance = new Account();
 
     instance.id = dto.id;
+    instance.type = dto.type;
     instance.description = dto.description;
     instance.isObsolete = dto.isObsolete;
     instance.isDefault = dto.isDefault;
