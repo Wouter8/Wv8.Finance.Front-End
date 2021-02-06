@@ -35,3 +35,25 @@ Import splitsed transactions as transactions with splitsed amount.
     - Edited splitsed transaction can update transaction
     - Add transaction to Splitser app. It will be imported within an hour, still have to add category
 
+
+
+Paid for myself and someone else
+	- 10 paid = 5 personal + 5 others
+	- expense transactie 10 euro
+	- personal amount 5 euro -> via linked Splitwise transactie
+	- Splitwise account + 5 euro -> via linked Splitwise transactie
+
+Paid for someone else
+	- 10 paid = 10 others
+	- expense transactie 10 euro
+	- personal amount 0 euro
+	- Splitwise account + 10 euro
+
+Paid, together with someone else, for me and others
+	- 10 paid + 40 paid others = 25 personal + 25 others
+	- expense transactie 10 euro
+	- personal amount = 25 -> 10 + 15 via Splitwise transactie
+	- Splitwise account - 15
+
+Someone else paid for me
+	- expense transactie voor personal amount
