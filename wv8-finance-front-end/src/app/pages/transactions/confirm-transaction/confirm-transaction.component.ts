@@ -33,10 +33,15 @@ export class ConfirmTransactionComponent implements OnInit {
       return;
     }
 
+    var amount =
+      this.transaction.type == TransactionType.Expense
+        ? -this.transaction.amount
+        : this.transaction.amount;
+
     this.transaction = await this.transactionService.confirmTransaction(
       this.transaction.id,
       this.transaction.date,
-      this.transaction.amount
+      amount
     );
     this.dialogRef.close({ success: true, transaction: this.transaction });
   }
