@@ -7,13 +7,11 @@ import { Transaction } from "../models/transaction.model";
 import { IAccount } from "./account";
 import { TransactionGroup } from "../models/transaction-group.model";
 import { IRecurringTransaction } from "./recurring-transaction";
-import { InputTransaction } from '../datatransfer/input-transaction';
-import { EditTransaction } from '../datatransfer/edit-transaction';
+import { InputTransaction } from "../datatransfer/input-transaction";
 
-export interface ITransaction {
+export interface IBaseTransaction {
   id: number;
   description: string;
-  date: string;
   type: TransactionType;
   amount: number;
   categoryId: IMaybe<number>;
@@ -22,12 +20,17 @@ export interface ITransaction {
   account: IAccount;
   receivingAccountId: IMaybe<number>;
   receivingAccount: IMaybe<IAccount>;
+  needsConfirmation: boolean;
+  paymentRequests: IPaymentRequest[];
+  splitDetails: ISplitDetail[];
+}
+
+export interface ITransaction extends IBaseTransaction {
+  date: string;
   processed: boolean;
   recurringTransactionId: IMaybe<number>;
   recurringTransaction: IMaybe<IRecurringTransaction>;
-  needsConfirmation: boolean;
   isConfirmed: IMaybe<boolean>;
-  paymentRequests: IPaymentRequest[];
   personalAmount: number;
 }
 
@@ -40,6 +43,12 @@ export interface IPaymentRequest {
   paidCount: number;
   amountDue: number;
   complete: boolean;
+}
+
+export interface ISplitDetail {
+  transactionId: number;
+  splitwiserUserId: number;
+  amount: number;
 }
 
 export interface ITransactionGroup {
@@ -64,7 +73,10 @@ export abstract class TransactionData {
     skip: number,
     take: number
   ): Promise<TransactionGroup>;
-  abstract updateTransaction(input: EditTransaction): Promise<Transaction>;
+  abstract updateTransaction(
+    id: number,
+    input: InputTransaction
+  ): Promise<Transaction>;
   abstract createTransaction(input: InputTransaction): Promise<Transaction>;
   abstract confirmTransaction(
     id: number,

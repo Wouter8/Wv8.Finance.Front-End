@@ -7,25 +7,16 @@ import { Transaction } from "../models/transaction.model";
 import { IAccount } from "./account";
 import { TransactionGroup } from "../models/transaction-group.model";
 import { RecurringTransaction } from "../models/recurring-transaction.model";
+import { InputRecurringTransaction } from "../datatransfer/input-recurring-transaction";
+import { IBaseTransaction } from "./transaction";
 
-export interface IRecurringTransaction {
-  id: number;
-  description: string;
+export interface IRecurringTransaction extends IBaseTransaction {
   startDate: string;
   endDate: IMaybe<string>;
-  type: TransactionType;
-  amount: number;
-  categoryId: IMaybe<number>;
-  category: IMaybe<ICategory>;
-  accountId: number;
-  account: IAccount;
-  receivingAccountId: IMaybe<number>;
-  receivingAccount: IMaybe<IAccount>;
   nextOccurence: IMaybe<string>;
   finished: boolean;
   intervalUnit: IntervalUnit;
   interval: number;
-  needsConfirmation: boolean;
 }
 
 export abstract class RecurringTransactionData {
@@ -38,29 +29,11 @@ export abstract class RecurringTransactionData {
   ): Promise<RecurringTransaction[]>;
   abstract updateRecurringTransaction(
     id: number,
-    accountId: number,
-    description: string,
-    startDate: Date,
-    endDate: Maybe<Date>,
-    amount: number,
-    categoryId: Maybe<number>,
-    receivingAccountId: Maybe<number>,
-    interval: number,
-    intervalUnit: IntervalUnit,
-    needsConfirmation: boolean,
+    input: InputRecurringTransaction,
     updateInstances: boolean
   ): Promise<RecurringTransaction>;
   abstract createRecurringTransaction(
-    accountId: number,
-    description: string,
-    startDate: Date,
-    endDate: Maybe<Date>,
-    amount: number,
-    categoryId: Maybe<number>,
-    receivingAccountId: Maybe<number>,
-    interval: number,
-    intervalUnit: IntervalUnit,
-    needsConfirmation: boolean
+    input: InputRecurringTransaction
   ): Promise<RecurringTransaction>;
   abstract deleteRecurringTransaction(
     id: number,

@@ -7,11 +7,12 @@ import { RecurringTransaction } from "../models/recurring-transaction.model";
 import { map } from "rxjs/operators";
 import {
   RecurringTransactionData,
-  IRecurringTransaction
+  IRecurringTransaction,
 } from "../data/recurring-transaction";
 import { TransactionType } from "../enums/transaction-type.enum";
 import { IntervalUnit } from "../enums/interval-unit";
-import { start } from 'repl';
+import { start } from "repl";
+import { InputRecurringTransaction } from "../datatransfer/input-recurring-transaction";
 
 @Injectable()
 export class RecurringTransactionService extends RecurringTransactionData {
@@ -27,7 +28,7 @@ export class RecurringTransactionService extends RecurringTransactionData {
     return this.http
       .get<IRecurringTransaction>(url)
       .pipe(
-        map(recurringtransaction =>
+        map((recurringtransaction) =>
           RecurringTransaction.fromDto(recurringtransaction)
         )
       )
@@ -47,45 +48,30 @@ export class RecurringTransactionService extends RecurringTransactionData {
         type: type.asEnumQueryParam(),
         accountId: accountId.asQueryParam(),
         categoryId: categoryId.asQueryParam(),
-        includeFinished
+        includeFinished,
       })
-      .pipe(map(group => group.map(rt => RecurringTransaction.fromDto(rt))))
+      .pipe(map((group) => group.map((rt) => RecurringTransaction.fromDto(rt))))
       .toPromise();
   }
 
   updateRecurringTransaction(
     id: number,
-    accountId: number,
-    description: string,
-    startDate: Date,
-    endDate: Maybe<Date>,
-    amount: number,
-    categoryId: Maybe<number>,
-    receivingAccountId: Maybe<number>,
-    interval: number,
-    intervalUnit: IntervalUnit,
-    needsConfirmation: boolean,
+    input: InputRecurringTransaction,
     updateInstances: boolean
   ): Promise<RecurringTransaction> {
     const url = `${RecurringTransactionService.BaseUrl}/${id}`;
 
     return this.http
-      .put<IRecurringTransaction>(url, {
-        id,
-        accountId,
-        description,
-        startDate: startDate.toDateString(),
-        endDate: endDate.map(d => d.toDateString()).asQueryParam(),
-        amount,
-        categoryId: categoryId.asQueryParam(),
-        receivingAccountId: receivingAccountId.asQueryParam(),
-        interval,
-        intervalUnit,
-        needsConfirmation,
-        updateInstances
-      })
+      .put<IRecurringTransaction>(
+        url,
+        {
+          id,
+          updateInstances,
+        },
+        input.serialize()
+      )
       .pipe(
-        map(recurringtransaction =>
+        map((recurringtransaction) =>
           RecurringTransaction.fromDto(recurringtransaction)
         )
       )
@@ -93,34 +79,14 @@ export class RecurringTransactionService extends RecurringTransactionData {
   }
 
   createRecurringTransaction(
-    accountId: number,
-    description: string,
-    startDate: Date,
-    endDate: Maybe<Date>,
-    amount: number,
-    categoryId: Maybe<number>,
-    receivingAccountId: Maybe<number>,
-    interval: number,
-    intervalUnit: IntervalUnit,
-    needsConfirmation: boolean
+    input: InputRecurringTransaction
   ): Promise<RecurringTransaction> {
     const url = `${RecurringTransactionService.BaseUrl}`;
 
     return this.http
-      .post<IRecurringTransaction>(url, {
-        accountId,
-        description,
-        startDate: startDate.toDateString(),
-        endDate: endDate.map(d => d.toDateString()).asQueryParam(),
-        amount,
-        categoryId: categoryId.asQueryParam(),
-        receivingAccountId: receivingAccountId.asQueryParam(),
-        interval,
-        intervalUnit,
-        needsConfirmation
-      })
+      .post<IRecurringTransaction>(url, {}, input.serialize())
       .pipe(
-        map(recurringtransaction =>
+        map((recurringtransaction) =>
           RecurringTransaction.fromDto(recurringtransaction)
         )
       )

@@ -20,7 +20,6 @@ import { Category } from "../../../@core/models/category.model";
 import { CategoryData } from "../../../@core/data/category";
 import { Maybe } from "@wv8/typescript.core";
 import { InputTransaction } from "../../../@core/datatransfer/input-transaction";
-import { EditTransaction } from "../../../@core/datatransfer/edit-transaction";
 
 @Component({
   selector: "create-or-edit-transaction",
@@ -111,34 +110,26 @@ export class CreateOrEditTransactionComponent implements OnInit {
         ? -this.transaction.amount
         : this.transaction.amount;
 
+    let input = new InputTransaction(
+      this.transaction.accountId,
+      this.transaction.description,
+      this.transaction.date,
+      amount,
+      this.transaction.categoryId,
+      this.transaction.receivingAccountId,
+      this.transaction.needsConfirmation,
+      [],
+      []
+    );
+
     if (this.editing) {
       this.transaction = await this.transactionService.updateTransaction(
-        new EditTransaction(
-          this.transaction.id,
-          this.transaction.accountId,
-          this.transaction.description,
-          this.transaction.date,
-          amount,
-          this.transaction.categoryId,
-          this.transaction.receivingAccountId,
-          this.transaction.needsConfirmation, // TODO: Back-end does not support updating needs confirmation.
-          []
-        )
+        this.transaction.id,
+        input
       );
       this.dialogRef.close({ success: true, transaction: this.transaction });
     } else {
-      this.transaction = await this.transactionService.createTransaction(
-        new InputTransaction(
-          this.transaction.accountId,
-          this.transaction.description,
-          this.transaction.date,
-          amount,
-          this.transaction.categoryId,
-          this.transaction.receivingAccountId,
-          this.transaction.needsConfirmation,
-          []
-        )
-      );
+      this.transaction = await this.transactionService.createTransaction(input);
       this.dialogRef.close({ success: true, transaction: this.transaction });
     }
   }

@@ -1,3 +1,4 @@
+import { Maybe } from "@wv8/typescript.core";
 import { Observable } from "rxjs";
 import { AccountType } from "../enums/account-type.enum";
 import { Account } from "../models/account.model";
@@ -15,7 +16,7 @@ export interface IAccount {
 
 export abstract class AccountData {
   abstract getAccount(id: number): Promise<Account>;
-  abstract getAccounts(includeObsolete: boolean): Promise<Account[]>;
+  abstract getAccounts(includeObsolete: boolean, accountType: Maybe<AccountType>): Promise<Account[]>;
   abstract updateAccount(
     id: number,
     description: string,
