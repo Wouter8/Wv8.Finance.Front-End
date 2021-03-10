@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { ViewCell } from "ng2-smart-table";
 import { TransactionType } from "../../../../@core/enums/transaction-type.enum";
+import { BaseTransaction } from "../../../../@core/models/base-transaction.model";
 import { Transaction } from "../../../../@core/models/transaction.model";
 
 @Component({
@@ -14,7 +15,7 @@ export class TableTransactionAmountCellComponent implements OnInit, ViewCell {
   @Input()
   rowData: any;
 
-  typedRowData: Transaction;
+  typedRowData: BaseTransaction;
 
   differentPersonalAmount: boolean;
   splitDetailsSum: number;
@@ -24,6 +25,8 @@ export class TableTransactionAmountCellComponent implements OnInit, ViewCell {
 
   ngOnInit() {
     this.typedRowData = this.rowData;
+
+    console.log(this.typedRowData);
 
     this.differentPersonalAmount =
       this.typedRowData.type === TransactionType.Expense &&

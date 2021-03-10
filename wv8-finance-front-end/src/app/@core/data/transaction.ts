@@ -14,6 +14,7 @@ export interface IBaseTransaction {
   description: string;
   type: TransactionType;
   amount: number;
+  personalAmount: number;
   categoryId: IMaybe<number>;
   category: IMaybe<ICategory>;
   accountId: number;
@@ -31,7 +32,6 @@ export interface ITransaction extends IBaseTransaction {
   recurringTransactionId: IMaybe<number>;
   recurringTransaction: IMaybe<IRecurringTransaction>;
   isConfirmed: IMaybe<boolean>;
-  personalAmount: number;
 }
 
 export interface IPaymentRequest {

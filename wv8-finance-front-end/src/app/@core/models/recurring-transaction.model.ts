@@ -26,6 +26,7 @@ export class RecurringTransaction extends BaseTransaction {
     instance.endDate = Maybe.deserialize(dto.endDate).map((d) => new Date(d));
     instance.type = dto.type;
     instance.amount = Math.abs(dto.amount);
+    instance.personalAmount = Math.abs(dto.personalAmount);
     instance.categoryId = Maybe.deserialize(dto.categoryId);
     instance.category = Maybe.deserialize(dto.category).map((c) =>
       Category.fromDto(c)

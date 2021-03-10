@@ -6,7 +6,7 @@ import { Router } from "@angular/router";
 import {
   NbDialogService,
   NbToastrService,
-  NbCalendarRange
+  NbCalendarRange,
 } from "@nebular/theme";
 import { Transaction } from "../../../../@core/models/transaction.model";
 import { Maybe } from "@wv8/typescript.core";
@@ -17,12 +17,13 @@ import { TableDateCellComponent } from "../../../../@theme/components/table/tabl
 import { TableEuroCellComponent } from "../../../../@theme/components/table/table-euro-cell/table-euro-cell.component";
 import { TableTransactionTypeIconCellComponent } from "../../../../@theme/components/table/table-transaction-type-icon-cell/table-transaction-type-icon-cell.component";
 import { CreateOrEditRecurringTransactionComponent } from "../create-or-edit-recurring-transaction/create-or-edit-recurring-transaction.component";
-import { TableMaybeDateCellComponent } from '../../../../@theme/components/table/table-maybe-date-cell/table-maybe-date-cell.component';
+import { TableMaybeDateCellComponent } from "../../../../@theme/components/table/table-maybe-date-cell/table-maybe-date-cell.component";
+import { TableTransactionAmountCellComponent } from "../../../../@theme/components/table/table-transaction-amount-cell/table-transaction-amount-cell.component";
 
 @Component({
   selector: "recurring-transactions-overview",
   templateUrl: "./recurring-transactions-overview.component.html",
-  styleUrls: ["./recurring-transactions-overview.component.scss"]
+  styleUrls: ["./recurring-transactions-overview.component.scss"],
 })
 export class RecurringTransactionsOverviewComponent implements OnInit {
   @ViewChild("table", { static: true })
@@ -97,7 +98,7 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
 
             instance.showDefaultIcon = false;
             instance.iconSize = "small";
-          }
+          },
         },
         categoryId: {
           title: "Category",
@@ -109,16 +110,16 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
           ) => {
             instance.nameFunction = () =>
               instance.typedData.category
-                .map(c => c.getCompleteName())
+                .map((c) => c.getCompleteName())
                 .valueOrElse("-");
             instance.iconFunction = () =>
               instance.typedData.category
-                .map(c => c.icon)
+                .map((c) => c.icon)
                 .valueOrElse(undefined);
 
             instance.showDefaultIcon = false;
             instance.iconSize = "small";
-          }
+          },
         },
         receivingAccountId: {
           title: "Receiver",
@@ -130,20 +131,20 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
           ) => {
             instance.nameFunction = () =>
               instance.typedData.receivingAccount
-                .map(a => a.description)
+                .map((a) => a.description)
                 .valueOrElse("-");
             instance.iconFunction = () =>
               instance.typedData.receivingAccount
-                .map(a => a.icon)
+                .map((a) => a.icon)
                 .valueOrElse(undefined);
 
             instance.showDefaultIcon = false;
             instance.iconSize = "small";
-          }
+          },
         },
         description: {
           title: "Description",
-          type: "text"
+          type: "text",
         },
         startDate: {
           title: "Start Date",
@@ -152,26 +153,26 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
           sort: false,
           onComponentInitFunction: (instance: TableDateCellComponent) => {
             instance.showFutureIcon = false;
-          }
+          },
         },
         endDate: {
           title: "End Date",
           type: "custom",
           renderComponent: TableMaybeDateCellComponent,
-          sort: false
+          sort: false,
         },
         amount: {
           title: "Amount",
           type: "custom",
-          renderComponent: TableEuroCellComponent,
-          sort: false
+          renderComponent: TableTransactionAmountCellComponent,
+          sort: false,
         },
         type: {
           title: "Type",
           type: "custom",
           renderComponent: TableTransactionTypeIconCellComponent,
-          sort: false
-        }
+          sort: false,
+        },
       },
       hideFilter: true,
       clickable: true,
@@ -181,7 +182,7 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
         if (row.finished) classes.push("obsolete");
 
         return classes;
-      }
+      },
     };
   }
 }

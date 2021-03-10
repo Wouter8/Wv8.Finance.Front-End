@@ -10,6 +10,7 @@ export class BaseTransaction {
   description: string;
   type: TransactionType;
   amount: number;
+  personalAmount: number;
   categoryId: Maybe<number> = Maybe.none();
   category: Maybe<Category> = Maybe.none();
   accountId: number;

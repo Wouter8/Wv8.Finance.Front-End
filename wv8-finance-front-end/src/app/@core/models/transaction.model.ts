@@ -14,7 +14,6 @@ export class Transaction extends BaseTransaction {
   recurringTransactionId: Maybe<number> = Maybe.none();
   recurringTransaction: Maybe<RecurringTransaction> = Maybe.none();
   isConfirmed: Maybe<boolean> = Maybe.none();
-  personalAmount: number;
 
   public static fromDto(dto: ITransaction): Transaction {
     let instance = new Transaction();
@@ -30,6 +29,7 @@ export class Transaction extends BaseTransaction {
     );
     instance.accountId = dto.accountId;
     instance.account = Account.fromDto(dto.account);
+    instance.personalAmount = Math.abs(dto.personalAmount);
     instance.receivingAccountId = Maybe.deserialize(dto.receivingAccountId);
     instance.receivingAccount = Maybe.deserialize(
       dto.receivingAccount
@@ -49,7 +49,6 @@ export class Transaction extends BaseTransaction {
     instance.splitDetails = dto.splitDetails.map((sd) =>
       SplitDetail.fromDto(sd)
     );
-    instance.personalAmount = Math.abs(dto.personalAmount);
 
     return instance;
   }
