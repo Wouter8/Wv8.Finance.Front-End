@@ -6,6 +6,7 @@ import { Account } from "./account.model";
 import { PaymentRequest } from "./payment-request.model";
 import { RecurringTransaction } from "./recurring-transaction.model";
 import { BaseTransaction } from "./base-transaction.model";
+import { SplitDetail } from "./split-detail.model";
 
 export class Transaction extends BaseTransaction {
   date: Date;
@@ -45,7 +46,10 @@ export class Transaction extends BaseTransaction {
     instance.paymentRequests = dto.paymentRequests.map((pr) =>
       PaymentRequest.fromDto(pr)
     );
-    instance.personalAmount = dto.personalAmount;
+    instance.splitDetails = dto.splitDetails.map((sd) =>
+      SplitDetail.fromDto(sd)
+    );
+    instance.personalAmount = Math.abs(dto.personalAmount);
 
     return instance;
   }

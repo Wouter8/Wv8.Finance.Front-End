@@ -7,6 +7,7 @@ import { TableEuroCellComponent } from "../table/table-euro-cell/table-euro-cell
 import { TableTransactionTypeIconCellComponent } from "../table/table-transaction-type-icon-cell/table-transaction-type-icon-cell.component";
 import { TableComponent } from "../table/table.component";
 import { Router } from "@angular/router";
+import { TableTransactionAmountCellComponent } from "../table/table-transaction-amount-cell/table-transaction-amount-cell.component";
 
 @Component({
   selector: "transaction-table",
@@ -73,10 +74,10 @@ export class TransactionTableComponent implements OnInit, OnChanges {
       renderComponent: TableTransactionTypeIconCellComponent,
       sort: false,
     };
-    columns["personalAmount"] = {
+    columns["amount"] = {
       title: "Amount",
       type: "custom",
-      renderComponent: TableEuroCellComponent,
+      renderComponent: TableTransactionAmountCellComponent,
       sort: false,
     };
     if (this.showDateColumn) {

@@ -1,0 +1,29 @@
+<div
+  *ngIf="differentPersonalAmount"
+  [nbPopover]="amountExplainerPopover"
+  nbPopoverTrigger="hint"
+  class="different-amount"
+>
+  <span> {{ typedRowData.personalAmount | currency: "EUR" }}</span>
+</div>
+<div *ngIf="!differentPersonalAmount">
+  {{ typedRowData.amount | currency: "EUR" }}
+</div>
+<ng-template #amountExplainerPopover>
+  <div class="amount-explainer">
+    <table class="amount-explainer-table">
+      <tr>
+        <th>Split details</th>
+        <td>{{ this.splitDetailsSum | currency: "EUR" }}</td>
+      </tr>
+      <tr class="payment-request-row">
+        <th>Payment requests</th>
+        <td>{{ this.paymentRequestsSum | currency: "EUR" }}</td>
+      </tr>
+      <tr class="sum-row">
+        <th>Total amount</th>
+        <td>{{ typedRowData.amount | currency: "EUR" }}</td>
+      </tr>
+    </table>
+  </div>
+</ng-template>

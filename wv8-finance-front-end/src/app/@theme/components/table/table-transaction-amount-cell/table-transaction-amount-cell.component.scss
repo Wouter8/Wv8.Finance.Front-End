@@ -1,0 +1,46 @@
+.different-amount > span {
+  background-image: linear-gradient(
+    to right,
+    rgb(119, 119, 119) 33%,
+    rgba(255, 255, 255, 0) 0%
+  );
+  background-position: bottom;
+  background-size: 4px 1px;
+  background-repeat: repeat-x;
+}
+
+.amount-explainer {
+  padding: 10px 7px 0px 7px;
+
+  .amount-explainer-table {
+    tr {
+      font-size: 12px;
+
+      &.sum-row {
+        height: 32px;
+
+        border-top: 1px solid rgb(87, 87, 87);
+
+        font-size: 14px;
+      }
+
+      &.payment-request-row {
+        th,
+        td {
+          padding-bottom: 3px;
+        }
+      }
+    }
+
+    th {
+      width: 80%;
+      padding-right: 20px;
+      font-weight: 480;
+    }
+
+    td {
+      width: 20%;
+      font-weight: 300;
+    }
+  }
+}
