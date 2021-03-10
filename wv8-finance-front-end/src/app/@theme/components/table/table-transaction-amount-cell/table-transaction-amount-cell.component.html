@@ -13,13 +13,17 @@
   <div class="amount-explainer">
     <table class="amount-explainer-table">
       <tr>
-        <th>Split details</th>
+        <th>Personal amount</th>
+        <td>{{ typedRowData.personalAmount | currency: "EUR" }}</td>
+      </tr>
+      <tr class="last-row">
+        <th>Splits</th>
         <td>{{ this.splitDetailsSum | currency: "EUR" }}</td>
       </tr>
-      <tr class="payment-request-row">
+      <!-- <tr class="last-row">
         <th>Payment requests</th>
         <td>{{ this.paymentRequestsSum | currency: "EUR" }}</td>
-      </tr>
+      </tr> -->
       <tr class="sum-row">
         <th>Total amount</th>
         <td>{{ typedRowData.amount | currency: "EUR" }}</td>

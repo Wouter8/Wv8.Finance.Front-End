@@ -10,37 +10,45 @@
 }
 
 .amount-explainer {
-  padding: 10px 7px 0px 7px;
+  padding: 15px;
 
   .amount-explainer-table {
-    tr {
-      font-size: 12px;
-
-      &.sum-row {
-        height: 32px;
-
-        border-top: 1px solid rgb(87, 87, 87);
-
-        font-size: 14px;
-      }
-
-      &.payment-request-row {
-        th,
-        td {
-          padding-bottom: 3px;
-        }
-      }
-    }
-
     th {
       width: 80%;
-      padding-right: 20px;
-      font-weight: 480;
+      padding-right: 30px;
+      font-weight: 400;
     }
 
     td {
       width: 20%;
       font-weight: 300;
+      text-align: right;
+    }
+
+    tr {
+      font-size: 12px;
+
+      &.sum-row {
+        border-top: 1px solid rgb(150, 150, 150);
+
+        font-size: 14px;
+
+        th {
+          font-weight: 480;
+        }
+
+        th,
+        td {
+          padding-top: 5px;
+        }
+      }
+
+      &.last-row {
+        th,
+        td {
+          padding-bottom: 4px;
+        }
+      }
     }
   }
 }
