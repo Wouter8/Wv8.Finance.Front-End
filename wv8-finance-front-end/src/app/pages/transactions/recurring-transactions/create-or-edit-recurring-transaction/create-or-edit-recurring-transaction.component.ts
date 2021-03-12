@@ -16,6 +16,7 @@ import { TransactionType } from "../../../../@core/enums/transaction-type.enum";
 import { Category } from "../../../../@core/models/category.model";
 import { Maybe } from "@wv8/typescript.core";
 import { InputRecurringTransaction } from "../../../../@core/datatransfer/input-recurring-transaction";
+import { CreateOrEditRecurringExpenseComponent } from "./create-or-edit-recurring-expense/create-or-edit-recurring-expense.component";
 
 @Component({
   selector: "create-or-edit-recurring-transaction",
@@ -29,6 +30,9 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
   incomeTab: NbTabComponent;
   @ViewChild("transferTab", { static: true })
   transferTab: NbTabComponent;
+
+  @ViewChild("expenseTabComponent", { static: true })
+  expenseTabComponent: CreateOrEditRecurringExpenseComponent;
 
   @Input()
   recurringTransaction: RecurringTransaction;
@@ -152,6 +156,9 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
 
   private validate() {
     let messages: string[] = [];
+
+    if (this.recurringTransaction.type === TransactionType.Expense)
+      messages = messages.concat(this.expenseTabComponent.validate());
 
     if (!this.recurringTransaction.accountId)
       messages.push("Select an account.");

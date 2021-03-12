@@ -1,3 +1,162 @@
-table {
+@import "../../../../../@theme/styles/themes";
+
+@include nb-install-component() {
+  .transaction-input-table {
     width: 100%;
+  }
+
+  nb-select.appearance-outline.size-tiny .select-button {
+    padding: 0.1rem 1.5rem 0.1rem 0.2rem;
+  }
+
+  .amount-cell {
+    .amount-start-split {
+      font-size: 12px;
+      cursor: pointer;
+      color: blue;
+      &:hover {
+        text-decoration: underline;
+      }
+
+      text-align: right;
+    }
+  }
+
+  .splits-table {
+    width: 100%;
+
+    td {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+
+      min-height: 26px;
+      height: 26px;
+      max-height: 26px;
+
+      &.equal {
+        .name {
+          flex-grow: 1;
+        }
+      }
+
+      &.stakes {
+        .stake-input {
+          flex-grow: 1;
+
+          user-select: none;
+
+          display: flex;
+          justify-content: flex-end;
+          padding-right: 40px;
+
+          .counter {
+            position: relative;
+
+            .count {
+              position: relative;
+
+              min-width: 20px;
+              width: 20px;
+              max-width: 20px;
+              min-height: 20px;
+              height: 20px;
+              max-height: 20px;
+              line-height: 18px;
+
+              font-size: 11px;
+
+              z-index: 10;
+
+              border-radius: 50%;
+              color: rgb(163, 163, 163);
+              background-color: rgb(230, 248, 255);
+
+              text-align: center;
+
+              &.hasStake {
+                color: black;
+                border: 1px solid nb-theme(color-primary-default);
+              }
+
+              &.noStake:hover {
+                cursor: pointer;
+              }
+            }
+
+            .count-button {
+              position: absolute;
+              background-color: rgb(255, 227, 176);
+              border: 1px solid orange;
+              border-radius: 5px;
+              width: 20px;
+              height: 12px;
+              line-height: 9px;
+              top: 4px;
+
+              font-size: 10px;
+
+              &:hover {
+                cursor: pointer;
+              }
+
+              z-index: 1;
+            }
+
+            .minus {
+              @extend .count-button;
+
+              padding-left: 2px;
+              right: 10px;
+            }
+
+            .plus {
+              @extend .count-button;
+
+              text-align: right;
+
+              padding-right: 1px;
+              left: 10px;
+            }
+          }
+        }
+      }
+
+      &.exact {
+        .exact-input {
+          flex-grow: 1;
+
+          text-align: right;
+        }
+      }
+    }
+
+    .checkbox {
+      padding-right: 5px;
+    }
+
+    .name {
+      font-size: 12px;
+      font-weight: 400;
+
+      min-width: 50px;
+
+      &.me {
+        font-weight: 600;
+      }
+    }
+
+    .split-amount {
+      font-size: 10px;
+
+      min-width: 50px;
+      max-width: 50px;
+
+      text-overflow: ellipsis;
+      overflow: hidden;
+
+      text-align: right;
+    }
+  }
 }
