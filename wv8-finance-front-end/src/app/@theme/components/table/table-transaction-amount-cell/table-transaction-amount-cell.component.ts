@@ -18,6 +18,7 @@ export class TableTransactionAmountCellComponent implements OnInit, ViewCell {
   typedRowData: BaseTransaction;
 
   differentPersonalAmount: boolean;
+  importedTransaction: boolean;
   splitDetailsSum: number;
   paymentRequestsSum: number;
 
@@ -26,8 +27,11 @@ export class TableTransactionAmountCellComponent implements OnInit, ViewCell {
   ngOnInit() {
     this.typedRowData = this.rowData;
 
+    // If the amount is 0, then someone else paid, meaning the transaction is imported from Splitwise.
+    this.importedTransaction = this.typedRowData.amount === 0;
     this.differentPersonalAmount =
       this.typedRowData.type === TransactionType.Expense &&
+      !this.importedTransaction &&
       this.typedRowData.amount !== this.typedRowData.personalAmount;
 
     if (this.differentPersonalAmount) {

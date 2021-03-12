@@ -10,7 +10,7 @@ export class SplitDetail {
 
     instance.transactionId = dto.transactionId;
     instance.amount = dto.amount;
-    instance.splitwiseUserId = dto.splitwiserUserId;
+    instance.splitwiseUserId = dto.splitwiseUserId;
 
     return instance;
   }

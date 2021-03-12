@@ -118,6 +118,14 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
         ? -this.recurringTransaction.amount
         : this.recurringTransaction.amount;
 
+    var splitDetails =
+      this.recurringTransaction.type == TransactionType.Expense &&
+      this.expenseTabComponent.hasSplits
+        ? this.expenseTabComponent.splits
+            .filter((s) => s.user.isSome && s.amount > 0)
+            .map((s) => s.asInput())
+        : [];
+
     let input = new InputRecurringTransaction(
       this.recurringTransaction.accountId,
       this.recurringTransaction.description,
@@ -130,7 +138,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       this.recurringTransaction.interval,
       this.recurringTransaction.intervalUnit,
       [],
-      []
+      splitDetails
     );
 
     if (this.editing) {

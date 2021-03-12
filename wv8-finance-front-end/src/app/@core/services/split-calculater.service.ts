@@ -2,6 +2,9 @@ import { Injectable } from "@angular/core";
 import { SplitType } from "../enums/split-type.enum";
 import { SplitSpecification } from "../models/split-specification.model";
 import { Money, Currencies } from "ts-money";
+import { SplitDetail } from "../models/split-detail.model";
+import { SplitwiseUser } from "../models/splitwise-user.model";
+import { Maybe } from "@wv8/typescript.core";
 
 @Injectable({
   providedIn: "root",
@@ -70,5 +73,82 @@ export class SplitCalculaterService {
       default:
         throw "Unknown split type";
     }
+  }
+
+  public toSpecifications(
+    amount: number,
+    personalAmount: number,
+    details: SplitDetail[],
+    users: SplitwiseUser[]
+  ): SplitSpecification[] {
+    var money = new Money(amount, Currencies.EUR);
+    var specifications = [new SplitSpecification(Maybe.none(), personalAmount)];
+
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+
+      var detail = new Maybe(
+        details.find((d) => d.splitwiseUserId === user.id)
+      );
+
+      specifications.push(
+        new SplitSpecification(
+          Maybe.some(user),
+          detail.map((d) => d.amount).valueOrElse(0)
+        )
+      );
+    }
+
+    return specifications;
+  }
+
+  public getSplitType(
+    amount: number,
+    personalAmount: number,
+    splits: number[]
+  ): SplitType {
+    let money = new Money(Math.round(amount * 100), Currencies.EUR);
+    let moneys = splits
+      .filter((s) => s > 0)
+      .map((s) => new Money(Math.round(s * 100), Currencies.EUR));
+    let personalMoney = new Money(
+      Math.round(personalAmount * 100),
+      Currencies.EUR
+    );
+
+    if (this.isEqualShare(money, moneys)) return SplitType.Equal;
+    if (this.isStakesShare(money, personalMoney, moneys))
+      return SplitType.Stakes;
+
+    return SplitType.Exact;
+  }
+
+  private isEqualShare(amount: Money, splits: Money[]): boolean {
+    var allocation = splits.map((_) => 1);
+    var shares = amount.allocate(allocation);
+
+    return this.containSameValues(splits, shares);
+  }
+
+  private isStakesShare(
+    amount: Money,
+    personalAmount: Money,
+    splits: Money[]
+  ): boolean {
+    // TODO.
+    return false;
+  }
+
+  private containSameValues(a: Money[], b: Money[]): boolean {
+    let aString = a
+      .map((m) => m.amount / 100)
+      .sort()
+      .join(",");
+    let bString = b
+      .map((m) => m.amount / 100)
+      .sort()
+      .join(",");
+
+    return aString === bString;
   }
 }

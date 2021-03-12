@@ -63,6 +63,7 @@ export class RecurringTransaction extends BaseTransaction {
     instance.endDate = this.endDate.map((d) => new Date(d));
     instance.type = this.type;
     instance.amount = this.amount;
+    instance.personalAmount = this.personalAmount;
     instance.categoryId = new Maybe(this.categoryId.valueOrElse(undefined));
     instance.category = this.category.map((c) => c.copy());
     instance.accountId = this.accountId;

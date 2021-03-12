@@ -35,9 +35,24 @@ export class CreateOrEditExpenseComponent implements OnInit {
     private calculateService: SplitCalculaterService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.hasSplits = this.transaction.splitDetails.length > 0;
-    if (this.hasSplits) this.loadSplitwiseUsers();
+
+    if (this.hasSplits) {
+      await this.loadSplitwiseUsers();
+      this.splits = this.calculateService.toSpecifications(
+        this.transaction.amount,
+        this.transaction.personalAmount,
+        this.transaction.splitDetails,
+        this.splitwiseUsers
+      );
+
+      this.splitType = this.calculateService.getSplitType(
+        this.transaction.amount,
+        this.transaction.personalAmount,
+        this.splits.map((s) => s.amount)
+      );
+    }
   }
 
   dateChanged(date: Date) {
@@ -57,7 +72,6 @@ export class CreateOrEditExpenseComponent implements OnInit {
   }
 
   async loadSplitwiseUsers() {
-    // TODO: Get users from backend
     this.splitwiseUsers = await this.splitwiseService.getSplitwiseUsers();
 
     let me = new SplitSpecification(Maybe.none(), 0);
@@ -99,6 +113,8 @@ export class CreateOrEditExpenseComponent implements OnInit {
 
   public validate(): string[] {
     if (!this.hasSplits) return [];
+
+    console.log("hi");
 
     this.calculateSplitAmounts();
 

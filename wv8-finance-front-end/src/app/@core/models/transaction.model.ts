@@ -14,6 +14,7 @@ export class Transaction extends BaseTransaction {
   recurringTransactionId: Maybe<number> = Maybe.none();
   recurringTransaction: Maybe<RecurringTransaction> = Maybe.none();
   isConfirmed: Maybe<boolean> = Maybe.none();
+  editableAmount: boolean;
 
   public static fromDto(dto: ITransaction): Transaction {
     let instance = new Transaction();
@@ -23,13 +24,13 @@ export class Transaction extends BaseTransaction {
     instance.date = new Date(dto.date);
     instance.type = dto.type;
     instance.amount = Math.abs(dto.amount);
+    instance.personalAmount = Math.abs(dto.personalAmount);
     instance.categoryId = Maybe.deserialize(dto.categoryId);
     instance.category = Maybe.deserialize(dto.category).map((c) =>
       Category.fromDto(c)
     );
     instance.accountId = dto.accountId;
     instance.account = Account.fromDto(dto.account);
-    instance.personalAmount = Math.abs(dto.personalAmount);
     instance.receivingAccountId = Maybe.deserialize(dto.receivingAccountId);
     instance.receivingAccount = Maybe.deserialize(
       dto.receivingAccount
@@ -49,6 +50,7 @@ export class Transaction extends BaseTransaction {
     instance.splitDetails = dto.splitDetails.map((sd) =>
       SplitDetail.fromDto(sd)
     );
+    instance.editableAmount = dto.editableAmount;
 
     return instance;
   }
@@ -61,6 +63,7 @@ export class Transaction extends BaseTransaction {
     instance.date = new Date(this.date);
     instance.type = this.type;
     instance.amount = this.amount;
+    instance.personalAmount = this.personalAmount;
     instance.categoryId = new Maybe(this.categoryId.valueOrElse(undefined));
     instance.category = this.category.map((c) => c.copy());
     instance.accountId = this.accountId;
@@ -80,6 +83,7 @@ export class Transaction extends BaseTransaction {
     instance.isConfirmed = new Maybe(this.isConfirmed.valueOrElse(undefined));
     instance.paymentRequests = this.paymentRequests.map((pr) => pr.copy());
     instance.splitDetails = this.splitDetails.map((sd) => sd.copy());
+    instance.editableAmount = this.editableAmount;
 
     return instance;
   }

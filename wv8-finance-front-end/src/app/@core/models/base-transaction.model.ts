@@ -19,5 +19,5 @@ export class BaseTransaction {
   receivingAccount: Maybe<Account> = Maybe.none();
   needsConfirmation: boolean = false;
   paymentRequests: PaymentRequest[];
-  splitDetails: SplitDetail[];
+  splitDetails: SplitDetail[] = [];
 }

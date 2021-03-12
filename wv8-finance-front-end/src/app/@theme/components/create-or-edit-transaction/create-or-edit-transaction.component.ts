@@ -114,6 +114,14 @@ export class CreateOrEditTransactionComponent implements OnInit {
         ? -this.transaction.amount
         : this.transaction.amount;
 
+    var splitDetails =
+      this.transaction.type == TransactionType.Expense &&
+      this.expenseTabComponent.hasSplits
+        ? this.expenseTabComponent.splits
+            .filter((s) => s.user.isSome && s.amount > 0)
+            .map((s) => s.asInput())
+        : [];
+
     let input = new InputTransaction(
       this.transaction.accountId,
       this.transaction.description,
@@ -123,7 +131,7 @@ export class CreateOrEditTransactionComponent implements OnInit {
       this.transaction.receivingAccountId,
       this.transaction.needsConfirmation,
       [],
-      []
+      splitDetails
     );
 
     if (this.editing) {

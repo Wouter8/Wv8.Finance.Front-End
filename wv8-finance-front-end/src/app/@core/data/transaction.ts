@@ -32,6 +32,7 @@ export interface ITransaction extends IBaseTransaction {
   recurringTransactionId: IMaybe<number>;
   recurringTransaction: IMaybe<IRecurringTransaction>;
   isConfirmed: IMaybe<boolean>;
+  editableAmount: boolean;
 }
 
 export interface IPaymentRequest {
@@ -47,7 +48,7 @@ export interface IPaymentRequest {
 
 export interface ISplitDetail {
   transactionId: number;
-  splitwiserUserId: number;
+  splitwiseUserId: number;
   amount: number;
 }
 

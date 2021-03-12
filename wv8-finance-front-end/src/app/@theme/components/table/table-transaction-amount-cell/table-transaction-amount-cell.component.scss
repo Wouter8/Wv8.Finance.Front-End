@@ -1,4 +1,4 @@
-.different-amount > span {
+.underline > span {
   background-image: linear-gradient(
     to right,
     rgb(119, 119, 119) 33%,
@@ -9,10 +9,20 @@
   background-repeat: repeat-x;
 }
 
-.amount-explainer {
+.content {
+  display: inline-block;
+}
+
+.import-explainer {
   padding: 15px;
 
-  .amount-explainer-table {
+  font-size: 14px;
+}
+
+.splits-explainer {
+  padding: 15px;
+
+  .splits-explainer-table {
     th {
       width: 80%;
       padding-right: 30px;
