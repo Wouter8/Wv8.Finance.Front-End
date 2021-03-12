@@ -13,11 +13,10 @@ import { NbDatepicker, NbDateService, NbCalendarRange } from "@nebular/theme";
 import { RecurringTransaction } from "../../../../../@core/models/recurring-transaction.model";
 import { IntervalUnit } from "../../../../../@core/enums/interval-unit";
 import { SplitType } from "../../../../../@core/enums/split-type.enum";
-import {
-  SplitSpecification,
-  ISplitwiseUser,
-} from "../../../../../@core/models/split-specification.model";
+import { SplitSpecification } from "../../../../../@core/models/split-specification.model";
 import { SplitCalculaterService } from "../../../../../@core/services/split-calculater.service";
+import { SplitwiseUser } from "../../../../../@core/models/splitwise-user.model";
+import { ISplitwiseData } from "../../../../../@core/data/splitwise";
 
 @Component({
   selector: "create-or-edit-recurring-expense",
@@ -36,11 +35,14 @@ export class CreateOrEditRecurringExpenseComponent implements OnInit {
   splitTypes = SplitType;
   splits: SplitSpecification[];
 
-  splitwiseUsers: ISplitwiseUser[];
+  splitwiseUsers: SplitwiseUser[];
 
   intervalUnits = IntervalUnit;
 
-  constructor(private calculateService: SplitCalculaterService) {}
+  constructor(
+    private splitwiseService: ISplitwiseData,
+    private calculateService: SplitCalculaterService
+  ) {}
 
   ngOnInit() {}
 
@@ -59,21 +61,16 @@ export class CreateOrEditRecurringExpenseComponent implements OnInit {
     this.updateInstancesChange.emit(val);
   }
 
-  toggleSpecifyingSplits() {
+  async toggleSpecifyingSplits() {
     this.hasSplits = !this.hasSplits;
 
-    if (!this.splitwiseUsers) this.loadSplitwiseUsers();
+    if (!this.splitwiseUsers) await this.loadSplitwiseUsers();
 
     this.calculateSplitAmounts();
   }
 
-  loadSplitwiseUsers() {
-    // TODO: Get users from backend
-    this.splitwiseUsers = [
-      { id: 1, name: "Brent" },
-      { id: 2, name: "Stef" },
-      { id: 3, name: "Stefan" },
-    ];
+  async loadSplitwiseUsers() {
+    this.splitwiseUsers = await this.splitwiseService.getSplitwiseUsers();
 
     let me = new SplitSpecification(Maybe.none(), 0);
     this.splits = this.splitwiseUsers.map(

@@ -8,12 +8,11 @@ import {
 } from "@angular/core";
 import { Transaction } from "../../../../@core/models/transaction.model";
 import { Maybe } from "@wv8/typescript.core";
-import {
-  ISplitwiseUser,
-  SplitSpecification,
-} from "../../../../@core/models/split-specification.model";
+import { SplitSpecification } from "../../../../@core/models/split-specification.model";
 import { SplitType } from "../../../../@core/enums/split-type.enum";
 import { SplitCalculaterService } from "../../../../@core/services/split-calculater.service";
+import { ISplitwiseData } from "../../../../@core/data/splitwise";
+import { SplitwiseUser } from "../../../../@core/models/splitwise-user.model";
 
 @Component({
   selector: "create-or-edit-expense",
@@ -29,9 +28,12 @@ export class CreateOrEditExpenseComponent implements OnInit {
   splitTypes = SplitType;
   splits: SplitSpecification[];
 
-  splitwiseUsers: ISplitwiseUser[];
+  splitwiseUsers: SplitwiseUser[];
 
-  constructor(private calculateService: SplitCalculaterService) {}
+  constructor(
+    private splitwiseService: ISplitwiseData,
+    private calculateService: SplitCalculaterService
+  ) {}
 
   ngOnInit() {
     this.hasSplits = this.transaction.splitDetails.length > 0;
@@ -46,21 +48,17 @@ export class CreateOrEditExpenseComponent implements OnInit {
     this.transaction.categoryId = new Maybe(id);
   }
 
-  toggleSpecifyingSplits() {
+  async toggleSpecifyingSplits() {
     this.hasSplits = !this.hasSplits;
 
-    if (!this.splitwiseUsers) this.loadSplitwiseUsers();
+    if (!this.splitwiseUsers) await this.loadSplitwiseUsers();
 
     this.calculateSplitAmounts();
   }
 
-  loadSplitwiseUsers() {
+  async loadSplitwiseUsers() {
     // TODO: Get users from backend
-    this.splitwiseUsers = [
-      { id: 1, name: "Brent" },
-      { id: 2, name: "Stef" },
-      { id: 3, name: "Stefan" },
-    ];
+    this.splitwiseUsers = await this.splitwiseService.getSplitwiseUsers();
 
     let me = new SplitSpecification(Maybe.none(), 0);
     this.splits = this.splitwiseUsers.map(

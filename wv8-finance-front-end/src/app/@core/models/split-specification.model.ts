@@ -1,18 +1,14 @@
 import { Maybe } from "@wv8/typescript.core";
-
-export interface ISplitwiseUser {
-  id: number;
-  name: string;
-}
+import { SplitwiseUser } from "./splitwise-user.model";
 
 export class SplitSpecification {
-  user: Maybe<ISplitwiseUser>;
+  user: Maybe<SplitwiseUser>;
   hasSplit: boolean;
   stake: number;
   amount: number;
   name: string;
 
-  constructor(user: Maybe<ISplitwiseUser>, amount: number, stake: number = 0) {
+  constructor(user: Maybe<SplitwiseUser>, amount: number, stake: number = 0) {
     this.user = user;
     this.hasSplit = false;
     this.stake = stake;
