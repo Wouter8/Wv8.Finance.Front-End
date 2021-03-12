@@ -91,7 +91,7 @@
     transform: unset !important;
   }
 
-  nb-select {
-    width: 100%;
+  nb-select .select-button {
+    min-width: unset;
   }
 }

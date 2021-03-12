@@ -46,6 +46,11 @@
     font-size: 0.8125rem;
   }
 
+  nb-select[size="tiny"] .select-button.placeholder,
+  [nbInput].size-tiny::placeholder {
+    font-size: 0.7rem;
+  }
+
   nb-option:focus {
     background-color: unset;
   }
@@ -53,6 +58,4 @@
   .cdk-overlay-pane {
     z-index: 1100;
   }
-
-
 }

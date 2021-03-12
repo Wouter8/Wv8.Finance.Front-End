@@ -48,7 +48,6 @@ export class AccountPickerComponent implements OnInit, OnChanges {
       accountId = this.account;
     }
 
-    console.log(this.onlyNormalAccounts);
     this.accounts =
       accountId && this.disabled
         ? [await this.accountService.getAccount(accountId)]

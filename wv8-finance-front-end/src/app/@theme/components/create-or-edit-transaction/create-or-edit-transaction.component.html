@@ -12,6 +12,7 @@
         [disabled]="editing && transaction.type != transactionTypes.Expense"
       >
         <create-or-edit-expense
+          #expenseTabComponent
           [transaction]="transaction"
           [editing]="editing"
         >
@@ -24,10 +25,7 @@
         tabIcon="trending-up-outline"
         [disabled]="editing && transaction.type != transactionTypes.Income"
       >
-        <create-or-edit-income
-          [transaction]="transaction"
-          [editing]="editing"
-        >
+        <create-or-edit-income [transaction]="transaction" [editing]="editing">
         </create-or-edit-income>
       </nb-tab>
       <nb-tab

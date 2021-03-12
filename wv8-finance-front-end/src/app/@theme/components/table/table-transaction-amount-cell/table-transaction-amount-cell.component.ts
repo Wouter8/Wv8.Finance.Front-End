@@ -26,8 +26,6 @@ export class TableTransactionAmountCellComponent implements OnInit, ViewCell {
   ngOnInit() {
     this.typedRowData = this.rowData;
 
-    console.log(this.typedRowData);
-
     this.differentPersonalAmount =
       this.typedRowData.type === TransactionType.Expense &&
       this.typedRowData.amount !== this.typedRowData.personalAmount;

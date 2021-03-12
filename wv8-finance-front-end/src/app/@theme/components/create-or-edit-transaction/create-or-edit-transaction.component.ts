@@ -20,6 +20,7 @@ import { Category } from "../../../@core/models/category.model";
 import { CategoryData } from "../../../@core/data/category";
 import { Maybe } from "@wv8/typescript.core";
 import { InputTransaction } from "../../../@core/datatransfer/input-transaction";
+import { CreateOrEditExpenseComponent } from "./create-or-edit-expense/create-or-edit-expense.component";
 
 @Component({
   selector: "create-or-edit-transaction",
@@ -33,6 +34,9 @@ export class CreateOrEditTransactionComponent implements OnInit {
   incomeTab: NbTabComponent;
   @ViewChild("transferTab", { static: true })
   transferTab: NbTabComponent;
+
+  @ViewChild("expenseTabComponent", { static: true })
+  expenseTabComponent: CreateOrEditExpenseComponent;
 
   @Input()
   transaction: Transaction;
@@ -140,6 +144,9 @@ export class CreateOrEditTransactionComponent implements OnInit {
 
   private validate() {
     let messages: string[] = [];
+
+    if (this.transaction.type === TransactionType.Expense)
+      messages = messages.concat(this.expenseTabComponent.validate());
 
     if (!this.transaction.accountId) messages.push("Select an account.");
     if (!this.transaction.date) messages.push("Select a date.");

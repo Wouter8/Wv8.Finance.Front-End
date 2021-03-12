@@ -1,4 +1,4 @@
-<table>
+<table class="transaction-input-table">
   <tbody>
     <tr>
       <th>Account</th>
@@ -34,7 +34,7 @@
     </tr>
     <tr>
       <th>Amount</th>
-      <td>
+      <td class="amount-cell">
         <nb-form-field>
           <nb-icon nbPrefix icon="euro-sign" pack="fas"></nb-icon>
           <input
@@ -46,8 +46,94 @@
             fieldSize="small"
             fullWidth
             [(ngModel)]="transaction.amount"
+            (ngModelChange)="calculateSplitAmounts()"
           />
         </nb-form-field>
+        <div class="amount-start-split" (click)="toggleSpecifyingSplits()">
+          <span *ngIf="hasSplits">Remove splits...</span>
+          <span *ngIf="!hasSplits">Specify splits...</span>
+        </div>
+      </td>
+    </tr>
+    <tr *ngIf="hasSplits">
+      <th>
+        <div>Splits</div>
+        <nb-select
+          class="split-type-select"
+          placeholder="Split type"
+          [(selected)]="splitType"
+          (selectedChange)="onSplitTypeChanged()"
+          [fullWidth]="false"
+          size="tiny"
+        >
+          <nb-option
+            *ngFor="let type of splitTypes | enumToArray"
+            [value]="type.index"
+            >{{ type.name }}</nb-option
+          >
+        </nb-select>
+      </th>
+      <td>
+        <table class="splits-table">
+          <tr *ngFor="let split of splits" class="split-row">
+            <td
+              [ngClass]="{
+                equal: splitType == splitTypes.Equal,
+                stakes: splitType == splitTypes.Stakes,
+                exact: splitType == splitTypes.Exact
+              }"
+            >
+              <nb-checkbox
+                *ngIf="splitType == splitTypes.Equal"
+                class="checkbox"
+                [(checked)]="split.hasSplit"
+                (checkedChange)="calculateSplitAmounts()"
+              ></nb-checkbox>
+              <span class="name" [ngClass]="{ me: split.user.isNone }">
+                {{ split.name }}</span
+              >
+              <div *ngIf="splitType == splitTypes.Stakes" class="stake-input">
+                <div class="counter">
+                  <div
+                    *ngIf="split.stake > 0"
+                    class="minus"
+                    (click)="addToStake(split, -1)"
+                  >
+                    &#8211;
+                  </div>
+                  <div
+                    class="count"
+                    [ngClass]="{
+                      hasStake: split.stake > 0,
+                      noStake: split.stake == 0
+                    }"
+                    (click)="addToStakeIfZero(split)"
+                  >
+                    {{ split.stake }}
+                  </div>
+                  <div class="plus" (click)="addToStake(split, 1)">+</div>
+                </div>
+              </div>
+              <div *ngIf="splitType == splitTypes.Exact" class="exact-input">
+                <nb-form-field>
+                  <nb-icon nbPrefix icon="euro-sign" pack="fas"></nb-icon>
+                  <input
+                    type="number"
+                    step="1"
+                    min="0"
+                    placeholder="0,00"
+                    nbInput
+                    fieldSize="tiny"
+                    [(ngModel)]="split.amount"
+                  />
+                </nb-form-field>
+              </div>
+              <span *ngIf="splitType != splitTypes.Exact" class="split-amount">
+                {{ split.amount | currency: "EUR" }}
+              </span>
+            </td>
+          </tr>
+        </table>
       </td>
     </tr>
     <tr>
