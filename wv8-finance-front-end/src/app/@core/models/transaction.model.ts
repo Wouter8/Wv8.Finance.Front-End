@@ -14,7 +14,7 @@ export class Transaction extends BaseTransaction {
   recurringTransactionId: Maybe<number> = Maybe.none();
   recurringTransaction: Maybe<RecurringTransaction> = Maybe.none();
   isConfirmed: Maybe<boolean> = Maybe.none();
-  editableAmount: boolean;
+  editableAmount: boolean = true;
 
   public static fromDto(dto: ITransaction): Transaction {
     let instance = new Transaction();

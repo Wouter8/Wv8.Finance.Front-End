@@ -94,4 +94,15 @@
   nb-select .select-button {
     min-width: unset;
   }
+
+  .underline {
+    background-image: linear-gradient(
+      to right,
+      rgb(119, 119, 119) 33%,
+      rgba(255, 255, 255, 0) 0%
+    );
+    background-position: bottom;
+    background-size: 4px 1px;
+    background-repeat: repeat-x;
+  }
 }

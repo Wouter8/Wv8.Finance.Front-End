@@ -1,18 +1,21 @@
 <div
   *ngIf="differentPersonalAmount"
   [nbPopover]="splitsExplainerPopover"
-  nbPopoverTrigger="hint"
-  class="underline content"
+  nbPopoverTrigger="hover"
+  class="content"
 >
-  <span> {{ typedRowData.personalAmount | currency: "EUR" }}</span>
+  <span class="underline">{{
+    typedRowData.personalAmount | currency: "EUR"
+  }}</span>
 </div>
 <div
   *ngIf="importedTransaction"
-  [nbPopover]="importExplainerPopover"
-  nbPopoverTrigger="hint"
-  class="underline content"
+  nbTooltip="Transaction was imported from Splitwise."
+  class="content"
 >
-  <span> {{ typedRowData.personalAmount | currency: "EUR" }}</span>
+  <span class="underline">{{
+    typedRowData.personalAmount | currency: "EUR"
+  }}</span>
 </div>
 <div *ngIf="!importedTransaction && !differentPersonalAmount" class="content">
   {{ typedRowData.amount | currency: "EUR" }}
@@ -38,8 +41,4 @@
       </tr>
     </table>
   </div>
-</ng-template>
-
-<ng-template #importExplainerPopover>
-  <div class="import-explainer">Transaction was imported from Splitwise.</div>
 </ng-template>

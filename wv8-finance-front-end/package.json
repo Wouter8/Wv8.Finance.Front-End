@@ -51,6 +51,7 @@
     "eva-icons": "^1.1.0",
     "intl": "1.2.5",
     "ionicons": "^2.0.1",
+    "javascript-time-ago": "^2.3.4",
     "nebular-icons": "1.1.0",
     "ng2-completer": "^3.0.3",
     "ng2-smart-table": "^1.6.0",

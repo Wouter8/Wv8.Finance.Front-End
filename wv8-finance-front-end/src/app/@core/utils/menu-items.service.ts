@@ -12,13 +12,13 @@ export class MenuItemsService {
     {
       title: "Dashboard",
       icon: "home-outline",
-      link: "/",
-      home: true
+      link: "/dashboard",
+      home: true,
     },
     {
       title: "Accounts",
       icon: "credit-card-outline",
-      link: "/accounts"
+      link: "/accounts",
     },
     {
       title: "Transactions",
@@ -28,30 +28,25 @@ export class MenuItemsService {
         {
           title: "Overview",
           icon: "list-outline",
-          link: "/transactions"
+          link: "/transactions",
         },
         {
-          title: "Recurring transactions",
+          title: "Recurring",
           link: "/transactions/recurring",
-          icon: "clock-outline"
-        }
-      ]
+          icon: "clock-outline",
+        },
+        {
+          title: "Import",
+          link: "/transactions/import",
+          icon: "cloud-download-outline",
+        },
+      ],
     },
     {
       title: "Categories",
       icon: "bookmark",
-      link: "/categories"
+      link: "/categories",
     },
-    {
-      title: "Budgets",
-      icon: "activity-outline",
-      link: "/budgets"
-    },
-    {
-      title: "Savings",
-      icon: "gift",
-      link: "/accounts"
-    }
   ];
 
   constructor() {}

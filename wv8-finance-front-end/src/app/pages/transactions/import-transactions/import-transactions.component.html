@@ -1,0 +1,81 @@
+<div class="row">
+  <div class="col-sm-12">
+    <nb-card *ngIf="importerInformation && rows">
+      <nb-card-header>
+        <span class="title">Import</span>
+      </nb-card-header>
+
+      <nb-card-body>
+        <div class="importer-information">
+          <p>
+            Last Splitwise import:
+            <span
+              *ngIf="
+                importerInformation.currentState === importStates.NotRunning
+              "
+              class="underline"
+              [nbTooltip]="getTimestampString()"
+              >{{ getRunTimeString() }}</span
+            >
+            <span
+              *ngIf="importerInformation.currentState === importStates.Running"
+            >
+              importer is running...
+            </span>
+          </p>
+        </div>
+
+        <table class="splitwise-transactions">
+          <tr>
+            <th class="description-column">Description</th>
+            <th class="amount-column">Personal amount</th>
+            <th class="category-column">Category</th>
+            <th></th>
+          </tr>
+          <tr *ngFor="let row of rows">
+            <td class="description-column">
+              {{ row.transaction.description }}
+            </td>
+            <td class="amount-column">
+              {{ row.transaction.personalAmount | currency: "EUR" }}
+            </td>
+            <td class="category-column">
+              <category-picker
+                [fullWidth]="true"
+                [category]="row.categoryId.valueOrElse(undefined)"
+                (categoryChange)="setCategoryId(row, $event)"
+              ></category-picker>
+            </td>
+            <td class="import-column">
+              <button
+                nbButton
+                [disabled]="row.imported || row.categoryId.isNone"
+                status="info"
+                size="tiny"
+                (click)="importTransaction(row)"
+              >
+                <nb-icon icon="cloud-download-outline"></nb-icon>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="rows.length === 0">
+            <td colspan="4" class="empty-table-cell">Nothing to import...</td>
+          </tr>
+          <tr>
+            <td colspan="4" class="import-table-cell">
+              <button
+                nbButton
+                status="info"
+                size="tiny"
+                (click)="importFromSplitwise()"
+              >
+                Import now
+                <nb-icon icon="refresh-outline"></nb-icon>
+              </button>
+            </td>
+          </tr>
+        </table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+@import "../../../@theme/styles/themes";
+
+@include nb-install-component() {
+  nb-card-body {
+    padding-top: 0;
+  }
+
+  .importer-information {
+    p {
+      font-size: 12px;
+      font-weight: 250;
+    }
+
+    padding-top: 0.3rem;
+  }
+
+  td {
+    padding: 0 1.5rem;
+
+    &.category-column {
+      padding: 0 0.3rem;
+
+      width: 200px;
+    }
+
+    &.import-column {
+      padding: 0;
+    }
+  }
+
+  th {
+    padding: 0.5rem 1.5rem;
+    border-bottom: 1px solid #edf1f7;
+  }
+
+  .empty-table-cell {
+    font-size: 14px;
+    padding: 5px 0px;
+    text-align: center;
+    font-style: italic;
+  }
+
+  .import-table-cell {
+    padding: 5px 0px 0px 0px;
+    text-align: center;
+  }
+}
