@@ -32,7 +32,7 @@ export interface ITransaction extends IBaseTransaction {
   recurringTransactionId: IMaybe<number>;
   recurringTransaction: IMaybe<IRecurringTransaction>;
   isConfirmed: IMaybe<boolean>;
-  editableAmount: boolean;
+  editable: boolean;
 }
 
 export interface IPaymentRequest {

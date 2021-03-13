@@ -3,41 +3,61 @@
     <nb-card>
       <nb-card-header>
         <span class="title">{{ transaction.description }}</span>
-        <button
-          nbButton
-          nbTooltip="Edit"
-          nbTooltipPlacement="right"
-          size="tiny"
-          class="header-button"
-          (click)="onEditClick()"
+        <div *ngIf="transaction.editable" class="buttons">
+          <button
+            nbButton
+            nbTooltip="Edit"
+            nbTooltipPlacement="right"
+            size="tiny"
+            class="header-button"
+            (click)="onEditClick()"
+          >
+            <nb-icon icon="edit-outline"></nb-icon>
+          </button>
+          <button
+            *ngIf="
+              transaction.needsConfirmation && !transaction.isConfirmed.value
+            "
+            nbTooltip="Confirm"
+            nbTooltipPlacement="right"
+            nbButton
+            size="tiny"
+            status="warning"
+            class="header-button"
+            (click)="onConfirmClick()"
+          >
+            <nb-icon icon="checkmark-outline"></nb-icon>
+          </button>
+          <button
+            nbTooltip="Delete"
+            nbTooltipPlacement="right"
+            nbButton
+            size="tiny"
+            status="danger"
+            class="header-button"
+            (click)="onDeleteClick()"
+          >
+            <nb-icon icon="trash-2-outline"></nb-icon>
+          </button>
+        </div>
+        <div
+          *ngIf="!transaction.editable"
+          class="buttons"
+          nbTooltip="Edit this transaction in Splitwise."
         >
-          <nb-icon icon="edit-outline"></nb-icon>
-        </button>
-        <button
-          *ngIf="
-            transaction.needsConfirmation && !transaction.isConfirmed.value
-          "
-          nbTooltip="Confirm"
-          nbTooltipPlacement="right"
-          nbButton
-          size="tiny"
-          status="warning"
-          class="header-button"
-          (click)="onConfirmClick()"
-        >
-          <nb-icon icon="checkmark-outline"></nb-icon>
-        </button>
-        <button
-          nbTooltip="Delete"
-          nbTooltipPlacement="right"
-          nbButton
-          size="tiny"
-          status="danger"
-          class="header-button"
-          (click)="onDeleteClick()"
-        >
-          <nb-icon icon="trash-2-outline"></nb-icon>
-        </button>
+          <button nbButton size="tiny" class="header-button" [disabled]="true">
+            <nb-icon icon="edit-outline"></nb-icon>
+          </button>
+          <button
+            nbButton
+            size="tiny"
+            status="danger"
+            class="header-button"
+            [disabled]="true"
+          >
+            <nb-icon icon="trash-2-outline"></nb-icon>
+          </button>
+        </div>
       </nb-card-header>
       <nb-card-body>
         <table>

@@ -6,7 +6,6 @@
         <account-picker
           [fullWidth]="true"
           [(account)]="transaction.accountId"
-          [disabled]="!transaction.editableAmount"
           [onlyNormalAccounts]="true"
         ></account-picker>
       </td>
@@ -36,7 +35,7 @@
     <tr>
       <th>Amount</th>
       <td class="amount-cell">
-        <nb-form-field *ngIf="transaction.editableAmount">
+        <nb-form-field>
           <nb-icon nbPrefix icon="euro-sign" pack="fas"></nb-icon>
           <input
             type="number"
@@ -50,25 +49,7 @@
             (ngModelChange)="calculateSplitAmounts()"
           />
         </nb-form-field>
-        <nb-form-field
-          *ngIf="!transaction.editableAmount"
-          nbTooltip="Change the amount of this transaction in Splitwise."
-        >
-          <nb-icon nbPrefix icon="euro-sign" pack="fas"></nb-icon>
-          <input
-            [disabled]="true"
-            type="number"
-            nbInput
-            fieldSize="small"
-            fullWidth
-            [(ngModel)]="transaction.personalAmount"
-          />
-        </nb-form-field>
-        <div
-          *ngIf="transaction.editableAmount"
-          class="amount-start-split"
-          (click)="toggleSpecifyingSplits()"
-        >
+        <div class="amount-start-split" (click)="toggleSpecifyingSplits()">
           <span *ngIf="hasSplits">Remove splits...</span>
           <span *ngIf="!hasSplits">Specify splits...</span>
         </div>
