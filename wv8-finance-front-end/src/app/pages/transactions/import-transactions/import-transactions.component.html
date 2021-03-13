@@ -67,6 +67,9 @@
                 nbButton
                 status="info"
                 size="tiny"
+                [disabled]="
+                  importerInformation.currentState === importStates.Running
+                "
                 (click)="importFromSplitwise()"
               >
                 Import now
