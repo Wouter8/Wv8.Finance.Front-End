@@ -103,6 +103,16 @@ export class CreateOrEditTransactionComponent implements OnInit {
   }
 
   async submit() {
+    // If the transaction is not fully editable, this means that only the category is editable.
+    if (!this.transaction.fullyEditable) {
+      this.transactionService.updateTransactionCategory(
+        this.transaction.id,
+        this.transaction.categoryId.value
+      );
+      this.dialogRef.close({ success: true, transaction: this.transaction });
+      return;
+    }
+
     let errors = this.validate().reverse();
     if (errors.length > 0) {
       errors.map((e) => this.toasterService.warning(e, "Incorrect data"));

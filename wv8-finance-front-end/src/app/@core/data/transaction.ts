@@ -32,7 +32,7 @@ export interface ITransaction extends IBaseTransaction {
   recurringTransactionId: IMaybe<number>;
   recurringTransaction: IMaybe<IRecurringTransaction>;
   isConfirmed: IMaybe<boolean>;
-  editable: boolean;
+  fullyEditable: boolean;
 }
 
 export interface IPaymentRequest {
@@ -78,6 +78,10 @@ export abstract class TransactionData {
     id: number,
     input: InputTransaction
   ): Promise<Transaction>;
+  abstract updateTransactionCategory(
+    id: number,
+    categoryId: number
+  ): Promise<void>;
   abstract createTransaction(input: InputTransaction): Promise<Transaction>;
   abstract confirmTransaction(
     id: number,

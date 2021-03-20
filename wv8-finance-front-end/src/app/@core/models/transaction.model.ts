@@ -14,7 +14,7 @@ export class Transaction extends BaseTransaction {
   recurringTransactionId: Maybe<number> = Maybe.none();
   recurringTransaction: Maybe<RecurringTransaction> = Maybe.none();
   isConfirmed: Maybe<boolean> = Maybe.none();
-  editable: boolean = true;
+  fullyEditable: boolean = true;
 
   public static fromDto(dto: ITransaction): Transaction {
     let instance = new Transaction();
@@ -50,7 +50,7 @@ export class Transaction extends BaseTransaction {
     instance.splitDetails = dto.splitDetails.map((sd) =>
       SplitDetail.fromDto(sd)
     );
-    instance.editable = dto.editable;
+    instance.fullyEditable = dto.fullyEditable;
 
     return instance;
   }
@@ -83,7 +83,7 @@ export class Transaction extends BaseTransaction {
     instance.isConfirmed = new Maybe(this.isConfirmed.valueOrElse(undefined));
     instance.paymentRequests = this.paymentRequests.map((pr) => pr.copy());
     instance.splitDetails = this.splitDetails.map((sd) => sd.copy());
-    instance.editable = this.editable;
+    instance.fullyEditable = this.fullyEditable;
 
     return instance;
   }

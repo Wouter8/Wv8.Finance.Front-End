@@ -3,7 +3,7 @@
     <nb-card>
       <nb-card-header>
         <span class="title">{{ transaction.description }}</span>
-        <div *ngIf="transaction.editable" class="buttons">
+        <div class="buttons">
           <button
             nbButton
             nbTooltip="Edit"
@@ -36,24 +36,6 @@
             status="danger"
             class="header-button"
             (click)="onDeleteClick()"
-          >
-            <nb-icon icon="trash-2-outline"></nb-icon>
-          </button>
-        </div>
-        <div
-          *ngIf="!transaction.editable"
-          class="buttons"
-          nbTooltip="Edit this transaction in Splitwise."
-        >
-          <button nbButton size="tiny" class="header-button" [disabled]="true">
-            <nb-icon icon="edit-outline"></nb-icon>
-          </button>
-          <button
-            nbButton
-            size="tiny"
-            status="danger"
-            class="header-button"
-            [disabled]="true"
           >
             <nb-icon icon="trash-2-outline"></nb-icon>
           </button>
