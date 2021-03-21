@@ -114,14 +114,14 @@ export class CreateOrEditExpenseComponent implements OnInit {
   public validate(): string[] {
     if (!this.hasSplits) return [];
 
-    console.log("hi");
-
     this.calculateSplitAmounts();
 
     var sumSplits = 0;
     for (let i = 0; i < this.splits.length; i++) {
       sumSplits += !this.splits[i].amount ? 0 : this.splits[i].amount;
     }
+
+    sumSplits = Math.round(sumSplits * 100) / 100;
 
     if (sumSplits !== this.transaction.amount)
       return ["The sum of the splits must be equal to the transaction amount."];
