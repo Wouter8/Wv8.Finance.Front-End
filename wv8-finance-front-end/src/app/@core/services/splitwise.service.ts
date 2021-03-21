@@ -58,12 +58,16 @@ export class SplitwiseService implements ISplitwiseData {
 
   completeTransactionImport(
     splitwiseId: number,
-    categoryId: number
+    categoryId: number,
+    accountId: Maybe<number>
   ): Promise<Transaction> {
     const url = `${SplitwiseService.BaseUrl}/complete-import/${splitwiseId}`;
 
     return this.http
-      .post<ITransaction>(url, { categoryId })
+      .post<ITransaction>(url, {
+        categoryId,
+        accountId: accountId.asQueryParam(),
+      })
       .pipe(map((transaction) => Transaction.fromDto(transaction)))
       .toPromise();
   }

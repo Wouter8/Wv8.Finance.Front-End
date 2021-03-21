@@ -43,7 +43,8 @@ export abstract class ISplitwiseData {
   abstract getSplitwiseUsers(): Promise<SplitwiseUser[]>;
   abstract completeTransactionImport(
     splitwiseId: number,
-    categoryId: number
+    categoryId: number,
+    accountId: Maybe<number>
   ): Promise<Transaction>;
   abstract importFromSplitwise(): Promise<ImportResult>;
   abstract getImporterInformation(): Promise<ImporterInformation>;

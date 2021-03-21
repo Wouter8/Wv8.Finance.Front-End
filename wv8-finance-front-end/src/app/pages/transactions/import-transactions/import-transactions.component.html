@@ -27,29 +27,59 @@
 
         <table class="splitwise-transactions">
           <tr>
-            <th class="description-column">Description</th>
-            <th class="amount-column">Personal amount</th>
-            <th class="category-column">Category</th>
+            <th class="column">Date</th>
+            <th class="column">Description</th>
+            <th class="column">Paid amount</th>
+            <th class="column">Personal amount</th>
+            <th class="picker column">Category</th>
+            <th class="picker account column">Account</th>
             <th></th>
           </tr>
           <tr *ngFor="let row of rows">
-            <td class="description-column">
+            <td class="column">
+              {{ row.transaction.date | date }}
+            </td>
+            <td class="column">
               {{ row.transaction.description }}
             </td>
-            <td class="amount-column">
+            <td class="column">
+              {{ row.transaction.paidAmount | currency: "EUR" }}
+            </td>
+            <td class="column">
               {{ row.transaction.personalAmount | currency: "EUR" }}
             </td>
-            <td class="category-column">
+            <td class="picker column">
               <category-picker
                 [fullWidth]="true"
                 [category]="row.categoryId.valueOrElse(undefined)"
                 (categoryChange)="setCategoryId(row, $event)"
+                [disabled]="row.imported"
               ></category-picker>
             </td>
-            <td class="import-column">
+            <td class="picker account column">
+              <account-picker
+                *ngIf="row.transaction.paidAmount > 0"
+                [fullWidth]="true"
+                [account]="row.accountId.valueOrElse(undefined)"
+                (accountChange)="setAccountId(row, $event)"
+                [onlyNormalAccounts]="true"
+                [disabled]="row.imported"
+              ></account-picker>
+              <p
+                class="no-account-text"
+                *ngIf="row.transaction.paidAmount === 0"
+              >
+                No payment
+              </p>
+            </td>
+            <td class="import">
               <button
                 nbButton
-                [disabled]="row.imported || row.categoryId.isNone"
+                [disabled]="
+                  row.imported ||
+                  row.categoryId.isNone ||
+                  (row.transaction.paidAmount > 0 && row.accountId.isNone)
+                "
                 status="info"
                 size="tiny"
                 (click)="importTransaction(row)"
@@ -59,10 +89,10 @@
             </td>
           </tr>
           <tr *ngIf="rows.length === 0">
-            <td colspan="4" class="empty-table-cell">Nothing to import...</td>
+            <td colspan="7" class="empty-table-cell">Nothing to import...</td>
           </tr>
-          <tr>
-            <td colspan="4" class="import-table-cell">
+          <tr class="import-row">
+            <td colspan="7" class="import-table-cell">
               <button
                 nbButton
                 status="info"

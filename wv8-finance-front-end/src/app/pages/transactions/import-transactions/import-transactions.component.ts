@@ -73,6 +73,10 @@ export class ImportTransactionsComponent implements OnInit {
     row.categoryId = new Maybe(categoryId);
   }
 
+  setAccountId(row: ISplitwiseTransactionRow, accountId: number) {
+    row.accountId = new Maybe(accountId);
+  }
+
   async importTransaction(row: ISplitwiseTransactionRow) {
     if (row.categoryId.isNone)
       this.toaster.warning("", "Specify a category for the transaction.");
@@ -82,7 +86,8 @@ export class ImportTransactionsComponent implements OnInit {
 
     var transaction = await this.splitwiseService.completeTransactionImport(
       row.transaction.id,
-      row.categoryId.value
+      row.categoryId.value,
+      row.accountId
     );
 
     row.imported = true;
@@ -130,6 +135,7 @@ export class ImportTransactionsComponent implements OnInit {
     return {
       transaction: transaction,
       categoryId: Maybe.none(),
+      accountId: Maybe.none(),
       imported: false,
     };
   }
@@ -138,5 +144,6 @@ export class ImportTransactionsComponent implements OnInit {
 interface ISplitwiseTransactionRow {
   transaction: SplitwiseTransaction;
   categoryId: Maybe<number>;
+  accountId: Maybe<number>;
   imported: boolean;
 }
