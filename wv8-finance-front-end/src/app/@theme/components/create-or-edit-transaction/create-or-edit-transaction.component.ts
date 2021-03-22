@@ -35,7 +35,7 @@ export class CreateOrEditTransactionComponent implements OnInit {
   @ViewChild("transferTab", { static: true })
   transferTab: NbTabComponent;
 
-  @ViewChild("expenseTabComponent", { static: true })
+  @ViewChild("expenseTabComponent", { static: false })
   expenseTabComponent: CreateOrEditExpenseComponent;
 
   @Input()

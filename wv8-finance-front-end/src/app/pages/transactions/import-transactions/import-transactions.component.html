@@ -32,7 +32,7 @@
             <th class="column">Paid amount</th>
             <th class="column">Personal amount</th>
             <th class="picker column">Category</th>
-            <th class="picker account column">Account</th>
+            <th class="picker account column">Paid with</th>
             <th></th>
           </tr>
           <tr *ngFor="let row of rows">
@@ -63,6 +63,7 @@
                 [account]="row.accountId.valueOrElse(undefined)"
                 (accountChange)="setAccountId(row, $event)"
                 [onlyNormalAccounts]="true"
+                [showResetOption]="true"
                 [disabled]="row.imported"
               ></account-picker>
               <p
@@ -75,11 +76,7 @@
             <td class="import">
               <button
                 nbButton
-                [disabled]="
-                  row.imported ||
-                  row.categoryId.isNone ||
-                  (row.transaction.paidAmount > 0 && row.accountId.isNone)
-                "
+                [disabled]="row.imported || row.categoryId.isNone"
                 status="info"
                 size="tiny"
                 (click)="importTransaction(row)"

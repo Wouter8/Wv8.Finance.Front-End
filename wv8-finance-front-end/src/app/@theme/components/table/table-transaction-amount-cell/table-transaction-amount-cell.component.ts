@@ -19,6 +19,7 @@ export class TableTransactionAmountCellComponent implements OnInit, ViewCell {
 
   differentPersonalAmount: boolean;
   importedTransaction: boolean;
+  settlementTransaction: boolean;
   splitDetailsSum: number;
   paymentRequestsSum: number;
 
@@ -33,6 +34,9 @@ export class TableTransactionAmountCellComponent implements OnInit, ViewCell {
       this.typedRowData.type === TransactionType.Expense &&
       !this.importedTransaction &&
       this.typedRowData.amount !== this.typedRowData.personalAmount;
+    this.settlementTransaction =
+      this.typedRowData.type === TransactionType.Income &&
+      this.typedRowData.splitDetails.length > 0;
 
     if (this.differentPersonalAmount) {
       this.splitDetailsSum = this.typedRowData.splitDetails.reduce(

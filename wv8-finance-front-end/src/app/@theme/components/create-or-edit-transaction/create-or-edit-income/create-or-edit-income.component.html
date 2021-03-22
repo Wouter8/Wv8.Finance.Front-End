@@ -1,4 +1,4 @@
-<table>
+<table *ngIf="transaction.fullyEditable">
   <tbody>
     <tr>
       <th>Account</th>
@@ -72,6 +72,83 @@
       <td>
         <nb-checkbox
           [disabled]="this.editing"
+          [(checked)]="transaction.needsConfirmation"
+        ></nb-checkbox>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table *ngIf="!transaction.fullyEditable" class="transaction-input-table">
+  <tbody>
+    <tr>
+      <th>Account</th>
+      <td
+        nbTooltip="This property can not be edited for imported transactions."
+      >
+        <account-picker
+          [fullWidth]="true"
+          [(account)]="transaction.accountId"
+          [onlyNormalAccounts]="true"
+          [disabled]="true"
+        ></account-picker>
+      </td>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <td nbTooltip="Edit this property in Splitwise.">
+        <date-picker
+          [date]="transaction.date"
+          (dateChange)="dateChanged($event)"
+          [disabled]="true"
+        ></date-picker>
+      </td>
+    </tr>
+    <tr>
+      <th>Description</th>
+      <td nbTooltip="Edit this property in Splitwise.">
+        <input
+          type="text"
+          placeholder="Description"
+          nbInput
+          fieldSize="small"
+          fullWidth
+          [(ngModel)]="transaction.description"
+          [disabled]="true"
+        />
+      </td>
+    </tr>
+    <tr>
+      <th>Amount</th>
+      <td nbTooltip="Edit this property in Splitwise." class="amount-cell">
+        <nb-form-field>
+          <nb-icon nbPrefix icon="euro-sign" pack="fas"></nb-icon>
+          <input
+            type="number"
+            nbInput
+            fieldSize="small"
+            fullWidth
+            [(ngModel)]="transaction.personalAmount"
+            [disabled]="true"
+          />
+        </nb-form-field>
+      </td>
+    </tr>
+    <tr>
+      <th>Category</th>
+      <td>
+        <category-picker
+          [fullWidth]="true"
+          [category]="transaction.categoryId.valueOrElse(undefined)"
+          (categoryChange)="setCategoryId($event)"
+        ></category-picker>
+      </td>
+    </tr>
+    <tr>
+      <th>Needs confirmation</th>
+      <td>
+        <nb-checkbox
+          [disabled]="true"
           [(checked)]="transaction.needsConfirmation"
         ></nb-checkbox>
       </td>

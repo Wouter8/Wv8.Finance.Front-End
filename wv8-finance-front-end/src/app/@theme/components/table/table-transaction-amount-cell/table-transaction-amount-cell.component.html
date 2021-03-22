@@ -17,7 +17,21 @@
     typedRowData.personalAmount | currency: "EUR"
   }}</span>
 </div>
-<div *ngIf="!importedTransaction && !differentPersonalAmount" class="content">
+<div
+  *ngIf="settlementTransaction"
+  nbTooltip="Transaction is a settlement transaction."
+  class="content"
+>
+  <span class="underline">{{
+    typedRowData.personalAmount | currency: "EUR"
+  }}</span>
+</div>
+<div
+  *ngIf="
+    !importedTransaction && !differentPersonalAmount && !settlementTransaction
+  "
+  class="content"
+>
   {{ typedRowData.amount | currency: "EUR" }}
 </div>
 <ng-template #splitsExplainerPopover>

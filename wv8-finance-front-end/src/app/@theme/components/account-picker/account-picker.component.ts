@@ -17,7 +17,7 @@ import { AccountType } from "../../../@core/enums/account-type.enum";
   styleUrls: ["./account-picker.component.scss"],
 })
 export class AccountPickerComponent implements OnInit, OnChanges {
-  accounts: Account[] = [];
+  accounts: Account[];
 
   inputIsObject = false;
 
@@ -35,6 +35,8 @@ export class AccountPickerComponent implements OnInit, OnChanges {
   selectedAccount: Account = undefined;
   accountId: number = undefined;
 
+  initialAccountSelected: boolean = false;
+
   constructor(private accountService: AccountData) {}
 
   async ngOnInit() {}
@@ -48,9 +50,24 @@ export class AccountPickerComponent implements OnInit, OnChanges {
       accountId = this.account;
     }
 
+    await this.loadAccounts(accountId);
+
+    if (!this.initialAccountSelected) {
+      if (accountId) {
+        this.selectAccount(accountId);
+      } else if (this.selectDefault) {
+        let defaultAccounts = this.accounts.filter((a) => a.isDefault);
+        if (defaultAccounts.length > 0)
+          this.selectAccount(defaultAccounts[0].id);
+      }
+    }
+  }
+
+  private async loadAccounts(id: number) {
+    if (this.accounts) return;
     this.accounts =
-      accountId && this.disabled
-        ? [await this.accountService.getAccount(accountId)]
+      id && this.disabled
+        ? [await this.accountService.getAccount(id)]
         : (
             await this.accountService.getAccounts(
               this.includeObsolete,
@@ -59,17 +76,18 @@ export class AccountPickerComponent implements OnInit, OnChanges {
                 : Maybe.none()
             )
           ).filter((c) => this.filterAccounts.indexOf(c.id) < 0);
+  }
 
-    if (accountId) {
-      this.selectedAccount = this.accounts.filter((c) => c.id == accountId)[0];
-    } else if (this.selectDefault) {
-      let defaultAccounts = this.accounts.filter((a) => a.isDefault);
-      if (defaultAccounts.length > 0) accountId = defaultAccounts[0].id;
+  private selectAccount(id: number) {
+    this.initialAccountSelected = true;
+
+    if (id) {
+      this.selectedAccount = this.accounts.filter((c) => c.id == id)[0];
     }
 
     // Set after loading everything so options get properly selected.
     setTimeout(() => {
-      this.accountId = accountId;
+      this.accountId = id;
       this.accountSelected();
     });
   }
@@ -78,10 +96,6 @@ export class AccountPickerComponent implements OnInit, OnChanges {
     if (!this.accountId) {
       return this.accountChange.emit(undefined);
     }
-
-    this.selectedAccount = this.accounts.filter(
-      (c) => c.id == this.accountId
-    )[0];
 
     this.accountChange.emit(
       this.inputIsObject ? this.selectedAccount : this.selectedAccount.id
