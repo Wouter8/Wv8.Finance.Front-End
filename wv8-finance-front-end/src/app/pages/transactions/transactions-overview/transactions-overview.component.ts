@@ -46,14 +46,9 @@ export class TransactionsOverviewComponent implements OnInit {
     private dialogService: NbDialogService,
     private toasterService: NbToastrService,
     private dateService: NbDateService<Date>
-  ) {}
+  ) { }
 
   async ngOnInit() {
-    let today = new Date();
-    this.rangeFilter = {
-      start: this.dateService.addDay(today, -21),
-      end: this.dateService.addDay(today, 7),
-    };
     this.filter();
 
     this.accounts = await this.accountService.getAccounts(true, Maybe.none());

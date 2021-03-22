@@ -9,17 +9,10 @@
         <div class="importer-information">
           <p>
             Last Splitwise import:
-            <span
-              *ngIf="
+            <span *ngIf="
                 importerInformation.currentState === importStates.NotRunning
-              "
-              class="underline"
-              [nbTooltip]="getTimestampString()"
-              >{{ getRunTimeString() }}</span
-            >
-            <span
-              *ngIf="importerInformation.currentState === importStates.Running"
-            >
+              " class="underline" [nbTooltip]="getTimestampString()">{{ getRunTimeString() }}</span>
+            <span *ngIf="importerInformation.currentState === importStates.Running">
               importer is running...
             </span>
           </p>
@@ -49,38 +42,20 @@
               {{ row.transaction.personalAmount | currency: "EUR" }}
             </td>
             <td class="picker column">
-              <category-picker
-                [fullWidth]="true"
-                [category]="row.categoryId.valueOrElse(undefined)"
-                (categoryChange)="setCategoryId(row, $event)"
-                [disabled]="row.imported"
-              ></category-picker>
+              <category-picker [fullWidth]="true" [category]="row.categoryId.valueOrElse(undefined)"
+                (categoryChange)="setCategoryId(row, $event)" [disabled]="row.imported"></category-picker>
             </td>
             <td class="picker account column">
-              <account-picker
-                *ngIf="row.transaction.paidAmount > 0"
-                [fullWidth]="true"
-                [accountId]="row.accountId.valueOrElse(undefined)"
-                (accountChange)="setAccountId(row, $event)"
-                [onlyNormalAccounts]="true"
-                [showResetOption]="true"
-                [disabled]="row.imported"
-              ></account-picker>
-              <p
-                class="no-account-text"
-                *ngIf="row.transaction.paidAmount === 0"
-              >
+              <account-picker *ngIf="row.transaction.paidAmount > 0" [fullWidth]="true"
+                [accountId]="row.accountId.valueOrElse(undefined)" (accountIdChange)="setAccountId(row, $event)"
+                [onlyNormalAccounts]="true" [showResetOption]="true" [disabled]="row.imported"></account-picker>
+              <p class="no-account-text" *ngIf="row.transaction.paidAmount === 0">
                 No payment
               </p>
             </td>
             <td class="import">
-              <button
-                nbButton
-                [disabled]="row.imported || row.categoryId.isNone"
-                status="info"
-                size="tiny"
-                (click)="importTransaction(row)"
-              >
+              <button nbButton [disabled]="row.imported || row.categoryId.isNone" status="info" size="tiny"
+                (click)="importTransaction(row)">
                 <nb-icon icon="cloud-download-outline"></nb-icon>
               </button>
             </td>
@@ -90,15 +65,9 @@
           </tr>
           <tr class="import-row">
             <td colspan="7" class="import-table-cell">
-              <button
-                nbButton
-                status="info"
-                size="tiny"
-                [disabled]="
+              <button nbButton status="info" size="tiny" [disabled]="
                   importerInformation.currentState === importStates.Running
-                "
-                (click)="importFromSplitwise()"
-              >
+                " (click)="importFromSplitwise()">
                 Import now
                 <nb-icon icon="refresh-outline"></nb-icon>
               </button>
