@@ -5,7 +5,7 @@
       <td>
         <account-picker
           [fullWidth]="true"
-          [(account)]="transaction.accountId"
+          [(accountId)]="transaction.accountId"
           [onlyNormalAccounts]="true"
         ></account-picker>
       </td>
@@ -56,7 +56,7 @@
         <account-picker
           [selectDefault]="false"
           [fullWidth]="true"
-          [account]="transaction.receivingAccountId.valueOrElse(undefined)"
+          [accountId]="transaction.receivingAccountId.valueOrElse(undefined)"
           (accountChange)="setReceivingAccountId($event)"
         ></account-picker>
       </td>

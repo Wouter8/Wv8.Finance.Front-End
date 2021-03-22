@@ -5,7 +5,7 @@
       <td>
         <account-picker
           [fullWidth]="true"
-          [(account)]="recurringTransaction.accountId"
+          [(accountId)]="recurringTransaction.accountId"
           [onlyNormalAccounts]="true"
         ></account-picker>
       </td>
@@ -58,7 +58,7 @@
         <account-picker
           [selectDefault]="false"
           [fullWidth]="true"
-          [account]="
+          [accountId]="
             recurringTransaction.receivingAccountId.valueOrElse(undefined)
           "
           (accountChange)="setReceivingAccountId($event)"

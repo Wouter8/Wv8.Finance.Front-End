@@ -60,7 +60,7 @@
               <account-picker
                 *ngIf="row.transaction.paidAmount > 0"
                 [fullWidth]="true"
-                [account]="row.accountId.valueOrElse(undefined)"
+                [accountId]="row.accountId.valueOrElse(undefined)"
                 (accountChange)="setAccountId(row, $event)"
                 [onlyNormalAccounts]="true"
                 [showResetOption]="true"

@@ -5,6 +5,7 @@ import {
   Output,
   EventEmitter,
   OnChanges,
+  SimpleChanges,
 } from "@angular/core";
 import { AccountData } from "../../../@core/data/account";
 import { Account } from "../../../@core/models/account.model";
@@ -19,8 +20,6 @@ import { AccountType } from "../../../@core/enums/account-type.enum";
 export class AccountPickerComponent implements OnInit, OnChanges {
   accounts: Account[];
 
-  inputIsObject = false;
-
   @Input() selectDefault: boolean = true;
   @Input() placeholderText: string = "Select account";
   @Input() disabled: boolean = false;
@@ -28,40 +27,28 @@ export class AccountPickerComponent implements OnInit, OnChanges {
   @Input() includeObsolete: boolean = false;
   @Input() filterAccounts: number[] = [];
   @Input() showResetOption: boolean = false;
-  @Input() account: number | Account;
+  @Input() accountId: number = undefined;
   @Input() onlyNormalAccounts: boolean = false;
-  @Output() accountChange = new EventEmitter<number | Account>();
+  @Output() accountIdChange = new EventEmitter<number>();
 
   selectedAccount: Account = undefined;
-  accountId: number = undefined;
 
   initialAccountSelected: boolean = false;
 
   constructor(private accountService: AccountData) {}
 
-  async ngOnInit() {}
-
   async ngOnChanges() {
-    let accountId: number;
-    if (this.account instanceof Account) {
-      this.inputIsObject = true;
-      accountId = this.account.id;
-    } else {
-      accountId = this.account;
-    }
+    await this.loadAccounts(this.accountId);
 
-    await this.loadAccounts(accountId);
-
-    if (!this.initialAccountSelected) {
-      if (accountId) {
-        this.selectAccount(accountId);
-      } else if (this.selectDefault) {
-        let defaultAccounts = this.accounts.filter((a) => a.isDefault);
-        if (defaultAccounts.length > 0)
-          this.selectAccount(defaultAccounts[0].id);
-      }
+    if (this.accountId) {
+      this.selectAccount(this.accountId);
+    } else if (!this.initialAccountSelected && this.selectDefault) {
+      let defaultAccounts = this.accounts.filter((a) => a.isDefault);
+      if (defaultAccounts.length > 0) this.selectAccount(defaultAccounts[0].id);
     }
   }
+
+  async ngOnInit() {}
 
   private async loadAccounts(id: number) {
     if (this.accounts) return;
@@ -81,10 +68,6 @@ export class AccountPickerComponent implements OnInit, OnChanges {
   private selectAccount(id: number) {
     this.initialAccountSelected = true;
 
-    if (id) {
-      this.selectedAccount = this.accounts.filter((c) => c.id == id)[0];
-    }
-
     // Set after loading everything so options get properly selected.
     setTimeout(() => {
       this.accountId = id;
@@ -94,11 +77,15 @@ export class AccountPickerComponent implements OnInit, OnChanges {
 
   accountSelected() {
     if (!this.accountId) {
-      return this.accountChange.emit(undefined);
+      return this.accountIdChange.emit(undefined);
     }
 
-    this.accountChange.emit(
-      this.inputIsObject ? this.selectedAccount : this.selectedAccount.id
-    );
+    if (this.accountId) {
+      this.selectedAccount = this.accounts.filter(
+        (c) => c.id == this.accountId
+      )[0];
+    }
+
+    this.accountIdChange.emit(this.selectedAccount.id);
   }
 }
