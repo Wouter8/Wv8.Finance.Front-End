@@ -6,7 +6,7 @@ import {
   NbToastrService,
   NbDateService,
   NbCalendarRange,
-  NbCalendarViewMode
+  NbCalendarViewMode,
 } from "@nebular/theme";
 import { Router } from "@angular/router";
 import { Maybe } from "@wv8/typescript.core";
@@ -16,12 +16,12 @@ import { TransactionGroup } from "../../../@core/models/transaction-group.model"
 import { Account } from "../../../@core/models/account.model";
 import { TransactionType } from "../../../@core/enums/transaction-type.enum";
 import { AccountData } from "../../../@core/data/account";
-import { CreateOrEditTransactionComponent } from '../../../@theme/components/create-or-edit-transaction/create-or-edit-transaction.component';
+import { CreateOrEditTransactionComponent } from "../../../@theme/components/create-or-edit-transaction/create-or-edit-transaction.component";
 
 @Component({
   selector: "transactions-overview",
   templateUrl: "./transactions-overview.component.html",
-  styleUrls: ["./transactions-overview.component.scss"]
+  styleUrls: ["./transactions-overview.component.scss"],
 })
 export class TransactionsOverviewComponent implements OnInit {
   transactionGroup: TransactionGroup = undefined;
@@ -46,17 +46,12 @@ export class TransactionsOverviewComponent implements OnInit {
     private dialogService: NbDialogService,
     private toasterService: NbToastrService,
     private dateService: NbDateService<Date>
-  ) {}
+  ) { }
 
   async ngOnInit() {
-    let today = new Date();
-    this.rangeFilter = {
-      start: this.dateService.addDay(today, -21),
-      end: this.dateService.addDay(today, 7)
-    };
     this.filter();
 
-    this.accounts = await this.accountService.getAccounts(true);
+    this.accounts = await this.accountService.getAccounts(true, Maybe.none());
   }
 
   onClickAdd(event: MouseEvent) {
@@ -69,7 +64,7 @@ export class TransactionsOverviewComponent implements OnInit {
 
             // Reset to trigger changes in table component.
             this.transactionGroup.transactions = [
-              ...this.transactionGroup.transactions
+              ...this.transactionGroup.transactions,
             ];
 
             this.toasterService.success("", "Added transaction");
@@ -81,7 +76,7 @@ export class TransactionsOverviewComponent implements OnInit {
   async filter(pageNumber: number = 1) {
     let range = {
       start: undefined,
-      end: undefined
+      end: undefined,
     };
     if (this.rangeFilter && this.rangeFilter.start && this.rangeFilter.end) {
       range.start = this.rangeFilter.start;

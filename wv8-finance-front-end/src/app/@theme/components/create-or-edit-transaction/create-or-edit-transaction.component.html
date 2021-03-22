@@ -12,6 +12,8 @@
         [disabled]="editing && transaction.type != transactionTypes.Expense"
       >
         <create-or-edit-expense
+          #expenseTabComponent
+          *ngIf="!editing || transaction.type === transactionTypes.Expense"
           [transaction]="transaction"
           [editing]="editing"
         >
@@ -25,6 +27,7 @@
         [disabled]="editing && transaction.type != transactionTypes.Income"
       >
         <create-or-edit-income
+          *ngIf="!editing || transaction.type === transactionTypes.Income"
           [transaction]="transaction"
           [editing]="editing"
         >
@@ -38,6 +41,7 @@
         [disabled]="editing && transaction.type != transactionTypes.Transfer"
       >
         <create-or-edit-transfer
+          *ngIf="!editing || transaction.type === transactionTypes.Transfer"
           [transaction]="transaction"
           [editing]="editing"
         >

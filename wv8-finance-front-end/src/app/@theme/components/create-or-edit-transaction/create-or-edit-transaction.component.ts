@@ -20,7 +20,7 @@ import { Category } from "../../../@core/models/category.model";
 import { CategoryData } from "../../../@core/data/category";
 import { Maybe } from "@wv8/typescript.core";
 import { InputTransaction } from "../../../@core/datatransfer/input-transaction";
-import { EditTransaction } from "../../../@core/datatransfer/edit-transaction";
+import { CreateOrEditExpenseComponent } from "./create-or-edit-expense/create-or-edit-expense.component";
 
 @Component({
   selector: "create-or-edit-transaction",
@@ -34,6 +34,9 @@ export class CreateOrEditTransactionComponent implements OnInit {
   incomeTab: NbTabComponent;
   @ViewChild("transferTab", { static: true })
   transferTab: NbTabComponent;
+
+  @ViewChild("expenseTabComponent", { static: false })
+  expenseTabComponent: CreateOrEditExpenseComponent;
 
   @Input()
   transaction: Transaction;
@@ -100,6 +103,16 @@ export class CreateOrEditTransactionComponent implements OnInit {
   }
 
   async submit() {
+    // If the transaction is not fully editable, this means that only the category is editable.
+    if (!this.transaction.fullyEditable) {
+      this.transactionService.updateTransactionCategory(
+        this.transaction.id,
+        this.transaction.categoryId.value
+      );
+      this.dialogRef.close({ success: true, transaction: this.transaction });
+      return;
+    }
+
     let errors = this.validate().reverse();
     if (errors.length > 0) {
       errors.map((e) => this.toasterService.warning(e, "Incorrect data"));
@@ -111,34 +124,34 @@ export class CreateOrEditTransactionComponent implements OnInit {
         ? -this.transaction.amount
         : this.transaction.amount;
 
+    var splitDetails =
+      this.transaction.type == TransactionType.Expense &&
+      this.expenseTabComponent.hasSplits
+        ? this.expenseTabComponent.splits
+            .filter((s) => s.user.isSome && s.amount > 0)
+            .map((s) => s.asInput())
+        : [];
+
+    let input = new InputTransaction(
+      this.transaction.accountId,
+      this.transaction.description,
+      this.transaction.date,
+      amount,
+      this.transaction.categoryId,
+      this.transaction.receivingAccountId,
+      this.transaction.needsConfirmation,
+      [],
+      splitDetails
+    );
+
     if (this.editing) {
       this.transaction = await this.transactionService.updateTransaction(
-        new EditTransaction(
-          this.transaction.id,
-          this.transaction.accountId,
-          this.transaction.description,
-          this.transaction.date,
-          amount,
-          this.transaction.categoryId,
-          this.transaction.receivingAccountId,
-          this.transaction.needsConfirmation, // TODO: Back-end does not support updating needs confirmation.
-          []
-        )
+        this.transaction.id,
+        input
       );
       this.dialogRef.close({ success: true, transaction: this.transaction });
     } else {
-      this.transaction = await this.transactionService.createTransaction(
-        new InputTransaction(
-          this.transaction.accountId,
-          this.transaction.description,
-          this.transaction.date,
-          amount,
-          this.transaction.categoryId,
-          this.transaction.receivingAccountId,
-          this.transaction.needsConfirmation,
-          []
-        )
-      );
+      this.transaction = await this.transactionService.createTransaction(input);
       this.dialogRef.close({ success: true, transaction: this.transaction });
     }
   }
@@ -149,6 +162,9 @@ export class CreateOrEditTransactionComponent implements OnInit {
 
   private validate() {
     let messages: string[] = [];
+
+    if (this.transaction.type === TransactionType.Expense)
+      messages = messages.concat(this.expenseTabComponent.validate());
 
     if (!this.transaction.accountId) messages.push("Select an account.");
     if (!this.transaction.date) messages.push("Select a date.");

@@ -3,7 +3,7 @@ import {
   NgModule,
   Optional,
   SkipSelf,
-  LOCALE_ID
+  LOCALE_ID,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { NbAuthModule, NbDummyAuthStrategy } from "@nebular/auth";
@@ -21,11 +21,13 @@ import { HttpService } from "./utils/http.service";
 import { CategoryService } from "./services/category.service";
 import { BudgetService } from "./services/budget.service";
 import { TransactionData } from "./data/transaction";
+import { ISplitwiseData } from "./data/splitwise";
 import { TransactionService } from "./services/transaction.service";
 import { RecurringTransactionService } from "./services/recurring-transaction.service";
 import { RecurringTransactionData } from "./data/recurring-transaction";
 import { ReportService } from "./services/report.service";
 import { ReportData } from "./data/report";
+import { SplitwiseService } from "./services/splitwise.service";
 
 const DATA_SERVICES = [
   { provide: AccountData, useClass: AccountService },
@@ -33,7 +35,8 @@ const DATA_SERVICES = [
   { provide: BudgetData, useClass: BudgetService },
   { provide: TransactionData, useClass: TransactionService },
   { provide: RecurringTransactionData, useClass: RecurringTransactionService },
-  { provide: ReportData, useClass: ReportService }
+  { provide: ReportData, useClass: ReportService },
+  { provide: ISplitwiseData, useClass: SplitwiseService },
 ];
 
 const UTIL_SERVICES = [AnalyticsService, MenuItemsService, HttpService];
@@ -50,19 +53,17 @@ export const NB_CORE_PROVIDERS = [...DATA_SERVICES, ...UTIL_SERVICES];
 @NgModule({
   imports: [CommonModule],
   exports: [NbAuthModule],
-  declarations: []
+  declarations: [],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
-    throwIfAlreadyLoaded(parentModule, 'CoreModule');
+    throwIfAlreadyLoaded(parentModule, "CoreModule");
   }
 
   static forRoot(): ModuleWithProviders<CoreModule> {
     return {
       ngModule: CoreModule,
-      providers: [
-        ...NB_CORE_PROVIDERS,
-      ],
+      providers: [...NB_CORE_PROVIDERS],
     };
   }
 }

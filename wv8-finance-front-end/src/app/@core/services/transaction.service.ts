@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import {
   ITransaction,
   TransactionData,
-  ITransactionGroup
+  ITransactionGroup,
 } from "../data/transaction";
 import { map } from "rxjs/operators";
 import { environment } from "../../../environments/environment";
@@ -12,8 +12,7 @@ import { Transaction } from "../models/transaction.model";
 import { Maybe } from "@wv8/typescript.core";
 import { TransactionType } from "../enums/transaction-type.enum";
 import { TransactionGroup } from "../models/transaction-group.model";
-import { InputTransaction } from '../datatransfer/input-transaction';
-import { EditTransaction } from '../datatransfer/edit-transaction';
+import { InputTransaction } from "../datatransfer/input-transaction";
 
 @Injectable()
 export class TransactionService extends TransactionData {
@@ -28,7 +27,7 @@ export class TransactionService extends TransactionData {
 
     return this.http
       .get<ITransaction>(url)
-      .pipe(map(transaction => Transaction.fromDto(transaction)))
+      .pipe(map((transaction) => Transaction.fromDto(transaction)))
       .toPromise();
   }
 
@@ -51,24 +50,32 @@ export class TransactionService extends TransactionData {
         description: description.asQueryParam(),
         categoryId: categoryId.asQueryParam(),
         startDate: startDate
-          .map(d => `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`)
+          .map((d) => `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`)
           .asQueryParam(),
         endDate: endDate
-          .map(d => `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`)
+          .map((d) => `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`)
           .asQueryParam(),
         skip,
-        take
+        take,
       })
-      .pipe(map(group => TransactionGroup.fromDto(group)))
+      .pipe(map((group) => TransactionGroup.fromDto(group)))
       .toPromise();
   }
 
-  updateTransaction(input: EditTransaction): Promise<Transaction> {
-    const url = `${TransactionService.BaseUrl}/${input.id}`;
+  updateTransaction(id: number, input: InputTransaction): Promise<Transaction> {
+    const url = `${TransactionService.BaseUrl}/${id}`;
 
     return this.http
       .put<ITransaction>(url, null, input.serialize())
-      .pipe(map(transaction => Transaction.fromDto(transaction)))
+      .pipe(map((transaction) => Transaction.fromDto(transaction)))
+      .toPromise();
+  }
+
+  updateTransactionCategory(id: number, categoryId: number): Promise<void> {
+    const url = `${TransactionService.BaseUrl}/${id}/update-category`;
+
+    return this.http
+      .put<void>(url, { categoryId })
       .toPromise();
   }
 
@@ -77,7 +84,7 @@ export class TransactionService extends TransactionData {
 
     return this.http
       .post<ITransaction>(url, null, input.serialize())
-      .pipe(map(transaction => Transaction.fromDto(transaction)))
+      .pipe(map((transaction) => Transaction.fromDto(transaction)))
       .toPromise();
   }
 
@@ -92,9 +99,9 @@ export class TransactionService extends TransactionData {
       .put<ITransaction>(url, {
         id,
         date: `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`,
-        amount
+        amount,
       })
-      .pipe(map(transaction => Transaction.fromDto(transaction)))
+      .pipe(map((transaction) => Transaction.fromDto(transaction)))
       .toPromise();
   }
 

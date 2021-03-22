@@ -4,7 +4,7 @@ import {
   OnChanges,
   Input,
   ViewChild,
-  ElementRef
+  ElementRef,
 } from "@angular/core";
 import { Transaction } from "../../../../@core/models/transaction.model";
 import { Maybe } from "@wv8/typescript.core";
@@ -12,7 +12,7 @@ import { Maybe } from "@wv8/typescript.core";
 @Component({
   selector: "create-or-edit-income",
   templateUrl: "./create-or-edit-income.component.html",
-  styleUrls: ["./create-or-edit-income.component.scss"]
+  styleUrls: ["./create-or-edit-income.component.scss"],
 })
 export class CreateOrEditIncomeComponent implements OnInit {
   @Input() transaction: Transaction;

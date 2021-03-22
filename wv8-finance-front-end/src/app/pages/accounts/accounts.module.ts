@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NbCardModule, NbIconModule, NbCheckboxModule, NbButtonModule, NbDialogModule, NbInputModule, NbTooltipModule, NbPopoverModule } from '@nebular/theme';
+import { NbCardModule, NbIconModule, NbCheckboxModule, NbButtonModule, NbDialogModule, NbInputModule, NbTooltipModule, NbPopoverModule, NbSelectModule } from '@nebular/theme';
 import { ThemeModule } from '../../@theme/theme.module';
 import { AccountsComponent } from './accounts.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
@@ -22,7 +22,8 @@ import { FormsModule } from '@angular/forms';
     NbButtonModule,
     FormsModule,
     NbTooltipModule,
-    NbPopoverModule
+    NbPopoverModule,
+    NbSelectModule
   ],
   declarations: [
     AccountsComponent,

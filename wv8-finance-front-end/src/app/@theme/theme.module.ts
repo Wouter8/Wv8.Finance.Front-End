@@ -21,7 +21,7 @@ import {
   NbAutocompleteModule,
   NbTabsetModule,
   NbFormFieldModule,
-  NbCheckboxModule
+  NbCheckboxModule,
 } from "@nebular/theme";
 import { NbEvaIconsModule } from "@nebular/eva-icons";
 import { NbSecurityModule } from "@nebular/security";
@@ -29,14 +29,14 @@ import { NbSecurityModule } from "@nebular/security";
 import {
   FooterComponent,
   HeaderComponent,
-  SwitcherComponent
+  SwitcherComponent,
 } from "./components";
 import {
   CapitalizePipe,
   PluralPipe,
   RoundPipe,
   TimingPipe,
-  NumberWithCommasPipe
+  NumberWithCommasPipe,
 } from "./pipes";
 import { LayoutComponent } from "./layouts";
 import { DEFAULT_THEME } from "./styles/theme.default";
@@ -68,11 +68,12 @@ import { DatePickerComponent } from "./components/date-picker/date-picker.compon
 import { PeriodPickerComponent } from "./components/period-picker/period-picker.component";
 import { TransactionTableComponent } from "./components/transaction-table/transaction-table.component";
 import { BudgetsTableComponent } from "./components/budgets-table/budgets-table.component";
-import { CreateOrEditTransactionComponent } from './components/create-or-edit-transaction/create-or-edit-transaction.component';
-import { TableMaybeDateCellComponent } from './components/table/table-maybe-date-cell/table-maybe-date-cell.component';
-import { CreateOrEditIncomeComponent } from './components/create-or-edit-transaction/create-or-edit-income/create-or-edit-income.component';
-import { CreateOrEditExpenseComponent } from './components/create-or-edit-transaction/create-or-edit-expense/create-or-edit-expense.component';
-import { CreateOrEditTransferComponent } from './components/create-or-edit-transaction/create-or-edit-transfer/create-or-edit-transfer.component';
+import { CreateOrEditTransactionComponent } from "./components/create-or-edit-transaction/create-or-edit-transaction.component";
+import { TableMaybeDateCellComponent } from "./components/table/table-maybe-date-cell/table-maybe-date-cell.component";
+import { CreateOrEditIncomeComponent } from "./components/create-or-edit-transaction/create-or-edit-income/create-or-edit-income.component";
+import { CreateOrEditExpenseComponent } from "./components/create-or-edit-transaction/create-or-edit-expense/create-or-edit-expense.component";
+import { CreateOrEditTransferComponent } from "./components/create-or-edit-transaction/create-or-edit-transfer/create-or-edit-transfer.component";
+import { TableTransactionAmountCellComponent } from "./components/table/table-transaction-amount-cell/table-transaction-amount-cell.component";
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -130,7 +131,8 @@ const COMPONENTS = [
   CreateOrEditExpenseComponent,
   CreateOrEditTransferComponent,
   CreateOrEditTransactionComponent,
-  TableMaybeDateCellComponent
+  TableMaybeDateCellComponent,
+  TableTransactionAmountCellComponent,
 ];
 const PIPES = [
   CapitalizePipe,
@@ -138,7 +140,7 @@ const PIPES = [
   RoundPipe,
   TimingPipe,
   NumberWithCommasPipe,
-  EnumToArrayPipe
+  EnumToArrayPipe,
 ];
 const ENTRY_COMPONENTS = [
   TableBooleanCellComponent,
@@ -160,7 +162,7 @@ const IMPORT_MODULES = [FormsModule];
   imports: [CommonModule, ...NB_MODULES, ...IMPORT_MODULES],
   exports: [CommonModule, ...PIPES, ...COMPONENTS],
   declarations: [...COMPONENTS, ...PIPES],
-  entryComponents: [...ENTRY_COMPONENTS]
+  entryComponents: [...ENTRY_COMPONENTS],
 })
 export class ThemeModule {
   static forRoot(): ModuleWithProviders<ThemeModule> {
@@ -169,9 +171,9 @@ export class ThemeModule {
       providers: [
         ...NbThemeModule.forRoot(
           {
-            name: 'default',
+            name: "default",
           },
-          [ DEFAULT_THEME, COSMIC_THEME, CORPORATE_THEME, DARK_THEME ],
+          [DEFAULT_THEME, COSMIC_THEME, CORPORATE_THEME, DARK_THEME]
         ).providers,
       ],
     };

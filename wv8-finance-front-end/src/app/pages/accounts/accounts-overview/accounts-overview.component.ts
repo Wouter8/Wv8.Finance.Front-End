@@ -11,11 +11,13 @@ import { CreateOrEditAccountComponent } from "../create-or-edit-account/create-o
 import { Account } from "../../../@core/models/account.model";
 import { TableIconCellComponent } from "../../../@theme/components/table/table-icon-cell/table-icon-cell.component";
 import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
+import { AccountType } from "../../../@core/enums/account-type.enum";
+import { Maybe } from "@wv8/typescript.core";
 
 @Component({
   selector: "accounts-overview",
   templateUrl: "./accounts-overview.component.html",
-  styleUrls: ["./accounts-overview.component.scss"]
+  styleUrls: ["./accounts-overview.component.scss"],
 })
 export class AccountsOverviewComponent implements OnInit {
   @ViewChild("table", { static: true })
@@ -51,14 +53,7 @@ export class AccountsOverviewComponent implements OnInit {
       .onClose.subscribe(
         async (data: { success: boolean; account: Account }) => {
           if (data.success) {
-            let account = await this.accountService.createAccount(
-              data.account.description,
-              data.account.icon.pack,
-              data.account.icon.name,
-              data.account.icon.color
-            );
-
-            this.accounts.push(account);
+            this.accounts.push(data.account);
             this.loadData();
 
             this.toasterService.success("", "Added account");
@@ -68,7 +63,7 @@ export class AccountsOverviewComponent implements OnInit {
   }
 
   private async loadData() {
-    this.accounts = await this.accountService.getAccounts(true);
+    this.accounts = await this.accountService.getAccounts(true, Maybe.none());
     this.setAccountList(this.showObsolete);
   }
 
@@ -76,7 +71,7 @@ export class AccountsOverviewComponent implements OnInit {
     if (showObsolete) {
       this.table.setData(this.accounts);
     } else {
-      this.table.setData(this.accounts.filter(a => !a.isObsolete));
+      this.table.setData(this.accounts.filter((a) => !a.isObsolete));
     }
   }
 
@@ -87,14 +82,14 @@ export class AccountsOverviewComponent implements OnInit {
           title: "Description",
           type: "custom",
           renderComponent: TableNameCellComponent,
-          sort: false
+          sort: false,
         },
         currentBalance: {
           title: "Current Balance",
           type: "custom",
           renderComponent: TableEuroCellComponent,
-          sort: false
-        }
+          sort: false,
+        },
       },
       hideFilter: true,
       clickable: true,
@@ -104,7 +99,7 @@ export class AccountsOverviewComponent implements OnInit {
           classes.push("obsolete");
         }
         return classes;
-      }
+      },
     };
   }
 }

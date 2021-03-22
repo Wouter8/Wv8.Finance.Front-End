@@ -15,6 +15,8 @@ import { RecurringTransactionData } from "../../../../@core/data/recurring-trans
 import { TransactionType } from "../../../../@core/enums/transaction-type.enum";
 import { Category } from "../../../../@core/models/category.model";
 import { Maybe } from "@wv8/typescript.core";
+import { InputRecurringTransaction } from "../../../../@core/datatransfer/input-recurring-transaction";
+import { CreateOrEditRecurringExpenseComponent } from "./create-or-edit-recurring-expense/create-or-edit-recurring-expense.component";
 
 @Component({
   selector: "create-or-edit-recurring-transaction",
@@ -28,6 +30,9 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
   incomeTab: NbTabComponent;
   @ViewChild("transferTab", { static: true })
   transferTab: NbTabComponent;
+
+  @ViewChild("expenseTabComponent", { static: true })
+  expenseTabComponent: CreateOrEditRecurringExpenseComponent;
 
   @Input()
   recurringTransaction: RecurringTransaction;
@@ -45,7 +50,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
     private recurringTransactionService: RecurringTransactionData,
     private toasterService: NbToastrService,
     private dateService: NbDateService<Date>
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (this.recurringTransaction) {
@@ -68,7 +73,9 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       let today = new Date();
       today.setHours(0, 0, 0, 0);
       this.recurringTransaction.startDate = today;
-      this.recurringTransaction.endDate = Maybe.some(this.dateService.addMonth(today, 1));
+      this.recurringTransaction.endDate = Maybe.some(
+        this.dateService.addMonth(today, 1)
+      );
       this.recurringTransaction.categoryId = Maybe.none();
       this.recurringTransaction.receivingAccountId = Maybe.none();
       this.recurringTransaction.needsConfirmation = false;
@@ -106,21 +113,38 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       return;
     }
 
-    var amount = this.recurringTransaction.type == TransactionType.Expense ? -this.recurringTransaction.amount : this.recurringTransaction.amount;
+    var amount =
+      this.recurringTransaction.type == TransactionType.Expense
+        ? -this.recurringTransaction.amount
+        : this.recurringTransaction.amount;
+
+    var splitDetails =
+      this.recurringTransaction.type == TransactionType.Expense &&
+        this.expenseTabComponent.hasSplits
+        ? this.expenseTabComponent.splits
+          .filter((s) => s.user.isSome && s.amount > 0)
+          .map((s) => s.asInput())
+        : [];
+
+    let input = new InputRecurringTransaction(
+      this.recurringTransaction.accountId,
+      this.recurringTransaction.description,
+      this.recurringTransaction.startDate,
+      this.recurringTransaction.endDate,
+      amount,
+      this.recurringTransaction.categoryId,
+      this.recurringTransaction.receivingAccountId,
+      this.recurringTransaction.needsConfirmation,
+      this.recurringTransaction.interval,
+      this.recurringTransaction.intervalUnit,
+      [],
+      splitDetails
+    );
 
     if (this.editing) {
       this.recurringTransaction = await this.recurringTransactionService.updateRecurringTransaction(
         this.recurringTransaction.id,
-        this.recurringTransaction.accountId,
-        this.recurringTransaction.description,
-        this.recurringTransaction.startDate,
-        this.recurringTransaction.endDate,
-        amount,
-        this.recurringTransaction.categoryId,
-        this.recurringTransaction.receivingAccountId,
-        this.recurringTransaction.interval,
-        this.recurringTransaction.intervalUnit,
-        this.recurringTransaction.needsConfirmation,
+        input,
         this.updateInstances
       );
       this.dialogRef.close({
@@ -129,16 +153,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       });
     } else {
       this.recurringTransaction = await this.recurringTransactionService.createRecurringTransaction(
-        this.recurringTransaction.accountId,
-        this.recurringTransaction.description,
-        this.recurringTransaction.startDate,
-        this.recurringTransaction.endDate,
-        amount,
-        this.recurringTransaction.categoryId,
-        this.recurringTransaction.receivingAccountId,
-        this.recurringTransaction.interval,
-        this.recurringTransaction.intervalUnit,
-        this.recurringTransaction.needsConfirmation
+        input
       );
       this.dialogRef.close({
         success: true,
@@ -149,6 +164,9 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
 
   private validate() {
     let messages: string[] = [];
+
+    if (this.recurringTransaction.type === TransactionType.Expense)
+      messages = messages.concat(this.expenseTabComponent.validate());
 
     if (!this.recurringTransaction.accountId)
       messages.push("Select an account.");
@@ -162,7 +180,10 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
       this.recurringTransaction.description.trim().length < 3
     )
       messages.push("Enter a description.");
-    if (!this.recurringTransaction.amount || this.recurringTransaction.amount <= 0)
+    if (
+      !this.recurringTransaction.amount ||
+      this.recurringTransaction.amount <= 0
+    )
       messages.push("Enter a positive amount.");
 
     switch (this.recurringTransaction.type) {

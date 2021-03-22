@@ -25,9 +25,10 @@ import { CreateOrEditRecurringTransactionComponent } from "./recurring-transacti
 import { RecurringTransactionComponent } from "./recurring-transactions/recurring-transaction/recurring-transaction.component";
 import { DeleteRecurringTransactionComponent } from "./recurring-transactions/delete-recurring-transaction/delete-recurring-transaction.component";
 import { ConfirmTransactionComponent } from "./confirm-transaction/confirm-transaction.component";
-import { CreateOrEditRecurringExpenseComponent } from './recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-expense/create-or-edit-recurring-expense.component';
-import { CreateOrEditRecurringIncomeComponent } from './recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-income/create-or-edit-recurring-income.component';
-import { CreateOrEditRecurringTransferComponent } from './recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-transfer/create-or-edit-recurring-transfer.component';
+import { CreateOrEditRecurringExpenseComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-expense/create-or-edit-recurring-expense.component";
+import { CreateOrEditRecurringIncomeComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-income/create-or-edit-recurring-income.component";
+import { CreateOrEditRecurringTransferComponent } from "./recurring-transactions/create-or-edit-recurring-transaction/create-or-edit-recurring-transfer/create-or-edit-recurring-transfer.component";
+import { ImportTransactionsComponent } from "./import-transactions/import-transactions.component";
 @NgModule({
   imports: [
     TransactionsRoutingModule,
@@ -58,6 +59,7 @@ import { CreateOrEditRecurringTransferComponent } from './recurring-transactions
     CreateOrEditRecurringTransferComponent,
     DeleteRecurringTransactionComponent,
     ConfirmTransactionComponent,
+    ImportTransactionsComponent,
   ],
   entryComponents: [
     CreateOrEditRecurringTransactionComponent,

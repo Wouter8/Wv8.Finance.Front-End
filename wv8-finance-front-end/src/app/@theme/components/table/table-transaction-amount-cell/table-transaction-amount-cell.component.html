@@ -1,0 +1,58 @@
+<div
+  *ngIf="differentPersonalAmount"
+  [nbPopover]="splitsExplainerPopover"
+  nbPopoverTrigger="hint"
+  class="content"
+>
+  <span class="underline">{{
+    typedRowData.personalAmount | currency: "EUR"
+  }}</span>
+</div>
+<div
+  *ngIf="importedTransaction"
+  nbTooltip="Transaction was imported from Splitwise."
+  class="content"
+>
+  <span class="underline">{{
+    typedRowData.personalAmount | currency: "EUR"
+  }}</span>
+</div>
+<div
+  *ngIf="settlementTransaction"
+  nbTooltip="Transaction is a settlement transaction."
+  class="content"
+>
+  <span class="underline">{{
+    typedRowData.personalAmount | currency: "EUR"
+  }}</span>
+</div>
+<div
+  *ngIf="
+    !importedTransaction && !differentPersonalAmount && !settlementTransaction
+  "
+  class="content"
+>
+  {{ typedRowData.amount | currency: "EUR" }}
+</div>
+<ng-template #splitsExplainerPopover>
+  <div class="splits-explainer">
+    <table class="splits-explainer-table">
+      <tr>
+        <th>Personal amount</th>
+        <td>{{ typedRowData.personalAmount | currency: "EUR" }}</td>
+      </tr>
+      <tr class="last-row">
+        <th>Splits</th>
+        <td>{{ this.splitDetailsSum | currency: "EUR" }}</td>
+      </tr>
+      <!-- <tr class="last-row">
+        <th>Payment requests</th>
+        <td>{{ this.paymentRequestsSum | currency: "EUR" }}</td>
+      </tr> -->
+      <tr class="sum-row">
+        <th>Paid amount</th>
+        <td>{{ typedRowData.amount | currency: "EUR" }}</td>
+      </tr>
+    </table>
+  </div>
+</ng-template>

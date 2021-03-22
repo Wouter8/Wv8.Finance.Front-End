@@ -1,0 +1,84 @@
+@import "../../../@theme/styles/themes";
+
+@include nb-install-component() {
+  nb-card-body {
+    padding-top: 0;
+  }
+
+  .splitwise-transactions {
+    width: 100%;
+  }
+
+  .importer-information {
+    p {
+      font-size: 12px;
+      font-weight: 250;
+    }
+
+    padding-top: 0.3rem;
+  }
+
+  th.column, td.column {
+    min-width: 150px;
+
+    &.picker {
+      min-width: 250px;
+    }
+  }
+
+  td {
+    padding: 0 1.5rem;
+    height: 33px;
+
+    &.picker {
+      padding: 0 0.3rem;
+
+      text-align: center;
+    }
+
+    &.import {
+      padding: 0;
+
+      text-align: center;
+    }
+  }
+
+  th {
+    padding: 0.5rem 1.5rem;
+    border-bottom: 1px solid #edf1f7;
+  }
+
+  .no-account-text {
+    margin: unset;
+    font-size: 12px;
+    color: #888888;
+    font-style: italic;
+  }
+
+  .empty-table-cell {
+    font-size: 14px;
+    padding: 5px 0px;
+    text-align: center;
+    font-style: italic;
+  }
+
+  .import-table-cell {
+    padding: 10px 0px 0px 0px;
+    text-align: center;
+  }
+
+  tr {
+    border: 1px solid #edf1f7;
+    border-bottom: unset;
+  }
+
+  tr:nth-child(2n) {
+    background: #f7f9fc
+  }
+
+  tr.import-row {
+    border:unset;
+    border-top: 1px solid #edf1f7;
+    background: unset;
+  }
+}

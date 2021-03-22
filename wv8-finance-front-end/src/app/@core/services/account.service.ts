@@ -5,6 +5,8 @@ import { Account } from "../models/account.model";
 import { map } from "rxjs/operators";
 import { environment } from "../../../environments/environment";
 import { HttpService } from "../utils/http.service";
+import { AccountType } from "../enums/account-type.enum";
+import { Maybe } from "@wv8/typescript.core";
 
 @Injectable()
 export class AccountService extends AccountData {
@@ -19,16 +21,22 @@ export class AccountService extends AccountData {
 
     return this.http
       .get<IAccount>(url)
-      .pipe(map(account => Account.fromDto(account)))
+      .pipe(map((account) => Account.fromDto(account)))
       .toPromise();
   }
 
-  getAccounts(includeObsolete: boolean = false): Promise<Account[]> {
+  getAccounts(
+    includeObsolete: boolean = false,
+    accountType: Maybe<AccountType>
+  ): Promise<Account[]> {
     const url = `${AccountService.BaseUrl}`;
 
     return this.http
-      .get<IAccount[]>(url, { includeObsolete })
-      .pipe(map(accounts => accounts.map(a => Account.fromDto(a))))
+      .get<IAccount[]>(url, {
+        includeObsolete,
+        accountType: accountType.asQueryParam(),
+      })
+      .pipe(map((accounts) => accounts.map((a) => Account.fromDto(a))))
       .toPromise();
   }
 
@@ -48,13 +56,14 @@ export class AccountService extends AccountData {
         isDefault,
         iconPack,
         iconName,
-        iconColor
+        iconColor,
       })
-      .pipe(map(account => Account.fromDto(account)))
+      .pipe(map((account) => Account.fromDto(account)))
       .toPromise();
   }
 
   createAccount(
+    type: AccountType,
     description: string,
     iconPack: string,
     iconName: string,
@@ -64,12 +73,13 @@ export class AccountService extends AccountData {
 
     return this.http
       .post<IAccount>(url, {
+        type,
         description,
         iconPack,
         iconName,
-        iconColor
+        iconColor,
       })
-      .pipe(map(account => Account.fromDto(account)))
+      .pipe(map((account) => Account.fromDto(account)))
       .toPromise();
   }
 
@@ -78,7 +88,7 @@ export class AccountService extends AccountData {
 
     return this.http
       .put<void>(url, {
-        obsolete
+        obsolete,
       })
       .toPromise();
   }

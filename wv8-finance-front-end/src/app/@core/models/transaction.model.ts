@@ -5,26 +5,16 @@ import { Maybe } from "@wv8/typescript.core";
 import { Account } from "./account.model";
 import { PaymentRequest } from "./payment-request.model";
 import { RecurringTransaction } from "./recurring-transaction.model";
+import { BaseTransaction } from "./base-transaction.model";
+import { SplitDetail } from "./split-detail.model";
 
-export class Transaction {
-  id: number;
-  description: string;
+export class Transaction extends BaseTransaction {
   date: Date;
-  type: TransactionType;
-  amount: number;
-  categoryId: Maybe<number> = Maybe.none();
-  category: Maybe<Category> = Maybe.none();
-  accountId: number;
-  account: Account;
-  receivingAccountId: Maybe<number> = Maybe.none();
-  receivingAccount: Maybe<Account> = Maybe.none();
   processed: boolean;
   recurringTransactionId: Maybe<number> = Maybe.none();
   recurringTransaction: Maybe<RecurringTransaction> = Maybe.none();
-  needsConfirmation: boolean = false;
   isConfirmed: Maybe<boolean> = Maybe.none();
-  paymentRequests: PaymentRequest[];
-  personalAmount: number;
+  fullyEditable: boolean = true;
 
   public static fromDto(dto: ITransaction): Transaction {
     let instance = new Transaction();
@@ -34,6 +24,7 @@ export class Transaction {
     instance.date = new Date(dto.date);
     instance.type = dto.type;
     instance.amount = Math.abs(dto.amount);
+    instance.personalAmount = Math.abs(dto.personalAmount);
     instance.categoryId = Maybe.deserialize(dto.categoryId);
     instance.category = Maybe.deserialize(dto.category).map((c) =>
       Category.fromDto(c)
@@ -53,8 +44,13 @@ export class Transaction {
     instance.recurringTransaction = Maybe.deserialize(
       dto.recurringTransaction
     ).map((rt) => RecurringTransaction.fromDto(rt));
-    instance.paymentRequests = dto.paymentRequests.map(pr => PaymentRequest.fromDto(pr));
-    instance.personalAmount = dto.personalAmount;
+    instance.paymentRequests = dto.paymentRequests.map((pr) =>
+      PaymentRequest.fromDto(pr)
+    );
+    instance.splitDetails = dto.splitDetails.map((sd) =>
+      SplitDetail.fromDto(sd)
+    );
+    instance.fullyEditable = dto.fullyEditable;
 
     return instance;
   }
@@ -67,6 +63,7 @@ export class Transaction {
     instance.date = new Date(this.date);
     instance.type = this.type;
     instance.amount = this.amount;
+    instance.personalAmount = this.personalAmount;
     instance.categoryId = new Maybe(this.categoryId.valueOrElse(undefined));
     instance.category = this.category.map((c) => c.copy());
     instance.accountId = this.accountId;
@@ -84,7 +81,9 @@ export class Transaction {
     );
     instance.needsConfirmation = this.needsConfirmation;
     instance.isConfirmed = new Maybe(this.isConfirmed.valueOrElse(undefined));
-    instance.paymentRequests = this.paymentRequests.map(pr => pr.copy());
+    instance.paymentRequests = this.paymentRequests.map((pr) => pr.copy());
+    instance.splitDetails = this.splitDetails.map((sd) => sd.copy());
+    instance.fullyEditable = this.fullyEditable;
 
     return instance;
   }

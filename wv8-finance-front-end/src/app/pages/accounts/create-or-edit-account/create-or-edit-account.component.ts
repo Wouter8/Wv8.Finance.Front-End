@@ -7,19 +7,22 @@ import {
   NbToastrConfig,
   NbDialogService,
   NbTrigger,
-  NbPopoverDirective
+  NbPopoverDirective,
 } from "@nebular/theme";
 import { FontAwesomeIconPickerComponent } from "../../../@theme/components/font-awesome-icon-picker/font-awesome-icon-picker.component";
 import { FontAwesomeIcon } from "../../../@theme/components/font-awesome-icon-picker/font-awesome-icon";
+import { AccountType } from "../../../@core/enums/account-type.enum";
 
 @Component({
   selector: "create-or-edit-account",
   templateUrl: "./create-or-edit-account.component.html",
-  styleUrls: ["./create-or-edit-account.component.scss"]
+  styleUrls: ["./create-or-edit-account.component.scss"],
 })
 export class CreateOrEditAccountComponent implements OnInit {
   @Input()
   account: Account;
+
+  accountTypes = AccountType;
 
   editing = false;
   header: string = "Creating new account";
@@ -31,7 +34,8 @@ export class CreateOrEditAccountComponent implements OnInit {
 
   constructor(
     protected dialogRef: NbDialogRef<CreateOrEditAccountComponent>,
-    private toasterService: NbToastrService
+    private toasterService: NbToastrService,
+    private accountService: AccountData
   ) {}
 
   ngOnInit() {
@@ -48,14 +52,29 @@ export class CreateOrEditAccountComponent implements OnInit {
     this.dialogRef.close({ success: false });
   }
 
-  submit() {
+  async submit() {
     let errors = this.validate();
     if (errors.length > 0) {
       this.toasterService.warning(errors[0], "Incorrect data");
       return;
     }
 
-    // TODO: Save to back-end here.
+    this.account = !this.editing
+      ? await this.accountService.createAccount(
+          this.account.type,
+          this.account.description,
+          this.account.icon.pack,
+          this.account.icon.name,
+          this.account.icon.color
+        )
+      : await this.accountService.updateAccount(
+          this.account.id,
+          this.account.description,
+          this.account.isDefault,
+          this.account.icon.pack,
+          this.account.icon.name,
+          this.account.icon.color
+        );
 
     this.dialogRef.close({ success: true, account: this.account });
   }
@@ -75,7 +94,7 @@ export class CreateOrEditAccountComponent implements OnInit {
       pack: this.account.icon.pack,
       color: this.account.icon.color,
       onIconChange: this.onIconChange.bind(this),
-      onColorChange: this.onColorChange.bind(this)
+      onColorChange: this.onColorChange.bind(this),
     };
   }
 

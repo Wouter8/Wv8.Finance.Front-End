@@ -5,6 +5,7 @@ import { TransactionsOverviewComponent } from "./transactions-overview/transacti
 import { TransactionComponent } from "./transaction/transaction.component";
 import { RecurringTransactionsOverviewComponent } from "./recurring-transactions/recurring-transactions-overview/recurring-transactions-overview.component";
 import { RecurringTransactionComponent } from "./recurring-transactions/recurring-transaction/recurring-transaction.component";
+import { ImportTransactionsComponent } from "./import-transactions/import-transactions.component";
 
 const routes: Routes = [
   {
@@ -13,26 +14,30 @@ const routes: Routes = [
     children: [
       {
         path: "",
-        component: TransactionsOverviewComponent
+        component: TransactionsOverviewComponent,
       },
       {
         path: "recurring",
-        component: RecurringTransactionsOverviewComponent
+        component: RecurringTransactionsOverviewComponent,
       },
       {
         path: "recurring/:id",
-        component: RecurringTransactionComponent
+        component: RecurringTransactionComponent,
+      },
+      {
+        path: "import",
+        component: ImportTransactionsComponent,
       },
       {
         path: ":id",
-        component: TransactionComponent
-      }
-    ]
-  }
+        component: TransactionComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class TransactionsRoutingModule {}

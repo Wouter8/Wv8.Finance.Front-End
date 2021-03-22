@@ -7,11 +7,12 @@ import { TableEuroCellComponent } from "../table/table-euro-cell/table-euro-cell
 import { TableTransactionTypeIconCellComponent } from "../table/table-transaction-type-icon-cell/table-transaction-type-icon-cell.component";
 import { TableComponent } from "../table/table.component";
 import { Router } from "@angular/router";
+import { TableTransactionAmountCellComponent } from "../table/table-transaction-amount-cell/table-transaction-amount-cell.component";
 
 @Component({
   selector: "transaction-table",
   templateUrl: "./transaction-table.component.html",
-  styleUrls: ["./transaction-table.component.scss"]
+  styleUrls: ["./transaction-table.component.scss"],
 })
 export class TransactionTableComponent implements OnInit, OnChanges {
   @ViewChild("table", { static: true })
@@ -71,13 +72,13 @@ export class TransactionTableComponent implements OnInit, OnChanges {
       type: "custom",
       width: "36px",
       renderComponent: TableTransactionTypeIconCellComponent,
-      sort: false
+      sort: false,
     };
     columns["amount"] = {
       title: "Amount",
       type: "custom",
-      renderComponent: TableEuroCellComponent,
-      sort: false
+      renderComponent: TableTransactionAmountCellComponent,
+      sort: false,
     };
     if (this.showDateColumn) {
       columns["date"] = {
@@ -89,7 +90,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
           instance.showFutureIcon = this.showDateColumnIcon;
           instance.determineIsFuture = () => !instance.rowData.processed;
           instance.futureTooltipText = "Unprocessed";
-        }
+        },
       };
     }
     if (this.showCategoryColumn) {
@@ -112,13 +113,13 @@ export class TransactionTableComponent implements OnInit, OnChanges {
 
           instance.showDefaultIcon = false;
           instance.iconSize = "small";
-        }
+        },
       };
     }
     if (this.showDescriptionColumn) {
       columns["description"] = {
         title: "Description",
-        type: "text"
+        type: "text",
       };
     }
     if (this.showAccountColumn) {
@@ -135,7 +136,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
 
           instance.showDefaultIcon = false;
           instance.iconSize = "small";
-        }
+        },
       };
     }
 
@@ -153,8 +154,8 @@ export class TransactionTableComponent implements OnInit, OnChanges {
       },
       pager: {
         display: true,
-        perPage: this.rowsPerPage
-      }
+        perPage: this.rowsPerPage,
+      },
     };
   }
 }

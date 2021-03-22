@@ -3,34 +3,23 @@
     <tr>
       <th>Account</th>
       <td>
-        <account-picker
-          [fullWidth]="true"
-          [(account)]="recurringTransaction.accountId"
-        ></account-picker>
+        <account-picker [fullWidth]="true" [(accountId)]="recurringTransaction.accountId" [onlyNormalAccounts]="true">
+        </account-picker>
       </td>
     </tr>
     <tr>
       <th>Period</th>
       <td>
-        <period-picker
-          [start]="recurringTransaction.startDate"
-          [end]="recurringTransaction.endDate.valueOrElse(undefined)"
-          [allowOnlyStart]="true"
-          (periodChanged)="periodChanged($event)"
-        ></period-picker>
+        <period-picker [start]="recurringTransaction.startDate"
+          [end]="recurringTransaction.endDate.valueOrElse(undefined)" [allowOnlyStart]="true"
+          (periodChanged)="periodChanged($event)"></period-picker>
       </td>
     </tr>
     <tr>
       <th>Description</th>
       <td>
-        <input
-          type="text"
-          placeholder="Description"
-          nbInput
-          fieldSize="small"
-          fullWidth
-          [(ngModel)]="recurringTransaction.description"
-        />
+        <input type="text" placeholder="Description" nbInput fieldSize="small" fullWidth
+          [(ngModel)]="recurringTransaction.description" />
       </td>
     </tr>
     <tr>
@@ -38,92 +27,54 @@
       <td>
         <nb-form-field>
           <nb-icon nbPrefix icon="euro-sign" pack="fas"></nb-icon>
-          <input
-            type="number"
-            step="1"
-            min="0"
-            placeholder="100,00"
-            nbInput
-            fieldSize="small"
-            fullWidth
-            [(ngModel)]="recurringTransaction.amount"
-          />
+          <input type="number" step="1" min="0" placeholder="100,00" nbInput fieldSize="small" fullWidth
+            [(ngModel)]="recurringTransaction.amount" />
         </nb-form-field>
       </td>
     </tr>
     <tr>
       <th>Receiver</th>
       <td>
-        <account-picker
-          [selectDefault]="false"
-          [fullWidth]="true"
-          [account]="
+        <account-picker [selectDefault]="false" [fullWidth]="true" [accountId]="
             recurringTransaction.receivingAccountId.valueOrElse(undefined)
-          "
-          (accountChange)="setReceivingAccountId($event)"
-        ></account-picker>
+          " (accountIdChange)="setReceivingAccountId($event)"></account-picker>
       </td>
     </tr>
     <tr>
       <th>Interval</th>
       <td>
-        <input
-          type="number"
-          step="1"
-          min="1"
-          placeholder="3"
-          nbInput
-          fieldSize="small"
-          fullWidth
-          [(ngModel)]="recurringTransaction.interval"
-        />
+        <input type="number" step="1" min="1" placeholder="3" nbInput fieldSize="small" fullWidth
+          [(ngModel)]="recurringTransaction.interval" />
       </td>
     </tr>
     <tr>
       <th>Unit</th>
       <td>
-        <nb-select
-          placeholder="Unit"
-          [(selected)]="recurringTransaction.intervalUnit"
-          size="small"
-        >
-          <nb-option
-            *ngFor="let type of intervalUnits | enumToArray"
-            [value]="type.index"
-            >{{ type.name }}</nb-option
-          >
+        <nb-select placeholder="Unit" [(selected)]="recurringTransaction.intervalUnit" size="small">
+          <nb-option *ngFor="let type of intervalUnits | enumToArray" [value]="type.index">{{ type.name }}</nb-option>
         </nb-select>
       </td>
     </tr>
     <tr>
       <th>
         Needs confirmation
-        <nb-icon
-          icon="info-outline"
+        <nb-icon icon="info-outline"
           nbTooltip="Created transactions need to be manually confirmed before being processed. Check this when you don't know the exact date or amount."
-          status="info"
-        ></nb-icon>
+          status="info"></nb-icon>
       </th>
       <td>
-        <nb-checkbox
-          [(checked)]="recurringTransaction.needsConfirmation"
-        ></nb-checkbox>
+        <nb-checkbox [(checked)]="recurringTransaction.needsConfirmation"></nb-checkbox>
       </td>
     </tr>
     <tr *ngIf="editing">
       <th>
         Re-add transactions
-        <nb-icon
-          icon="info-outline"
+        <nb-icon icon="info-outline"
           nbTooltip="Remove already created transactions and create them again with the updated recurring transaction"
-          status="info"
-        ></nb-icon>
+          status="info"></nb-icon>
       </th>
       <td>
-        <nb-checkbox
-          [checked]="updateInstances"
-          (checkedChange)="onUpdateInstanceChange($event)"
-        ></nb-checkbox>
+        <nb-checkbox [checked]="updateInstances" (checkedChange)="onUpdateInstanceChange($event)"></nb-checkbox>
       </td>
     </tr>
   </tbody>
