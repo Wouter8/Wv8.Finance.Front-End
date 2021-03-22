@@ -50,7 +50,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
     private recurringTransactionService: RecurringTransactionData,
     private toasterService: NbToastrService,
     private dateService: NbDateService<Date>
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (this.recurringTransaction) {
@@ -120,10 +120,10 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
 
     var splitDetails =
       this.recurringTransaction.type == TransactionType.Expense &&
-      this.expenseTabComponent.hasSplits
+        this.expenseTabComponent.hasSplits
         ? this.expenseTabComponent.splits
-            .filter((s) => s.user.isSome && s.amount > 0)
-            .map((s) => s.asInput())
+          .filter((s) => s.user.isSome && s.amount > 0)
+          .map((s) => s.asInput())
         : [];
 
     let input = new InputRecurringTransaction(

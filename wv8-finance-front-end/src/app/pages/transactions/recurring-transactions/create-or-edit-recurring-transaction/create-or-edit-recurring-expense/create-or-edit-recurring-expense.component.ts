@@ -42,9 +42,26 @@ export class CreateOrEditRecurringExpenseComponent implements OnInit {
   constructor(
     private splitwiseService: ISplitwiseData,
     private calculateService: SplitCalculaterService
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  async ngOnInit() {
+    this.hasSplits = this.recurringTransaction.splitDetails.length > 0;
+
+    if (this.hasSplits) {
+      await this.loadSplitwiseUsers();
+      this.splits = this.calculateService.toSpecifications(
+        this.recurringTransaction.personalAmount,
+        this.recurringTransaction.splitDetails,
+        this.splitwiseUsers
+      );
+
+      this.splitType = this.calculateService.getSplitType(
+        this.recurringTransaction.amount,
+        this.recurringTransaction.personalAmount,
+        this.splits.map((s) => s.amount)
+      );
+    }
+  }
 
   periodChanged(period: NbCalendarRange<Date>) {
     this.recurringTransaction.startDate = new Date(period.start);
@@ -118,6 +135,8 @@ export class CreateOrEditRecurringExpenseComponent implements OnInit {
     for (let i = 0; i < this.splits.length; i++) {
       sumSplits += !this.splits[i].amount ? 0 : this.splits[i].amount;
     }
+
+    sumSplits = Math.round(sumSplits * 100) / 100;
 
     if (sumSplits !== this.recurringTransaction.amount)
       return ["The sum of the splits must be equal to the transaction amount."];

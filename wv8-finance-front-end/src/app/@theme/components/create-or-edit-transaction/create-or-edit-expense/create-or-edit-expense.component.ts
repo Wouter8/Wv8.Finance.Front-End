@@ -33,7 +33,7 @@ export class CreateOrEditExpenseComponent implements OnInit {
   constructor(
     private splitwiseService: ISplitwiseData,
     private calculateService: SplitCalculaterService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.hasSplits = this.transaction.splitDetails.length > 0;
@@ -41,7 +41,6 @@ export class CreateOrEditExpenseComponent implements OnInit {
     if (this.hasSplits) {
       await this.loadSplitwiseUsers();
       this.splits = this.calculateService.toSpecifications(
-        this.transaction.amount,
         this.transaction.personalAmount,
         this.transaction.splitDetails,
         this.splitwiseUsers

@@ -10,7 +10,7 @@ import { Maybe } from "@wv8/typescript.core";
   providedIn: "root",
 })
 export class SplitCalculaterService {
-  constructor() {}
+  constructor() { }
 
   public calculateSplits(
     splits: SplitSpecification[],
@@ -34,7 +34,7 @@ export class SplitCalculaterService {
           usersInSplit.length === 0
             ? [new Money(0, Currencies.EUR)]
             : // Share equally.
-              amountMoney.allocate(usersInSplit.map((_) => 1));
+            amountMoney.allocate(usersInSplit.map((_) => 1));
 
         // Reverse the applying because the allocation returns the highest splits first.
         let equalAmountIndex = amountsEqual.length - 1;
@@ -76,12 +76,10 @@ export class SplitCalculaterService {
   }
 
   public toSpecifications(
-    amount: number,
     personalAmount: number,
     details: SplitDetail[],
     users: SplitwiseUser[]
   ): SplitSpecification[] {
-    var money = new Money(amount, Currencies.EUR);
     var specifications = [new SplitSpecification(Maybe.none(), personalAmount)];
 
     for (let i = 0; i < users.length; i++) {

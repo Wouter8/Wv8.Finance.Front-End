@@ -54,12 +54,13 @@ export class InputRecurringTransaction extends InputBaseTransaction {
   }
 
   public serialize(): IInputRecurringTransaction {
+    console.log(this.endDate, this.endDate.map((d) => d.toDateString()));
     return {
       accountId: this.accountId,
       description: this.description,
       amount: this.amount,
       startDateString: this.startDate.toDateString(),
-      endDateString: this.endDate.map((d) => d.toDateString()),
+      endDateString: this.endDate.map((d) => d.toDateString()).serialize(),
       categoryId: this.categoryId.serialize(),
       receivingAccountId: this.receivingAccountId.serialize(),
       needsConfirmation: this.needsConfirmation,
