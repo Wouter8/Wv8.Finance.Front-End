@@ -38,9 +38,13 @@ export class DashboardComponent implements OnInit {
   }
 
   private setBalanceChartOptions(colors: any, echarts: any) {
+    let accounts = this.report.accounts
+      .filter(a => a.currentBalance > 0)
+      .sort((a, b) => a.currentBalance < b.currentBalance ? -1 : a.currentBalance > b.currentBalance ? 1 : 0);
+
     this.balanceChartOptions = {
       backgroundColor: echarts.bg,
-      color: this.report.accounts.map(a => a.icon.color),
+      color: accounts.map(a => a.icon.color),
       tooltip: {
         trigger: "item",
         formatter: (i: any) =>
@@ -63,9 +67,7 @@ export class DashboardComponent implements OnInit {
           areaStyle: {
             opacity: echarts.areaOpacity
           },
-          data: this.report.accounts
-            .filter(a => a.currentBalance > 0)
-            .sort((a, b) => a.currentBalance < b.currentBalance ? -1 : a.currentBalance > b.currentBalance ? 1 : 0)
+          data: accounts
             .map(a => {
               return { value: a.currentBalance, name: a.description };
             })
