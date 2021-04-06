@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
     private themeService: NbThemeService,
     private currencyPipe: CurrencyPipe,
     private datePipe: DatePipe
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.report = await this.reportService.getCurrentDateReport();
@@ -65,6 +65,7 @@ export class DashboardComponent implements OnInit {
           },
           data: this.report.accounts
             .filter(a => a.currentBalance > 0)
+            .sort((a, b) => a.currentBalance < b.currentBalance ? -1 : a.currentBalance > b.currentBalance ? 1 : 0)
             .map(a => {
               return { value: a.currentBalance, name: a.description };
             })
