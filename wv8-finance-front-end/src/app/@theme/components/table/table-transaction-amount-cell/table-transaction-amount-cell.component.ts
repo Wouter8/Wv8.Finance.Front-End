@@ -35,8 +35,8 @@ export class TableTransactionAmountCellComponent implements OnInit, ViewCell {
       !this.importedTransaction &&
       this.typedRowData.amount !== this.typedRowData.personalAmount;
     this.settlementTransaction =
-      this.typedRowData.type === TransactionType.Income &&
-      this.typedRowData.splitDetails.length > 0;
+      this.typedRowData.type === TransactionType.Transfer &&
+      this.rowData.splitwiseTransaction?.isSome;
 
     if (this.differentPersonalAmount) {
       this.splitDetailsSum = this.typedRowData.splitDetails.reduce(

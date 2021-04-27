@@ -21,6 +21,7 @@ import { CategoryData } from "../../../@core/data/category";
 import { Maybe } from "@wv8/typescript.core";
 import { InputTransaction } from "../../../@core/datatransfer/input-transaction";
 import { CreateOrEditExpenseComponent } from "./create-or-edit-expense/create-or-edit-expense.component";
+import { AccountType } from "../../../@core/enums/account-type.enum";
 
 @Component({
   selector: "create-or-edit-transaction",
@@ -105,10 +106,24 @@ export class CreateOrEditTransactionComponent implements OnInit {
   async submit() {
     // If the transaction is not fully editable, this means that only the category is editable.
     if (!this.transaction.fullyEditable) {
-      this.transactionService.updateTransactionCategory(
-        this.transaction.id,
-        this.transaction.categoryId.value
-      );
+      if (this.transaction.type == TransactionType.Transfer) {
+        if (this.transaction.account.type == AccountType.Splitwise) {
+          await this.transactionService.updateTransactionReceiver(
+            this.transaction.id,
+            this.transaction.receivingAccountId.value
+          );
+        } else {
+          await this.transactionService.updateTransactionSender(
+            this.transaction.id,
+            this.transaction.accountId
+          );
+        }
+      } else {
+        await this.transactionService.updateTransactionCategory(
+          this.transaction.id,
+          this.transaction.categoryId.value
+        );
+      }
       this.dialogRef.close({ success: true, transaction: this.transaction });
       return;
     }

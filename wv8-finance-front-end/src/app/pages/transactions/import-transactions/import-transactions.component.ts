@@ -78,17 +78,27 @@ export class ImportTransactionsComponent implements OnInit {
   }
 
   async importTransaction(row: ISplitwiseTransactionRow) {
-    if (row.categoryId.isNone)
+    if (!row.isSettlement && row.categoryId.isNone)
       this.toaster.warning("", "Specify a category for the transaction.");
+    if (
+      (row.isSettlement || row.transaction.paidAmount > 0) &&
+      row.accountId.isNone
+    )
+      this.toaster.warning("", "Specify an account for the transaction.");
 
     if (row.imported)
       this.toaster.danger("", "This transaction was already imported.");
 
-    var transaction = await this.splitwiseService.completeTransactionImport(
-      row.transaction.id,
-      row.categoryId.value,
-      row.accountId
-    );
+    var transaction = row.isSettlement
+      ? await this.splitwiseService.completeTransferImport(
+          row.transaction.id,
+          row.accountId.value
+        )
+      : await this.splitwiseService.completeTransactionImport(
+          row.transaction.id,
+          row.categoryId.value,
+          row.accountId
+        );
 
     row.imported = true;
 
@@ -134,6 +144,7 @@ export class ImportTransactionsComponent implements OnInit {
   ): ISplitwiseTransactionRow {
     return {
       transaction: transaction,
+      isSettlement: transaction.description == "Payment",
       categoryId: Maybe.none(),
       accountId: Maybe.none(),
       imported: false,
@@ -143,6 +154,7 @@ export class ImportTransactionsComponent implements OnInit {
 
 interface ISplitwiseTransactionRow {
   transaction: SplitwiseTransaction;
+  isSettlement: boolean;
   categoryId: Maybe<number>;
   accountId: Maybe<number>;
   imported: boolean;

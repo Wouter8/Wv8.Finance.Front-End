@@ -7,6 +7,7 @@ import { PaymentRequest } from "./payment-request.model";
 import { RecurringTransaction } from "./recurring-transaction.model";
 import { BaseTransaction } from "./base-transaction.model";
 import { SplitDetail } from "./split-detail.model";
+import { SplitwiseTransaction } from "./splitwise-transaction.model";
 
 export class Transaction extends BaseTransaction {
   date: Date;
@@ -14,6 +15,7 @@ export class Transaction extends BaseTransaction {
   recurringTransactionId: Maybe<number> = Maybe.none();
   recurringTransaction: Maybe<RecurringTransaction> = Maybe.none();
   isConfirmed: Maybe<boolean> = Maybe.none();
+  splitwiseTransaction: Maybe<SplitwiseTransaction> = Maybe.none();
   fullyEditable: boolean = true;
 
   public static fromDto(dto: ITransaction): Transaction {
@@ -51,6 +53,9 @@ export class Transaction extends BaseTransaction {
       SplitDetail.fromDto(sd)
     );
     instance.fullyEditable = dto.fullyEditable;
+    instance.splitwiseTransaction = Maybe.deserialize(
+      dto.splitwiseTransaction
+    ).map((st) => SplitwiseTransaction.fromDto(st));
 
     return instance;
   }
@@ -84,6 +89,9 @@ export class Transaction extends BaseTransaction {
     instance.paymentRequests = this.paymentRequests.map((pr) => pr.copy());
     instance.splitDetails = this.splitDetails.map((sd) => sd.copy());
     instance.fullyEditable = this.fullyEditable;
+    instance.splitwiseTransaction = this.splitwiseTransaction.map((st) =>
+      st.copy()
+    );
 
     return instance;
   }

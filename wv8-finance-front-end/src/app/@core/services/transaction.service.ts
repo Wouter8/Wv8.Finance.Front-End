@@ -71,6 +71,22 @@ export class TransactionService extends TransactionData {
       .toPromise();
   }
 
+  updateTransactionSender(id: number, accountId: number): Promise<void> {
+    const url = `${TransactionService.BaseUrl}/${id}/update-sender`;
+
+    return this.http
+      .put<void>(url, { accountId })
+      .toPromise();
+  }
+
+  updateTransactionReceiver(id: number, accountId: number): Promise<void> {
+    const url = `${TransactionService.BaseUrl}/${id}/update-receiver`;
+
+    return this.http
+      .put<void>(url, { accountId })
+      .toPromise();
+  }
+
   updateTransactionCategory(id: number, categoryId: number): Promise<void> {
     const url = `${TransactionService.BaseUrl}/${id}/update-category`;
 

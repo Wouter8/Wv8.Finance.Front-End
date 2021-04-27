@@ -8,6 +8,7 @@ import { IAccount } from "./account";
 import { TransactionGroup } from "../models/transaction-group.model";
 import { IRecurringTransaction } from "./recurring-transaction";
 import { InputTransaction } from "../datatransfer/input-transaction";
+import { ISplitwiseTransaction } from "./splitwise";
 
 export interface IBaseTransaction {
   id: number;
@@ -33,6 +34,7 @@ export interface ITransaction extends IBaseTransaction {
   recurringTransaction: IMaybe<IRecurringTransaction>;
   isConfirmed: IMaybe<boolean>;
   fullyEditable: boolean;
+  splitwiseTransaction: IMaybe<ISplitwiseTransaction>;
 }
 
 export interface IPaymentRequest {
@@ -78,6 +80,14 @@ export abstract class TransactionData {
     id: number,
     input: InputTransaction
   ): Promise<Transaction>;
+  abstract updateTransactionSender(
+    id: number,
+    accountId: number
+  ): Promise<void>;
+  abstract updateTransactionReceiver(
+    id: number,
+    accountId: number
+  ): Promise<void>;
   abstract updateTransactionCategory(
     id: number,
     categoryId: number

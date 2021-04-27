@@ -41,6 +41,10 @@ export abstract class ISplitwiseData {
     onlyImportable: boolean
   ): Promise<SplitwiseTransaction[]>;
   abstract getSplitwiseUsers(): Promise<SplitwiseUser[]>;
+  abstract completeTransferImport(
+    splitwiseId: number,
+    accountId: number
+  ): Promise<Transaction>;
   abstract completeTransactionImport(
     splitwiseId: number,
     categoryId: number,
