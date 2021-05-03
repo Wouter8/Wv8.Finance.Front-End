@@ -80,10 +80,7 @@ export class ImportTransactionsComponent implements OnInit {
   async importTransaction(row: ISplitwiseTransactionRow) {
     if (!row.isSettlement && row.categoryId.isNone)
       this.toaster.warning("", "Specify a category for the transaction.");
-    if (
-      (row.isSettlement || row.transaction.paidAmount > 0) &&
-      row.accountId.isNone
-    )
+    if (row.isSettlement && row.accountId.isNone)
       this.toaster.warning("", "Specify an account for the transaction.");
 
     if (row.imported)
@@ -91,14 +88,14 @@ export class ImportTransactionsComponent implements OnInit {
 
     var transaction = row.isSettlement
       ? await this.splitwiseService.completeTransferImport(
-          row.transaction.id,
-          row.accountId.value
-        )
+        row.transaction.id,
+        row.accountId.value
+      )
       : await this.splitwiseService.completeTransactionImport(
-          row.transaction.id,
-          row.categoryId.value,
-          row.accountId
-        );
+        row.transaction.id,
+        row.categoryId.value,
+        row.accountId
+      );
 
     row.imported = true;
 
