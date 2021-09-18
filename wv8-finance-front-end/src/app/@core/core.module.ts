@@ -58,12 +58,19 @@ export const NB_CORE_PROVIDERS = [...DATA_SERVICES, ...UTIL_SERVICES];
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
     throwIfAlreadyLoaded(parentModule, "CoreModule");
+    this.overwriteToDateString();
   }
 
   static forRoot(): ModuleWithProviders<CoreModule> {
     return {
       ngModule: CoreModule,
       providers: [...NB_CORE_PROVIDERS],
+    };
+  }
+
+  overwriteToDateString() {
+    Date.prototype.toDateString = function () {
+      return `${this.getMonth() + 1}/${this.getDate()}/${this.getFullYear()}`;
     };
   }
 }
