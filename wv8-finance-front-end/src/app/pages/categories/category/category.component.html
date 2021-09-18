@@ -1,60 +1,33 @@
 <div *ngIf="category" class="row">
-  <div class="col-sm-12">
-    <nb-card>
-      <nb-card-header>
-        <wv8-icon-with-background
-          [icon]="category.icon.name"
-          [pack]="category.icon.pack"
-          [color]="category.icon.color"
-        ></wv8-icon-with-background>
-        <wv8-obsolete-container
-          [text]="category.description"
-          [data]="category"
-          [tooltipPlacement]="'top'"
-        ></wv8-obsolete-container>
-        <button
-          *ngIf="!category.isObsolete"
-          nbButton
-          nbTooltip="Edit"
-          nbTooltipPlacement="right"
-          size="tiny"
-          (click)="onEditClick()"
-        >
+    <div class="col-sm-12">
+        <nb-card>
+            <nb-card-header>
+                <wv8-icon-with-background [icon]="category.icon.name" [pack]="category.icon.pack" [color]="category.icon.color"></wv8-icon-with-background>
+                <wv8-obsolete-container [text]="category.description" [data]="category" [tooltipPlacement]="'top'"></wv8-obsolete-container>
+                <button *ngIf="!category.isObsolete" nbButton nbTooltip="Edit" nbTooltipPlacement="right" size="tiny" (click)="onEditClick()">
           <nb-icon icon="edit-outline"></nb-icon>
         </button>
-        <button
-          *ngIf="category.isObsolete"
-          nbTooltip="Recover"
-          nbTooltipPlacement="right"
-          nbButton
-          size="tiny"
-          status="info"
-          (click)="onObsoleteClick()"
-        >
+                <button *ngIf="category.isObsolete" nbTooltip="Recover" nbTooltipPlacement="right" nbButton size="tiny" status="info" (click)="onObsoleteClick()">
           <nb-icon icon="refresh-outline"></nb-icon>
         </button>
-        <button
-          *ngIf="!category.isObsolete"
-          nbTooltip="Mark obsolete"
-          nbTooltipPlacement="right"
-          nbButton
-          size="tiny"
-          status="danger"
-          (click)="onObsoleteClick()"
-        >
+                <button *ngIf="!category.isObsolete" nbTooltip="Mark obsolete" nbTooltipPlacement="right" nbButton size="tiny" status="danger" (click)="onObsoleteClick()">
           <nb-icon icon="trash-2-outline"></nb-icon>
         </button>
-      </nb-card-header>
-      <nb-card-body>
-        <table>
-          <tbody>
-            <tr>
-              <th>Id</th>
-              <td>{{ category.id }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </nb-card-body>
-    </nb-card>
-  </div>
+            </nb-card-header>
+            <nb-card-body>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ category.id }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="chart-container">
+                    <div echarts [options]="resultChartOptions" class="echart"></div>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </div>
 </div>

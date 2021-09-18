@@ -12,6 +12,8 @@ import { Category } from "../../../@core/models/category.model";
 import { ConfirmDialogComponent } from "../../../@theme/components/confirm-dialog/confirm-dialog.component";
 import { CategoryReport } from "../../../@core/models/category-report.model";
 import { ReportData } from "../../../@core/data/report";
+import { EChartOption } from "echarts";
+import { CurrencyPipe, DatePipe } from "@angular/common";
 
 @Component({
   selector: "category",
@@ -22,6 +24,8 @@ export class CategoryComponent implements OnInit {
   category: Category;
   report: CategoryReport;
 
+  resultChartOptions: EChartOption;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -29,7 +33,9 @@ export class CategoryComponent implements OnInit {
     private reportService: ReportData,
     private dialogService: NbDialogService,
     private toasterService: NbToastrService,
-    private dateService: NbDateService<Date>
+    private dateService: NbDateService<Date>,
+    private currencyPipe: CurrencyPipe,
+    private datePipe: DatePipe
   ) {}
 
   async ngOnInit() {
@@ -48,6 +54,7 @@ export class CategoryComponent implements OnInit {
             start,
             today
           );
+          this.resultChartOptions = this.getChartOptions(this.report);
         } catch {
           this.toasterService.danger("", "Category not found");
           this.router.navigateByUrl("/categories");
@@ -95,5 +102,67 @@ export class CategoryComponent implements OnInit {
           }
         }
       );
+  }
+
+  private getChartOptions(report: CategoryReport): EChartOption {
+    return {
+      color: ["green", "red", "blue"],
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "shadow",
+        },
+      },
+      grid: {
+        left: "3%",
+        right: "4%",
+        bottom: "3%",
+        containLabel: true,
+      },
+      xAxis: [
+        {
+          type: "category",
+          data: report.dates.map((d) => d.toISOString()),
+          axisLabel: {
+            formatter: (v) => `${this.datePipe.transform(v, "dd-MM-yyyy")}`,
+          },
+        },
+      ],
+      yAxis: [
+        {
+          type: "value",
+        },
+      ],
+      series: [
+        {
+          name: "Income",
+          type: "bar",
+          stack: "1",
+          label: {
+            show: false,
+          },
+          data: report.incomes,
+        },
+        {
+          name: "Expenses",
+          type: "bar",
+          stack: "1",
+          label: {
+            show: false,
+            position: "left",
+          },
+          data: report.expenses,
+        },
+        {
+          name: "Result",
+          type: "line",
+          label: {
+            show: false,
+            position: "inside",
+          },
+          data: report.results,
+        },
+      ],
+    };
   }
 }
