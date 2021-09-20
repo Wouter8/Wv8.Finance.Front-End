@@ -40,13 +40,17 @@ export class ImportTransactionsComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.checkImporterFinished();
+    try {
+      await this.checkImporterFinished();
 
-    if (this.importerInformation.currentState === ImportState.Running) {
-      this.importFinishedTimer = setInterval(
-        this.checkImporterFinished.bind(this),
-        1000
-      );
+      if (this.importerInformation.currentState === ImportState.Running) {
+        this.importFinishedTimer = setInterval(
+          this.checkImporterFinished.bind(this),
+          1000
+        );
+      }
+    } catch (error) {
+      this.toaster.danger("", "Splitwise not configured.");
     }
   }
 
@@ -115,8 +119,8 @@ export class ImportTransactionsComponent implements OnInit {
 
         this.importerInformation.lastRunTimestamp = new Date();
       }
-    } catch {
-      this.toaster.success("", "Importer failed");
+    } catch (error) {
+      this.toaster.danger("Importer failed", error);
     } finally {
       this.importerInformation.currentState = ImportState.NotRunning;
     }

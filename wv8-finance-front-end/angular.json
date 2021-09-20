@@ -13,7 +13,6 @@
           "options": {
             "aot": true,
             "preserveSymlinks": true,
-            "rebaseRootRelativeCssUrls": true,
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -31,7 +30,13 @@
               "node_modules/pace-js/templates/pace-theme-flash.tmpl.css",
               "src/app/@theme/styles/styles.scss"
             ],
-            "scripts": ["node_modules/pace-js/pace.min.js"]
+            "scripts": ["node_modules/pace-js/pace.min.js"],
+            "allowedCommonJsDependencies": [
+              "ts-money",
+              "javascript-time-ago/locale/en",
+              "echarts",
+              "lodash"
+            ]
           },
           "configurations": {
             "production": {
@@ -44,7 +49,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": false,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,

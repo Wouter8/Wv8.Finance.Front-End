@@ -28,6 +28,7 @@ import { RecurringTransactionData } from "./data/recurring-transaction";
 import { ReportService } from "./services/report.service";
 import { ReportData } from "./data/report";
 import { SplitwiseService } from "./services/splitwise.service";
+import { DateUtils } from "./utils/date-utils";
 
 const DATA_SERVICES = [
   { provide: AccountData, useClass: AccountService },
@@ -58,6 +59,7 @@ export const NB_CORE_PROVIDERS = [...DATA_SERVICES, ...UTIL_SERVICES];
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
     throwIfAlreadyLoaded(parentModule, "CoreModule");
+    DateUtils.overwriteMethods();
   }
 
   static forRoot(): ModuleWithProviders<CoreModule> {
