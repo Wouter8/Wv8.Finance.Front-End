@@ -14,6 +14,7 @@ import { CategoryReport } from "../../../@core/models/category-report.model";
 import { ReportData } from "../../../@core/data/report";
 import { EChartOption } from "echarts";
 import { CurrencyPipe, DatePipe } from "@angular/common";
+import { ChartTooltip } from "../../../@core/models/chart-tooltip/chart-tooltip.model";
 
 @Component({
   selector: "category",
@@ -106,31 +107,52 @@ export class CategoryComponent implements OnInit {
 
   private getChartOptions(report: CategoryReport): EChartOption {
     return {
-      color: ["green", "red", "blue"],
+      color: ["#3BDE67", "#FF6E6E", "#3366ff"],
       tooltip: {
         trigger: "axis",
         axisPointer: {
           type: "shadow",
         },
+        formatter: (data) => {
+          let date = this.report.dates[data[0].dataIndex].toIntervalTooltip(
+            this.report.unit
+          );
+          let tooltip = ChartTooltip.create(date)
+            .addEuroRow(data[0])
+            .addEuroRow(data[1]);
+
+          if (report.results.isSome) tooltip.addEuroRow(data[2]);
+
+          return tooltip.render();
+        },
       },
       grid: {
-        left: "3%",
-        right: "4%",
-        bottom: "3%",
+        left: "0%",
+        right: "0%",
+        bottom: "5px",
+        top: "5px",
         containLabel: true,
       },
       xAxis: [
         {
           type: "category",
-          data: report.dates.map((d) => d.toISOString()),
-          axisLabel: {
-            formatter: (v) => `${this.datePipe.transform(v, "dd-MM-yyyy")}`,
-          },
+          data: report.dates.map((d) => d.toIntervalString(this.report.unit)),
         },
       ],
       yAxis: [
         {
           type: "value",
+          min: (v) => (v.min === 0 && v.max === 0 ? -60 : null),
+          max: (v) => (v.min === 0 && v.max === 0 ? 60 : null),
+          axisLabel: {
+            formatter: (v) =>
+              this.currencyPipe.transform(
+                Math.abs(v),
+                "EUR",
+                "symbol",
+                "1.0-0"
+              ),
+          },
         },
       ],
       series: [
@@ -138,29 +160,18 @@ export class CategoryComponent implements OnInit {
           name: "Income",
           type: "bar",
           stack: "1",
-          label: {
-            show: false,
-          },
           data: report.incomes,
         },
         {
           name: "Expenses",
           type: "bar",
           stack: "1",
-          label: {
-            show: false,
-            position: "left",
-          },
           data: report.expenses,
         },
         {
           name: "Result",
           type: "line",
-          label: {
-            show: false,
-            position: "inside",
-          },
-          data: report.results,
+          data: report.results.valueOrElse([]),
         },
       ],
     };

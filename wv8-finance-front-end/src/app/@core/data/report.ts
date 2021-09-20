@@ -5,6 +5,7 @@ import { IBudget } from "./budget";
 import { CurrentDateReport } from "../models/current-date-report.model";
 import { ReportIntervalUnit } from "../enums/report-interval-unit.enum";
 import { CategoryReport } from "../models/category-report.model";
+import { IMaybe } from "@wv8/typescript.core";
 
 export interface ICurrentDateReport {
   latestTransactions: ITransaction[];
@@ -24,7 +25,7 @@ interface IReport {
 export interface ICategoryReport extends IReport {
   expenses: number[];
   incomes: number[];
-  results: number[];
+  results: IMaybe<number[]>;
 }
 
 export abstract class ReportData {

@@ -105,4 +105,27 @@
     background-size: 4px 1px;
     background-repeat: repeat-x;
   }
+  .chart-tooltip {
+    color: white;
+    font-size: 12px;
+
+    .tooltip-header {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .tooltip-row {
+      display: flex;
+      align-items: baseline;
+
+      .tooltip-row-color {
+        width: 10px;
+        height: 10px;
+        border-radius: 10px;
+
+        display: inline-block;
+        margin-right: 4px;
+      }
+    }
+  }
 }
