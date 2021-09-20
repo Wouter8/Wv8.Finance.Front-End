@@ -9,6 +9,7 @@ import { AccountsRoutingModule } from './accounts-routing.module';
 import { AccountsOverviewComponent } from './accounts-overview/accounts-overview.component';
 import { CreateOrEditAccountComponent } from './create-or-edit-account/create-or-edit-account.component';
 import { FormsModule } from '@angular/forms';
+import { NgxEchartsModule } from 'ngx-echarts';
 @NgModule({
   imports: [
     AccountsRoutingModule,
@@ -23,7 +24,8 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     NbTooltipModule,
     NbPopoverModule,
-    NbSelectModule
+    NbSelectModule,
+    NgxEchartsModule,
   ],
   declarations: [
     AccountsComponent,

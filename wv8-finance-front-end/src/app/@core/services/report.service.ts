@@ -6,9 +6,11 @@ import {
   ReportData,
   ICurrentDateReport,
   ICategoryReport,
+  IAccountReport,
 } from "../data/report";
 import { CurrentDateReport } from "../models/current-date-report.model";
 import { CategoryReport } from "../models/category-report.model";
+import { AccountReport } from "../models/account-report.model";
 
 @Injectable()
 export class ReportService extends ReportData {
@@ -40,6 +42,22 @@ export class ReportService extends ReportData {
         end: end.toDateString(),
       })
       .pipe(map((r) => CategoryReport.fromDto(r)))
+      .toPromise();
+  }
+
+  getAccountReport(
+    accountId: number,
+    start: Date,
+    end: Date
+  ): Promise<AccountReport> {
+    const url = `${ReportService.BaseUrl}/account/${accountId}`;
+
+    return this.http
+      .get<IAccountReport>(url, {
+        start: start.toDateString(),
+        end: end.toDateString(),
+      })
+      .pipe(map((r) => AccountReport.fromDto(r)))
       .toPromise();
   }
 }

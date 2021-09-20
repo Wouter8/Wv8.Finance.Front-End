@@ -35,8 +35,7 @@ export class CategoryComponent implements OnInit {
     private dialogService: NbDialogService,
     private toasterService: NbToastrService,
     private dateService: NbDateService<Date>,
-    private currencyPipe: CurrencyPipe,
-    private datePipe: DatePipe
+    private currencyPipe: CurrencyPipe
   ) {}
 
   async ngOnInit() {

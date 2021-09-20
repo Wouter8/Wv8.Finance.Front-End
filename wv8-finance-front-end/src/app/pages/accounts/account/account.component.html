@@ -75,4 +75,14 @@
       </nb-card-body>
     </nb-card>
   </div>
+  <div class="col-sm-12 col-md-6 col-lg-4">
+      <nb-card>
+          <nb-card-header> Balans afgelopen 12 maanden </nb-card-header>
+          <nb-card-body>
+              <div class="chart-container">
+                  <div echarts [options]="balanceChartOptions" class="echart"></div>
+              </div>
+          </nb-card-body>
+      </nb-card>
+  </div>
 </div>
