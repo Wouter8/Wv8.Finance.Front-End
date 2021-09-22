@@ -141,6 +141,9 @@ export class AccountComponent implements OnInit {
           name: "Balance",
           type: "line",
           data: report.balances,
+          areaStyle: {
+            opacity: 0.5
+          },
         },
       ]
     };
