@@ -77,6 +77,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private setNetWorthChartOptions(colors: any, echarts: any) {
+    console.log(echarts.areaOpacity);
     this.netWorthChartOptions = {
       backgroundColor: echarts.bg,
       color: [colors.primaryLight],
