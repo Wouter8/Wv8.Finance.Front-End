@@ -10,7 +10,7 @@ import { Maybe } from "@wv8/typescript.core";
   providedIn: "root",
 })
 export class SplitCalculaterService {
-  constructor() { }
+  constructor() {}
 
   public calculateSplits(
     splits: SplitSpecification[],
@@ -29,17 +29,17 @@ export class SplitCalculaterService {
       case SplitType.Equal:
         let usersInSplit = splits
           .filter((s) => s.hasSplit)
-          .map((s) => s.getUserId());
+          .map((s) => s.userId);
         let amountsEqual =
           usersInSplit.length === 0
             ? [new Money(0, Currencies.EUR)]
             : // Share equally.
-            amountMoney.allocate(usersInSplit.map((_) => 1));
+              amountMoney.allocate(usersInSplit.map((_) => 1));
 
         // Reverse the applying because the allocation returns the highest splits first.
         let equalAmountIndex = amountsEqual.length - 1;
         for (let i = 0; i < splits.length; i++) {
-          if (usersInSplit.indexOf(splits[i].getUserId()) >= 0) {
+          if (usersInSplit.indexOf(splits[i].userId) >= 0) {
             splits[i].amount = amountsEqual[equalAmountIndex].amount / 100;
             equalAmountIndex--;
           } else {
@@ -80,7 +80,12 @@ export class SplitCalculaterService {
     details: SplitDetail[],
     users: SplitwiseUser[]
   ): SplitSpecification[] {
-    var specifications = [new SplitSpecification(Maybe.none(), personalAmount)];
+    var specifications = [new SplitSpecification(-1, "Me", personalAmount)];
+
+    let userIds = users.map((u) => u.id);
+    let splitsWithoutUser = details.filter(
+      (sd) => !userIds.includes(sd.splitwiseUserId)
+    );
 
     for (let i = 0; i < users.length; i++) {
       const user = users[i];
@@ -91,8 +96,20 @@ export class SplitCalculaterService {
 
       specifications.push(
         new SplitSpecification(
-          Maybe.some(user),
+          user.id,
+          user.name,
           detail.map((d) => d.amount).valueOrElse(0)
+        )
+      );
+    }
+
+    for (let i = 0; i < splitsWithoutUser.length; i++) {
+      const detail = splitsWithoutUser[i];
+      specifications.push(
+        new SplitSpecification(
+          detail.splitwiseUserId,
+          detail.splitwiseUserName,
+          detail.amount
         )
       );
     }

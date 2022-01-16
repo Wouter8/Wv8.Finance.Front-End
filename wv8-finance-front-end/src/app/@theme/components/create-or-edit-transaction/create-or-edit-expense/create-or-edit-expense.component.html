@@ -1,4 +1,7 @@
-<table *ngIf="transaction.fullyEditable" class="transaction-input-table">
+<table
+  *ngIf="transaction.fullyEditable && splitUsersExist"
+  class="transaction-input-table"
+>
   <tbody>
     <tr>
       <th>Account</th>
@@ -49,13 +52,17 @@
             (ngModelChange)="calculateSplitAmounts()"
           />
         </nb-form-field>
-        <div class="amount-start-split" (click)="toggleSpecifyingSplits()">
+        <div
+          *ngIf="splitwiseIntegrationEnabled"
+          class="amount-start-split"
+          (click)="toggleSpecifyingSplits()"
+        >
           <span *ngIf="hasSplits">Remove splits...</span>
           <span *ngIf="!hasSplits">Specify splits...</span>
         </div>
       </td>
     </tr>
-    <tr *ngIf="hasSplits">
+    <tr *ngIf="splitwiseIntegrationEnabled && hasSplits">
       <th>
         <div>Splits</div>
         <nb-select
@@ -89,7 +96,7 @@
                 [(checked)]="split.hasSplit"
                 (checkedChange)="calculateSplitAmounts()"
               ></nb-checkbox>
-              <span class="name" [ngClass]="{ me: split.user.isNone }">
+              <span class="name" [ngClass]="{ me: split.userId == -1 }">
                 {{ split.name }}</span
               >
               <div *ngIf="splitType == splitTypes.Stakes" class="stake-input">
@@ -165,7 +172,10 @@
   </tbody>
 </table>
 
-<table *ngIf="!transaction.fullyEditable" class="transaction-input-table">
+<table
+  *ngIf="!transaction.fullyEditable || !splitUsersExist"
+  class="transaction-input-table"
+>
   <tbody>
     <tr>
       <th>Account</th>

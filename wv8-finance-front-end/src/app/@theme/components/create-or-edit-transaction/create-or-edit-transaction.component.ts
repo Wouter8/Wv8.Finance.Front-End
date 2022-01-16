@@ -143,7 +143,7 @@ export class CreateOrEditTransactionComponent implements OnInit {
       this.transaction.type == TransactionType.Expense &&
       this.expenseTabComponent.hasSplits
         ? this.expenseTabComponent.splits
-            .filter((s) => s.user.isSome && s.amount > 0)
+            .filter((s) => s.userId !== -1 && s.amount > 0)
             .map((s) => s.asInput())
         : [];
 

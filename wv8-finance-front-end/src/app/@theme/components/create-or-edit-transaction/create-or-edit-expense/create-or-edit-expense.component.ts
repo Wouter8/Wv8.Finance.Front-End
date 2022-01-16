@@ -13,6 +13,7 @@ import { SplitType } from "../../../../@core/enums/split-type.enum";
 import { SplitCalculaterService } from "../../../../@core/services/split-calculater.service";
 import { ISplitwiseData } from "../../../../@core/data/splitwise";
 import { SplitwiseUser } from "../../../../@core/models/splitwise-user.model";
+import { environment } from "../../../../../environments/environment";
 
 @Component({
   selector: "create-or-edit-expense",
@@ -23,7 +24,9 @@ export class CreateOrEditExpenseComponent implements OnInit {
   @Input() transaction: Transaction;
   @Input() editing: boolean;
 
+  splitwiseIntegrationEnabled: boolean;
   hasSplits: boolean = false;
+  splitUsersExist: boolean = true;
   splitType: SplitType = SplitType.Equal;
   splitTypes = SplitType;
   splits: SplitSpecification[];
@@ -33,13 +36,20 @@ export class CreateOrEditExpenseComponent implements OnInit {
   constructor(
     private splitwiseService: ISplitwiseData,
     private calculateService: SplitCalculaterService
-  ) { }
+  ) {}
 
   async ngOnInit() {
+    this.splitwiseIntegrationEnabled = environment.splitwiseIntegrationEnabled;
     this.hasSplits = this.transaction.splitDetails.length > 0;
 
     if (this.hasSplits) {
       await this.loadSplitwiseUsers();
+
+      let existingSplitwiseUserIds = this.splitwiseUsers.map((u) => u.id);
+      this.splitUsersExist = this.transaction.splitDetails.every((sd) =>
+        existingSplitwiseUserIds.includes(sd.splitwiseUserId)
+      );
+
       this.splits = this.calculateService.toSpecifications(
         this.transaction.personalAmount,
         this.transaction.splitDetails,
@@ -73,9 +83,9 @@ export class CreateOrEditExpenseComponent implements OnInit {
   async loadSplitwiseUsers() {
     this.splitwiseUsers = await this.splitwiseService.getSplitwiseUsers();
 
-    let me = new SplitSpecification(Maybe.none(), 0);
+    let me = new SplitSpecification(-1, "Me", 0);
     this.splits = this.splitwiseUsers.map(
-      (u) => new SplitSpecification(Maybe.some(u), 0)
+      (u) => new SplitSpecification(u.id, u.name, 0)
     );
     this.splits.unshift(me);
   }
