@@ -32,6 +32,10 @@ jobs:
     # `npm rebuild` will run all those post-install scripts for us.
     - run: npm rebuild && npm run prepare --if-present
       working-directory: ${{env.workingDirectory}}
+    - run: npm install @angular/cli --global
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      working-directory: ${{env.workingDirectory}}
     # build angular production configuration
     - run: npm run "build:prod"
       working-directory: ${{env.workingDirectory}}
