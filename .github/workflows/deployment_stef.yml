@@ -4,7 +4,6 @@ on: workflow_dispatch
 
 jobs:
   buildAndDeploy:
-
     runs-on: ubuntu-latest
     env:
       workingDirectory: ./wv8-finance-front-end
@@ -12,31 +11,36 @@ jobs:
       environmentFileDirectory: ./wv8-finance-front-end/src/environments/
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2.1.4
-    - run: sed -i 's@{secrets.BACKEND_URL}@${{secrets.BACKEND_URL_STEF}}@g' environment.prod.ts
-      working-directory: ${{env.environmentFileDirectory}}
-    - run: echo "${{secrets.AZURE_AUTH}}" > ~/.npmrc
-    - run: npm config set @wv8:registry https://pkgs.dev.azure.com/woutervanacht/_packaging/Wv8-NuGet-Feed/npm/registry/
-    # Skip post-install scripts here, as a malicious
-    # script could steal NODE_AUTH_TOKEN.
-    - run: npm install --ignore-scripts
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      working-directory: ${{env.workingDirectory}}
-    # `npm rebuild` will run all those post-install scripts for us.
-    - run: npm rebuild && npm run prepare --if-present
-      working-directory: ${{env.workingDirectory}}
-    # build angular production configuration
-    - run: npm run "build:prod"
-      working-directory: ${{env.workingDirectory}}
-    - name: Deploy app
-      uses: isthatcentered/dist-to-ftp@master
-      with:
-        user: ${{ secrets.FTP_USER }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        host: ${{ secrets.FTP_HOST }}
-        port: 21
-        path: ${{env.distDirectory}}
-        into: ${{ secrets.FTP_FOLDER_STEF }}
-        cleanupExisting: true
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2.1.4
+      - run: sed -i 's@{secrets.BACKEND_URL}@${{secrets.BACKEND_URL_STEF}}@g' environment.prod.ts
+        working-directory: ${{env.environmentFileDirectory}}
+      - run: echo "${{secrets.AZURE_AUTH}}" > ~/.npmrc
+      - run: npm config set @wv8:registry https://pkgs.dev.azure.com/woutervanacht/_packaging/Wv8-NuGet-Feed/npm/registry/
+      # Skip post-install scripts here, as a malicious
+      # script could steal NODE_AUTH_TOKEN.
+      - run: npm install --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: ${{env.workingDirectory}}
+      # `npm rebuild` will run all those post-install scripts for us.
+      - run: npm rebuild && npm run prepare --if-present
+        working-directory: ${{env.workingDirectory}}
+      # for some reason npm install does not properly install angular cli.
+      - run: npm install @angular/cli --global
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: ${{env.workingDirectory}}
+      # build angular production configuration
+      - run: npm run "build:prod"
+        working-directory: ${{env.workingDirectory}}
+      - name: Deploy app
+        uses: isthatcentered/dist-to-ftp@master
+        with:
+          user: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          host: ${{ secrets.FTP_HOST }}
+          port: 21
+          path: ${{env.distDirectory}}
+          into: ${{ secrets.FTP_FOLDER_STEF }}
+          cleanupExisting: true

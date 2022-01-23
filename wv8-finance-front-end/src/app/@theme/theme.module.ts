@@ -26,18 +26,8 @@ import {
 import { NbEvaIconsModule } from "@nebular/eva-icons";
 import { NbSecurityModule } from "@nebular/security";
 
-import {
-  FooterComponent,
-  HeaderComponent,
-  SwitcherComponent,
-} from "./components";
-import {
-  CapitalizePipe,
-  PluralPipe,
-  RoundPipe,
-  TimingPipe,
-  NumberWithCommasPipe,
-} from "./pipes";
+import { FooterComponent, HeaderComponent, SwitcherComponent } from "./components";
+import { CapitalizePipe, PluralPipe, RoundPipe, TimingPipe, NumberWithCommasPipe } from "./pipes";
 import { LayoutComponent } from "./layouts";
 import { DEFAULT_THEME } from "./styles/theme.default";
 import { COSMIC_THEME } from "./styles/theme.cosmic";
@@ -74,6 +64,7 @@ import { CreateOrEditIncomeComponent } from "./components/create-or-edit-transac
 import { CreateOrEditExpenseComponent } from "./components/create-or-edit-transaction/create-or-edit-expense/create-or-edit-expense.component";
 import { CreateOrEditTransferComponent } from "./components/create-or-edit-transaction/create-or-edit-transfer/create-or-edit-transfer.component";
 import { TableTransactionAmountCellComponent } from "./components/table/table-transaction-amount-cell/table-transaction-amount-cell.component";
+import { WarningComponent } from "./components/warning/warning.component";
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -133,6 +124,7 @@ const COMPONENTS = [
   CreateOrEditTransactionComponent,
   TableMaybeDateCellComponent,
   TableTransactionAmountCellComponent,
+  WarningComponent,
 ];
 const PIPES = [
   CapitalizePipe,

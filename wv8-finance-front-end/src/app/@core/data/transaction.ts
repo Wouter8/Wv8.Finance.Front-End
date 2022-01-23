@@ -51,6 +51,7 @@ export interface IPaymentRequest {
 export interface ISplitDetail {
   transactionId: number;
   splitwiseUserId: number;
+  splitwiseUserName: string;
   amount: number;
 }
 

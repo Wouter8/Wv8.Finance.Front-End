@@ -27,10 +27,10 @@
     "docs:serve": "compodoc -p src/tsconfig.app.json -d docs -s",
     "prepush": "npm run lint:ci",
     "release:changelog": "npm run conventional-changelog -- -p angular -i CHANGELOG.md -s",
-    "postinstall": "ngcc"
+    "postinstall": ""
   },
   "dependencies": {
-    "@akveo/ng2-completer": "^9.0.1",
+    "@angular/cli": "^11.2.5",
     "@angular/animations": "^11.2.6",
     "@angular/cdk": "^11.2.5",
     "@angular/common": "^11.2.6",
@@ -70,7 +70,6 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.1102.5",
-    "@angular/cli": "^11.2.5",
     "@angular/compiler-cli": "^11.2.6",
     "@angular/language-service": "11.2.6",
     "@compodoc/compodoc": "1.0.1",

@@ -4,7 +4,7 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpErrorResponse
+  HttpErrorResponse,
 } from "@angular/common/http";
 import { Observable, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
@@ -21,19 +21,19 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     request = request.clone({
       setHeaders: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     });
 
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
-        const error: string = err.status == 400 ? err.error : "";
+        const error: string = err.error;
 
         this.toastrService.danger(error, "Oops... Something went wrong", {
-          duration: 6000
+          duration: 6000,
         });
 
-        console.error(err.error);
+        console.error(err);
 
         return throwError(error);
       })

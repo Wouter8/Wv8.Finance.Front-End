@@ -50,7 +50,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
     private recurringTransactionService: RecurringTransactionData,
     private toasterService: NbToastrService,
     private dateService: NbDateService<Date>
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (this.recurringTransaction) {
@@ -85,9 +85,8 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
   onTypeChange(selectedTab: NbTabComponent) {
     if (this.editing) return;
 
-    this.recurringTransaction.type = this.transactionTypes[
-      selectedTab.tabTitle
-    ];
+    this.recurringTransaction.type =
+      this.transactionTypes[selectedTab.tabTitle];
 
     switch (this.recurringTransaction.type) {
       case TransactionType.Expense:
@@ -120,10 +119,10 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
 
     var splitDetails =
       this.recurringTransaction.type == TransactionType.Expense &&
-        this.expenseTabComponent.hasSplits
+      this.expenseTabComponent.hasSplits
         ? this.expenseTabComponent.splits
-          .filter((s) => s.user.isSome && s.amount > 0)
-          .map((s) => s.asInput())
+            .filter((s) => s.userId !== -1 && s.amount > 0)
+            .map((s) => s.asInput())
         : [];
 
     let input = new InputRecurringTransaction(
@@ -142,19 +141,21 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
     );
 
     if (this.editing) {
-      this.recurringTransaction = await this.recurringTransactionService.updateRecurringTransaction(
-        this.recurringTransaction.id,
-        input,
-        this.updateInstances
-      );
+      this.recurringTransaction =
+        await this.recurringTransactionService.updateRecurringTransaction(
+          this.recurringTransaction.id,
+          input,
+          this.updateInstances
+        );
       this.dialogRef.close({
         success: true,
         recurringTransaction: this.recurringTransaction,
       });
     } else {
-      this.recurringTransaction = await this.recurringTransactionService.createRecurringTransaction(
-        input
-      );
+      this.recurringTransaction =
+        await this.recurringTransactionService.createRecurringTransaction(
+          input
+        );
       this.dialogRef.close({
         success: true,
         recurringTransaction: this.recurringTransaction,

@@ -14,6 +14,7 @@
       font-size: 12px;
       cursor: pointer;
       color: blue;
+
       &:hover {
         text-decoration: underline;
       }
@@ -25,31 +26,58 @@
   .splits-table {
     width: 100%;
 
-    td {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
+    tr {
+      td {
+        min-height: 26px;
+        height: 26px;
+        max-height: 26px;
+        max-width: 209px;
+        display: flex;
+        align-items: center;
 
-      min-height: 26px;
-      height: 26px;
-      max-height: 26px;
+        .name {
+          font-size: 12px;
+          font-weight: 400;
+
+          text-align: left;
+
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow-x: hidden;
+
+          &.me {
+            font-weight: 600;
+          }
+        }
+
+        .split-amount {
+          font-size: 10px;
+
+          text-align: right;
+        }
+      }
 
       &.equal {
+        .checkbox {
+          padding-right: 5px;
+        }
+
         .name {
-          flex-grow: 1;
+          width: 100%;
         }
       }
 
       &.stakes {
+        .name {
+          min-width: 85px;
+          max-width: 85px;
+        }
+
         .stake-input {
-          flex-grow: 1;
+          width: 100%;
+          padding-left: 10px;
 
           user-select: none;
-
-          display: flex;
-          justify-content: flex-end;
-          padding-right: 40px;
 
           .counter {
             position: relative;
@@ -108,7 +136,7 @@
               @extend .count-button;
 
               padding-left: 2px;
-              right: 10px;
+              left: -10px;
             }
 
             .plus {
@@ -116,7 +144,7 @@
 
               text-align: right;
 
-              padding-right: 1px;
+              padding-right: 2px;
               left: 10px;
             }
           }
@@ -124,39 +152,17 @@
       }
 
       &.exact {
+        .name {
+          width: 100%;
+        }
+
         .exact-input {
-          flex-grow: 1;
+          min-width: 100px;
+          max-width: 100px;
 
           text-align: right;
         }
       }
-    }
-
-    .checkbox {
-      padding-right: 5px;
-    }
-
-    .name {
-      font-size: 12px;
-      font-weight: 400;
-
-      min-width: 50px;
-
-      &.me {
-        font-weight: 600;
-      }
-    }
-
-    .split-amount {
-      font-size: 10px;
-
-      min-width: 50px;
-      max-width: 50px;
-
-      text-overflow: ellipsis;
-      overflow: hidden;
-
-      text-align: right;
     }
   }
 }

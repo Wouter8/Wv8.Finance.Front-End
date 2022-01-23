@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnChanges,
-  Input,
-  ViewChild,
-  ElementRef,
-} from "@angular/core";
+import { Component, OnInit, OnChanges, Input, ViewChild, ElementRef } from "@angular/core";
 import { Transaction } from "../../../../@core/models/transaction.model";
 import { Maybe } from "@wv8/typescript.core";
 import { SplitSpecification } from "../../../../@core/models/split-specification.model";
@@ -13,6 +6,7 @@ import { SplitType } from "../../../../@core/enums/split-type.enum";
 import { SplitCalculaterService } from "../../../../@core/services/split-calculater.service";
 import { ISplitwiseData } from "../../../../@core/data/splitwise";
 import { SplitwiseUser } from "../../../../@core/models/splitwise-user.model";
+import { environment } from "../../../../../environments/environment";
 
 @Component({
   selector: "create-or-edit-expense",
@@ -23,6 +17,9 @@ export class CreateOrEditExpenseComponent implements OnInit {
   @Input() transaction: Transaction;
   @Input() editing: boolean;
 
+  warningMessage: Maybe<string> = Maybe.none();
+
+  splitwiseIntegrationEnabled: boolean;
   hasSplits: boolean = false;
   splitType: SplitType = SplitType.Equal;
   splitTypes = SplitType;
@@ -33,13 +30,26 @@ export class CreateOrEditExpenseComponent implements OnInit {
   constructor(
     private splitwiseService: ISplitwiseData,
     private calculateService: SplitCalculaterService
-  ) { }
+  ) {}
 
   async ngOnInit() {
+    this.splitwiseIntegrationEnabled = environment.splitwiseIntegrationEnabled;
     this.hasSplits = this.transaction.splitDetails.length > 0;
 
     if (this.hasSplits) {
       await this.loadSplitwiseUsers();
+
+      let existingSplitwiseUserIds = this.splitwiseUsers.map((u) => u.id);
+      let splitUsersExist = this.transaction.splitDetails.every((sd) =>
+        existingSplitwiseUserIds.includes(sd.splitwiseUserId)
+      );
+      this.transaction.fullyEditable = this.transaction.fullyEditable && splitUsersExist;
+      if (!this.transaction.fullyEditable) {
+        this.warningMessage = Maybe.some(
+          "Only the category of this transaction is editable.\nUpdate the other properties in Splitwise."
+        );
+      }
+
       this.splits = this.calculateService.toSpecifications(
         this.transaction.personalAmount,
         this.transaction.splitDetails,
@@ -73,10 +83,8 @@ export class CreateOrEditExpenseComponent implements OnInit {
   async loadSplitwiseUsers() {
     this.splitwiseUsers = await this.splitwiseService.getSplitwiseUsers();
 
-    let me = new SplitSpecification(Maybe.none(), 0);
-    this.splits = this.splitwiseUsers.map(
-      (u) => new SplitSpecification(Maybe.some(u), 0)
-    );
+    let me = new SplitSpecification(-1, "Me", 0);
+    this.splits = this.splitwiseUsers.map((u) => new SplitSpecification(u.id, u.name, 0));
     this.splits.unshift(me);
   }
 
@@ -94,19 +102,14 @@ export class CreateOrEditExpenseComponent implements OnInit {
 
     if (this.splitType == SplitType.Exact) {
       for (let i = 0; i < this.splits.length; i++) {
-        this.splits[i].amount =
-          this.splits[i].amount === 0 ? undefined : this.splits[i].amount;
+        this.splits[i].amount = this.splits[i].amount === 0 ? undefined : this.splits[i].amount;
       }
     }
   }
 
   calculateSplitAmounts() {
     if (this.hasSplits) {
-      this.calculateService.calculateSplits(
-        this.splits,
-        this.transaction.amount,
-        this.splitType
-      );
+      this.calculateService.calculateSplits(this.splits, this.transaction.amount, this.splitType);
     }
   }
 

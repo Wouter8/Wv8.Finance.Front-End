@@ -1,0 +1,25 @@
+.warning-box {
+  padding: 0.5rem 1rem;
+  background-color: #e7e6e6;
+  border-radius: 0.25rem;
+
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .warning-icon-container {
+    nb-icon {
+      color: #f4b600;
+    }
+  }
+
+  .message {
+    flex-grow: 1;
+
+    white-space: pre-wrap;
+
+    padding-left: 0.75rem;
+  }
+}

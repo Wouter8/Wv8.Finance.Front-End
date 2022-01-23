@@ -1,0 +1,12 @@
+<div
+  class="warning-box"
+  [ngStyle]="{
+    'margin-top': marginTop + 'px',
+    'margin-bottom': marginBottom + 'px'
+  }"
+>
+  <div class="warning-icon-container">
+    <nb-icon icon="exclamation-triangle" pack="fas"></nb-icon>
+  </div>
+  <div class="message">{{ message }}</div>
+</div>

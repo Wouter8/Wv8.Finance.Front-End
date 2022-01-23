@@ -4,30 +4,30 @@ import { SplitDetail } from "./split-detail.model";
 import { SplitwiseUser } from "./splitwise-user.model";
 
 export class SplitSpecification {
-  user: Maybe<SplitwiseUser>;
+  userId: number;
   hasSplit: boolean;
   stake: number;
   amount: number;
   name: string;
 
-  constructor(user: Maybe<SplitwiseUser>, amount: number, stake: number = 0) {
-    this.user = user;
+  constructor(userId: number, name: string, amount: number, stake: number = 0) {
+    this.userId = userId;
     this.hasSplit = amount > 0;
     this.stake = stake;
     this.amount = amount;
-    this.name = this.user.map((u) => u.name).valueOrElse("Me");
-  }
-
-  public getUserId(): number {
-    return this.user.map((u) => u.id).valueOrElse(-1);
+    this.name = name;
   }
 
   public asInput(): InputSplitwiseSplit {
-    if (this.user.isNone) throw "Can only create an input for another user.";
-    return new InputSplitwiseSplit(this.user.value.id, this.amount);
+    return new InputSplitwiseSplit(this.userId, this.amount);
   }
 
   public copy(): SplitSpecification {
-    return new SplitSpecification(this.user, this.amount, this.stake);
+    return new SplitSpecification(
+      this.userId,
+      this.name,
+      this.amount,
+      this.stake
+    );
   }
 }

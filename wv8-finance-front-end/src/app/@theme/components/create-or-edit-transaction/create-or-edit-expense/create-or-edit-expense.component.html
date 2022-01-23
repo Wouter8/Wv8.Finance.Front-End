@@ -1,4 +1,9 @@
-<table *ngIf="transaction.fullyEditable" class="transaction-input-table">
+<warning
+  *ngIf="warningMessage.isSome"
+  [message]="warningMessage.value"
+  [marginBottom]="8"
+></warning>
+<table class="transaction-input-table">
   <tbody>
     <tr>
       <th>Account</th>
@@ -7,6 +12,7 @@
           [fullWidth]="true"
           [(accountId)]="transaction.accountId"
           [onlyNormalAccounts]="true"
+          [disabled]="warningMessage.isSome"
         ></account-picker>
       </td>
     </tr>
@@ -16,6 +22,7 @@
         <date-picker
           [date]="transaction.date"
           (dateChange)="dateChanged($event)"
+          [disabled]="warningMessage.isSome"
         ></date-picker>
       </td>
     </tr>
@@ -29,6 +36,7 @@
           fieldSize="small"
           fullWidth
           [(ngModel)]="transaction.description"
+          [disabled]="warningMessage.isSome"
         />
       </td>
     </tr>
@@ -47,15 +55,20 @@
             fullWidth
             [(ngModel)]="transaction.amount"
             (ngModelChange)="calculateSplitAmounts()"
+            [disabled]="warningMessage.isSome"
           />
         </nb-form-field>
-        <div class="amount-start-split" (click)="toggleSpecifyingSplits()">
+        <div
+          *ngIf="splitwiseIntegrationEnabled && warningMessage.isNone"
+          class="amount-start-split"
+          (click)="toggleSpecifyingSplits()"
+        >
           <span *ngIf="hasSplits">Remove splits...</span>
           <span *ngIf="!hasSplits">Specify splits...</span>
         </div>
       </td>
     </tr>
-    <tr *ngIf="hasSplits">
+    <tr *ngIf="splitwiseIntegrationEnabled && hasSplits">
       <th>
         <div>Splits</div>
         <nb-select
@@ -64,6 +77,7 @@
           [(selected)]="splitType"
           (selectedChange)="onSplitTypeChanged()"
           [fullWidth]="false"
+          [disabled]="warningMessage.isSome"
           size="tiny"
         >
           <nb-option
@@ -75,21 +89,24 @@
       </th>
       <td>
         <table class="splits-table">
-          <tr *ngFor="let split of splits" class="split-row">
-            <td
-              [ngClass]="{
-                equal: splitType == splitTypes.Equal,
-                stakes: splitType == splitTypes.Stakes,
-                exact: splitType == splitTypes.Exact
-              }"
-            >
+          <tr
+            *ngFor="let split of splits"
+            class="split-row"
+            [ngClass]="{
+              equal: splitType == splitTypes.Equal,
+              stakes: splitType == splitTypes.Stakes,
+              exact: splitType == splitTypes.Exact
+            }"
+          >
+            <td>
               <nb-checkbox
                 *ngIf="splitType == splitTypes.Equal"
                 class="checkbox"
                 [(checked)]="split.hasSplit"
                 (checkedChange)="calculateSplitAmounts()"
+                [disabled]="warningMessage.isSome"
               ></nb-checkbox>
-              <span class="name" [ngClass]="{ me: split.user.isNone }">
+              <span class="name" [ngClass]="{ me: split.userId == -1 }">
                 {{ split.name }}</span
               >
               <div *ngIf="splitType == splitTypes.Stakes" class="stake-input">
@@ -157,84 +174,7 @@
       </th>
       <td>
         <nb-checkbox
-          [disabled]="editing"
-          [(checked)]="transaction.needsConfirmation"
-        ></nb-checkbox>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table *ngIf="!transaction.fullyEditable" class="transaction-input-table">
-  <tbody>
-    <tr>
-      <th>Account</th>
-      <td
-        nbTooltip="This property can not be edited for imported transactions."
-      >
-        <account-picker
-          [fullWidth]="true"
-          [(accountId)]="transaction.accountId"
-          [onlyNormalAccounts]="true"
-          [disabled]="true"
-        ></account-picker>
-      </td>
-    </tr>
-    <tr>
-      <th>Date</th>
-      <td nbTooltip="Edit this property in Splitwise.">
-        <date-picker
-          [date]="transaction.date"
-          (dateChange)="dateChanged($event)"
-          [disabled]="true"
-        ></date-picker>
-      </td>
-    </tr>
-    <tr>
-      <th>Description</th>
-      <td nbTooltip="Edit this property in Splitwise.">
-        <input
-          type="text"
-          placeholder="Description"
-          nbInput
-          fieldSize="small"
-          fullWidth
-          [(ngModel)]="transaction.description"
-          [disabled]="true"
-        />
-      </td>
-    </tr>
-    <tr>
-      <th>Amount</th>
-      <td nbTooltip="Edit this property in Splitwise." class="amount-cell">
-        <nb-form-field>
-          <nb-icon nbPrefix icon="euro-sign" pack="fas"></nb-icon>
-          <input
-            type="number"
-            nbInput
-            fieldSize="small"
-            fullWidth
-            [(ngModel)]="transaction.personalAmount"
-            [disabled]="true"
-          />
-        </nb-form-field>
-      </td>
-    </tr>
-    <tr>
-      <th>Category</th>
-      <td>
-        <category-picker
-          [fullWidth]="true"
-          [category]="transaction.categoryId.valueOrElse(undefined)"
-          (categoryChange)="setCategoryId($event)"
-        ></category-picker>
-      </td>
-    </tr>
-    <tr>
-      <th>Needs confirmation</th>
-      <td>
-        <nb-checkbox
-          [disabled]="true"
+          [disabled]="editing || warningMessage.isSome"
           [(checked)]="transaction.needsConfirmation"
         ></nb-checkbox>
       </td>
