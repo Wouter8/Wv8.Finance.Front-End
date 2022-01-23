@@ -1,3 +1,8 @@
+<warning
+  *ngIf="warningMessage.isSome"
+  [message]="warningMessage.value"
+  [marginBottom]="8"
+></warning>
 <table *ngIf="transaction.fullyEditable">
   <tbody>
     <tr>
@@ -7,6 +12,7 @@
           [fullWidth]="true"
           [(accountId)]="transaction.accountId"
           [onlyNormalAccounts]="true"
+          [disabled]="warningMessage.isSome && editableReceiver"
         >
         </account-picker>
       </td>
@@ -17,6 +23,7 @@
         <date-picker
           [date]="transaction.date"
           (dateChange)="dateChanged($event)"
+          [disabled]="warningMessage.isSome"
         ></date-picker>
       </td>
     </tr>
@@ -30,6 +37,7 @@
           fieldSize="small"
           fullWidth
           [(ngModel)]="transaction.description"
+          [disabled]="warningMessage.isSome"
         />
       </td>
     </tr>
@@ -47,6 +55,7 @@
             fieldSize="small"
             fullWidth
             [(ngModel)]="transaction.amount"
+            [disabled]="warningMessage.isSome"
           />
         </nb-form-field>
       </td>
@@ -60,6 +69,7 @@
           [accountId]="transaction.receivingAccountId.valueOrElse(undefined)"
           (accountIdChange)="setReceivingAccountId($event)"
           [onlyNormalAccounts]="true"
+          [disabled]="warningMessage.isSome && !editableReceiver"
         ></account-picker>
       </td>
     </tr>
@@ -75,113 +85,7 @@
       </th>
       <td>
         <nb-checkbox
-          [disabled]="this.editing"
-          [(checked)]="transaction.needsConfirmation"
-        ></nb-checkbox>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table *ngIf="!transaction.fullyEditable" class="transaction-input-table">
-  <tbody>
-    <tr>
-      <th>Account</th>
-      <td
-        *ngIf="transaction.account.type == accountTypes.Splitwise"
-        nbTooltip="You can only edit the receiving account for this transaction."
-      >
-        <account-picker
-          [fullWidth]="true"
-          [(accountId)]="transaction.accountId"
-          [onlyNormalAccounts]="true"
-          [disabled]="true"
-        ></account-picker>
-      </td>
-      <td *ngIf="transaction.account.type != accountTypes.Splitwise">
-        <account-picker
-          [fullWidth]="true"
-          [(accountId)]="transaction.accountId"
-          [onlyNormalAccounts]="true"
-        ></account-picker>
-      </td>
-    </tr>
-    <tr>
-      <th>Date</th>
-      <td nbTooltip="Edit this property in Splitwise.">
-        <date-picker
-          [date]="transaction.date"
-          (dateChange)="dateChanged($event)"
-          [disabled]="true"
-        ></date-picker>
-      </td>
-    </tr>
-    <tr>
-      <th>Description</th>
-      <td nbTooltip="Edit this property in Splitwise.">
-        <input
-          type="text"
-          placeholder="Description"
-          nbInput
-          fieldSize="small"
-          fullWidth
-          [(ngModel)]="transaction.description"
-          [disabled]="true"
-        />
-      </td>
-    </tr>
-    <tr>
-      <th>Amount</th>
-      <td nbTooltip="Edit this property in Splitwise." class="amount-cell">
-        <nb-form-field>
-          <nb-icon nbPrefix icon="euro-sign" pack="fas"></nb-icon>
-          <input
-            type="number"
-            nbInput
-            fieldSize="small"
-            fullWidth
-            [(ngModel)]="transaction.personalAmount"
-            [disabled]="true"
-          />
-        </nb-form-field>
-      </td>
-    </tr>
-    <tr>
-      <th>Receiver</th>
-      <td
-        *ngIf="
-          transaction.receivingAccount.isSome &&
-          transaction.receivingAccount.value.type == accountTypes.Splitwise
-        "
-        nbTooltip="You can only edit the sending account for this transaction."
-      >
-        <account-picker
-          [fullWidth]="true"
-          [(accountId)]="transaction.receivingAccountId.value"
-          [onlyNormalAccounts]="true"
-          [disabled]="true"
-        ></account-picker>
-      </td>
-      <td
-        *ngIf="
-          transaction.receivingAccount.isNone ||
-          transaction.receivingAccount.value.type != accountTypes.Splitwise
-        "
-      >
-        <account-picker
-          [fullWidth]="true"
-          [accountId]="transaction.receivingAccountId.valueOrElse(undefined)"
-          (accountIdChange)="setReceivingAccountId($event)"
-          [onlyNormalAccounts]="true"
-        ></account-picker>
-      </td>
-    </tr>
-    <tr></tr>
-    <tr>
-      <th>Needs confirmation</th>
-      <td>
-        <nb-checkbox
-          [disabled]="true"
+          [disabled]="this.editing || warningMessage.isSome"
           [(checked)]="transaction.needsConfirmation"
         ></nb-checkbox>
       </td>

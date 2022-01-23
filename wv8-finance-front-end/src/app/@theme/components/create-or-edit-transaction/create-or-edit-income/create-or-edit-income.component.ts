@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnChanges,
-  Input,
-  ViewChild,
-  ElementRef,
-} from "@angular/core";
+import { Component, OnInit, OnChanges, Input, ViewChild, ElementRef } from "@angular/core";
 import { Transaction } from "../../../../@core/models/transaction.model";
 import { Maybe } from "@wv8/typescript.core";
 
@@ -18,9 +11,17 @@ export class CreateOrEditIncomeComponent implements OnInit {
   @Input() transaction: Transaction;
   @Input() editing: boolean;
 
+  warningMessage: Maybe<string> = Maybe.none();
+
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (!this.transaction.fullyEditable) {
+      this.warningMessage = Maybe.some(
+        "Only the category of this transaction is editable.\nUpdate the other properties in Splitwise."
+      );
+    }
+  }
 
   dateChanged(date: Date) {
     this.transaction.date = new Date(date);
