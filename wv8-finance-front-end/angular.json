@@ -30,10 +30,7 @@
               "node_modules/pace-js/templates/pace-theme-flash.tmpl.css",
               "src/app/@theme/styles/styles.scss"
             ],
-            "scripts": [
-              "node_modules/pace-js/pace.min.js",
-              "node_modules/@fortawesome/fontawesome-free/css/all.css"
-            ],
+            "scripts": ["node_modules/pace-js/pace.min.js"],
             "allowedCommonJsDependencies": [
               "ts-money",
               "javascript-time-ago/locale/en",
