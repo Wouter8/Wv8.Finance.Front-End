@@ -58,6 +58,11 @@ export class MenuItemsService {
         icon: "bookmark",
         link: "/categories",
       },
+      {
+        title: "Reports",
+        icon: "bar-chart",
+        link: "/reports",
+      },
     ];
   }
 

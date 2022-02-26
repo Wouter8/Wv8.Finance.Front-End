@@ -12,41 +12,41 @@ const routes: Routes = [
     children: [
       {
         path: "dashboard",
-        component: DashboardComponent
+        component: DashboardComponent,
       },
       {
         path: "",
         redirectTo: "dashboard",
-        pathMatch: "full"
+        pathMatch: "full",
       },
       {
         path: "accounts",
-        loadChildren: () =>
-          import("./accounts/accounts.module").then(m => m.AccountsModule)
+        loadChildren: () => import("./accounts/accounts.module").then((m) => m.AccountsModule),
       },
       {
         path: "categories",
         loadChildren: () =>
-          import("./categories/categories.module").then(m => m.CategoriesModule)
+          import("./categories/categories.module").then((m) => m.CategoriesModule),
       },
       {
         path: "budgets",
-        loadChildren: () =>
-          import("./budgets/budgets.module").then(m => m.BudgetsModule)
+        loadChildren: () => import("./budgets/budgets.module").then((m) => m.BudgetsModule),
       },
       {
         path: "transactions",
         loadChildren: () =>
-          import("./transactions/transactions.module").then(
-            m => m.TransactionsModule
-          )
-      }
-    ]
-  }
+          import("./transactions/transactions.module").then((m) => m.TransactionsModule),
+      },
+      {
+        path: "reports",
+        loadChildren: () => import("./reports/reports.module").then((m) => m.ReportsModule),
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class PagesRoutingModule {}
