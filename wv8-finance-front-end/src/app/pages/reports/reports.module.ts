@@ -17,6 +17,7 @@ import {
 import { ThemeModule } from "../../@theme/theme.module";
 import { Ng2SmartTableModule } from "ng2-smart-table";
 import { FormsModule } from "@angular/forms";
+import { NgxEchartsModule } from "ngx-echarts";
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { FormsModule } from "@angular/forms";
     NbDatepickerModule,
     NbStepperModule,
     NbFormFieldModule,
+    NgxEchartsModule,
   ],
   declarations: [ReportsComponent],
 })

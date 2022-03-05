@@ -1,0 +1,76 @@
+:host {
+  height: 100%;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+}
+
+.filters {
+  .period-filter {
+    width: 240px;
+  }
+}
+
+.report {
+  flex-grow: 1;
+
+  position: relative;
+
+  margin-top: 8px;
+
+  .totals {
+    .total-row {
+      display: flex;
+
+      padding-bottom: 6px;
+
+      &:last-child {
+        padding-bottom: 0;
+      }
+
+      .row-value {
+        flex-grow: 1;
+        text-align: right;
+      }
+
+      &.result {
+        font-weight: bold;
+      }
+    }
+
+    hr {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &.loading {
+    max-height: calc(100vh - 76px - 2.25rem - 32px - 8px - 0.75rem);
+    overflow: hidden;
+
+    nb-card-body {
+      min-height: 200px;
+    }
+  }
+
+  .loading {
+    position: absolute;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    background-color: rgba(150, 150, 150, 0.125);
+
+    i {
+      margin: auto;
+      font-size: 64px;
+    }
+  }
+}

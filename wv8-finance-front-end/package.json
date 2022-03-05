@@ -30,9 +30,9 @@
     "postinstall": ""
   },
   "dependencies": {
-    "@angular/cli": "^11.2.5",
     "@angular/animations": "^11.2.6",
     "@angular/cdk": "^11.2.5",
+    "@angular/cli": "^11.2.5",
     "@angular/common": "^11.2.6",
     "@angular/compiler": "^11.2.6",
     "@angular/core": "^11.2.6",
@@ -62,6 +62,7 @@
     "roboto-fontface": "0.8.0",
     "rxjs": "6.5.5",
     "socicon": "3.0.5",
+    "tinycolor2": "^1.4.2",
     "ts-money": "^0.4.6",
     "tslib": "^2.0.0",
     "typeface-exo": "0.0.22",
