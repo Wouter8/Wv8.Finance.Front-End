@@ -1,6 +1,7 @@
 import { CurrencyPipe, DatePipe } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { NbCalendarRange, NbDateService } from "@nebular/theme";
+import { Maybe } from "@wv8/typescript.core";
 import { EChartOption } from "echarts";
 import { ITransactionSums, ReportData } from "../../@core/data/report";
 import { Category } from "../../@core/models/category.model";
@@ -16,7 +17,9 @@ type OtherCategoriesData = {
 };
 
 type CategoryData = {
+  parentName: Maybe<string>;
   name: string;
+  groupedNames: string[];
   sums: ITransactionSums;
 };
 
@@ -187,14 +190,25 @@ export class ReportsComponent implements OnInit {
       let [categoryId, categorySum, childCategories] = categoriesToShow[i];
       let color = rootColors[i];
 
+      let categoryName =
+        categoryId == -1
+          ? this.uniqueCategoryName("Other", i)
+          : this.report.categories.get(categoryId).description;
+
       outerColors.push(color);
       // TODO: Add category id to data such that click handler can do something for specific category
       outerData.push({
-        name: categoryId == -1 ? "Other" : this.report.categories.get(categoryId).description,
+        parentName: Maybe.none(),
+        name: categoryName,
+        groupedNames: [],
         sums: categorySum,
       });
 
-      let childCategoriesData = this.getInnerData(color, childCategories, this.report.categories);
+      let childCategoriesData = this.getInnerData(
+        { color: color, name: categoryName, number: i },
+        childCategories,
+        this.report.categories
+      );
       let remaining = childCategoriesData.reduce(
         (prev, current) => {
           return {
@@ -205,23 +219,32 @@ export class ReportsComponent implements OnInit {
         { expense: categorySum.expense, income: categorySum.income }
       );
       if (remaining.expense > 0) {
+        // Categories with the same name share the same color. We don't want this.
+        let parentName = this.uniqueCategoryName("Parent", i);
         childCategoriesData = [
-          { color: color, data: { name: "Parent", sums: remaining } },
+          {
+            color: color,
+            data: {
+              parentName: Maybe.some(parentName),
+              name: parentName,
+              groupedNames: [],
+              sums: remaining,
+            },
+          },
           ...childCategoriesData,
         ];
       }
 
       for (let j = 0; j < childCategoriesData.length; j++) {
-        console.log(childCategoriesData[j]);
         innerColors.push(childCategoriesData[j].color);
         innerData.push(childCategoriesData[j].data);
       }
     }
-
-    console.log(outerColors, innerColors, outerColors.concat(innerColors));
-
     this.byCategoryChartOptions = {
       color: outerColors.concat(innerColors),
+      tooltip: {
+        trigger: "item",
+      },
       series: [
         {
           name: "Root",
@@ -234,13 +257,25 @@ export class ReportsComponent implements OnInit {
           emphasis: {
             // TODO
           },
+          tooltip: {
+            formatter: (data: any) => {
+              // Normal: show parent data
+              // Other: show all grouped categories, including percentages
+              return "";
+            },
+          },
           label: {
-            position: "inner",
+            color: "white",
+            position: "inside",
+            textBorderColor: "black",
+            textBorderWidth: 2,
+            fontSize: 16,
           },
           data: outerData.map((d) => {
             return {
               name: d.name,
               value: d.sums.expense,
+              data: d,
             };
           }),
         },
@@ -252,13 +287,26 @@ export class ReportsComponent implements OnInit {
             borderWidth: 3,
             borderColor: "#fff",
           },
+          tooltip: {
+            formatter: (data: any) => {
+              // Normal: show parent data + child data
+              // Parent: explain that no child category is selected
+              // Other: show all grouped categories, including percentages
+              return "";
+            },
+          },
           label: {
-            position: "inner",
+            color: "white",
+            position: "inside",
+            textBorderColor: "black",
+            textBorderWidth: 2,
+            fontSize: 12,
           },
           data: innerData.map((d) => {
             return {
               name: d.name,
               value: d.sums.expense,
+              data: d,
             };
           }),
         },
@@ -267,26 +315,24 @@ export class ReportsComponent implements OnInit {
   }
 
   private getInnerData(
-    rootCategoryColor,
+    rootCategory: { color: string; name: string; number: number },
     childCategories: ChildCategories,
     categoryMap: Map<number, Category>
   ): ChildCategoryData[] {
-    const minPercentageToShow = 100;
+    const minPercentageToShow = 0;
 
     if (!childCategories) return [];
 
-    console.log(childCategories, Array.from(childCategories));
-
     let categories = Array.from(childCategories).sort((a, b) => b[1].expense - a[1].expense);
 
-    let categoriesToShow: [number, ITransactionSums][] = [];
+    let categoriesToShow: [number, ITransactionSums, string[]][] = [];
     let otherCategories = [];
     for (let i = 0; i < categories.length; i++) {
       let [categoryId, categorySums] = categories[i];
       if ((categorySums.expense / this.report.totals.expense) * 100 < minPercentageToShow) {
         otherCategories.push(categories[i]);
       } else {
-        categoriesToShow.push([categoryId, categorySums]);
+        categoriesToShow.push([categoryId, categorySums, []]);
       }
     }
 
@@ -301,7 +347,8 @@ export class ReportsComponent implements OnInit {
         { expense: 0, income: 0 }
       );
 
-      categoriesToShow.push([-1, othersSum]);
+      let otherCategoryNames = otherCategories.map((cId) => categoryMap.get(cId).description);
+      categoriesToShow.push([-1, othersSum, otherCategoryNames]);
     }
 
     let numberOfChildCategories = categoriesToShow.length;
@@ -310,21 +357,28 @@ export class ReportsComponent implements OnInit {
     let data: ChildCategoryData[] = [];
 
     for (let i = 0; i < numberOfChildCategories; i++) {
-      console.log(numberOfChildCategories, lightenStep, categories[i]);
-      let [categoryId, categorySum] = categoriesToShow[i];
-      console.log(categoryId, categoryMap.get(categoryId));
+      let [categoryId, categorySum, groupedNames] = categoriesToShow[i];
       let percentage = lightenStep * (i + 1);
-      let color = ColorUtils.colorShade(rootCategoryColor, percentage);
+      let color = ColorUtils.colorShade(rootCategory.color, percentage);
 
       data.push({
         color: color,
         data: {
-          name: categoryId == -1 ? "Other" : categoryMap.get(categoryId).description,
+          name:
+            categoryId == -1
+              ? this.uniqueCategoryName("Other", rootCategory.number)
+              : categoryMap.get(categoryId).description,
+          parentName: Maybe.some(rootCategory.name),
+          groupedNames: groupedNames,
           sums: categorySum,
         },
       });
     }
 
     return data;
+  }
+
+  private uniqueCategoryName(name, number) {
+    return name + " ".repeat(number);
   }
 }
