@@ -13,6 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2.1.4
+      - run: mv environment.prod.stef.ts environment.prod.ts
+        working-directory: ${{env.environmentFileDirectory}}
       - run: sed -i 's@{secrets.BACKEND_URL}@${{secrets.BACKEND_URL_STEF}}@g' environment.prod.ts
         working-directory: ${{env.environmentFileDirectory}}
       - run: echo "${{secrets.AZURE_AUTH}}" > ~/.npmrc
