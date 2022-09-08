@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe } from "@angular/common";
+import { CurrencyPipe, DatePipe, PercentPipe } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { NbCalendarRange, NbDateService } from "@nebular/theme";
 import { Maybe } from "@wv8/typescript.core";
@@ -10,22 +10,61 @@ import { PeriodReport } from "../../@core/models/period-report.model";
 import { CategoryService } from "../../@core/services/category.service";
 import { ColorUtils } from "../../@core/utils/color-utils";
 
+const MIN_ANGLE_ROOT_CATEGORY = 20;
+const MIN_ANGLE_CHILD_CATEGORY = 40;
+const MIN_ANGLE_CHILD_LABEL = 20;
+const MAX_OPACITY_CHILD_CATEGORY = 30;
+
+enum RootCategoryType {
+  Normal,
+  Other,
+}
+
+enum ChildCategoryType {
+  Normal,
+  Implicit,
+  Other,
+}
+
 type ChildCategories = Map<number, ITransactionSums>;
-type OtherCategoriesData = {
+
+// Display types
+type BaseCategory = {
+  name: string;
+  sums: ITransactionSums;
+};
+type NormalRootCategory = {
+  name: string;
   sums: ITransactionSums;
   children: ChildCategories;
+  type: RootCategoryType;
+};
+type OtherRootCategory = {
+  groupedCategories: BaseCategory[];
+  type: RootCategoryType;
 };
 
-type CategoryData = {
-  parentName: Maybe<string>;
+type RootCategory = NormalRootCategory | OtherRootCategory;
+
+type NormalChildCategory = {
   name: string;
-  groupedNames: string[];
+  parentName: string;
   sums: ITransactionSums;
+  type: ChildCategoryType;
+};
+type OtherChildCategory = {
+  // This will always be "Other", optionally followed by spaces to make the name unique
+  name: string;
+  parentName: string;
+  groupedCategories: BaseCategory[];
+  type: ChildCategoryType;
 };
 
-type ChildCategoryData = {
+type ChildCategory = NormalChildCategory | OtherChildCategory;
+
+type DeterminedChildCategory = {
   color: string;
-  data: CategoryData;
+  category: ChildCategory;
 };
 
 @Component({
@@ -134,8 +173,6 @@ export class ReportsComponent implements OnInit {
   }
 
   private setByTimeIntervalChartOptions() {
-    const maxNumberOfRootCategories = 9;
-    const minPercentageToShow = 10;
     const rootColors = [
       "#e60049",
       "#0bb4ff",
@@ -150,94 +187,68 @@ export class ReportsComponent implements OnInit {
 
     let outerColors: string[] = [];
     let innerColors: string[] = [];
-    let outerData: CategoryData[] = [];
-    let innerData: CategoryData[] = [];
+    let outerData: RootCategory[] = [];
+    let innerData: ChildCategory[] = [];
 
-    let categories = Array.from(this.report.totalsPerRootCategory).sort(
-      (a, b) => b[1].expense - a[1].expense
-    );
+    let categoriesToShow: RootCategory[] = [];
 
-    let categoriesToShow: [number, ITransactionSums, ChildCategories][] = [];
-    let otherCategories: [number, ITransactionSums, ChildCategories][] = [];
-    for (let i = 0; i < categories.length; i++) {
-      let [categoryId, categorySums] = categories[i];
-      let childCategories = this.report.totalsPerChildCategory.get(categoryId);
-      if ((categorySums.expense / this.report.totals.expense) * 100 < minPercentageToShow) {
-        otherCategories.push([categoryId, categorySums, childCategories]);
+    // Sort the categories in descending order
+    let sortedCategories = Array.from(this.report.totalsPerRootCategory)
+      .sort((a, b) => b[1].expense - a[1].expense)
+      .map((x) => {
+        return { id: x[0], sums: x[1] };
+      });
+
+    // The categories which are too small to see will be grouped
+    let categoriesToGroup: { id: number; sums: ITransactionSums }[] = [];
+
+    for (let i = 0; i < sortedCategories.length; i++) {
+      let category = sortedCategories[i];
+      let angle = (category.sums.expense / this.report.totals.expense) * 360;
+
+      if (angle < MIN_ANGLE_ROOT_CATEGORY) {
+        categoriesToGroup.push(category);
       } else {
-        categoriesToShow.push([categoryId, categorySums, childCategories]);
+        categoriesToShow.push({
+          name: this.report.categories.get(category.id).description,
+          sums: category.sums,
+          children: this.report.totalsPerChildCategory.get(category.id),
+          type: RootCategoryType.Normal,
+        });
       }
     }
 
-    if (otherCategories.length > 0) {
-      let othersData: OtherCategoriesData = otherCategories.reduce(
-        (prev: OtherCategoriesData, current) => {
+    if (categoriesToGroup.length > 0) {
+      categoriesToShow.push({
+        groupedCategories: categoriesToGroup.map((c) => {
           return {
-            sums: {
-              expense: prev.sums.expense + current[1].expense,
-              income: prev.sums.income + current[1].income,
-            },
-            children: new Map([...prev.children, ...current[2]]),
+            name: this.report.categories.get(c.id).description,
+            sums: c.sums,
+            children: this.report.totalsPerChildCategory.get(c.id),
+            type: RootCategoryType.Normal,
           };
-        },
-        { sums: { expense: 0, income: 0 }, children: new Map() }
-      );
-
-      categoriesToShow.push([-1, othersData.sums, othersData.children]);
+        }),
+        type: RootCategoryType.Other,
+      });
     }
 
     for (let i = 0; i < categoriesToShow.length; i++) {
-      let [categoryId, categorySum, childCategories] = categoriesToShow[i];
+      let category = categoriesToShow[i];
+      let categorySums = this.rootCategorySums(category);
       let color = rootColors[i];
 
-      let categoryName =
-        categoryId == -1
-          ? this.uniqueCategoryName("Other", i)
-          : this.report.categories.get(categoryId).description;
-
       outerColors.push(color);
-      // TODO: Add category id to data such that click handler can do something for specific category
-      outerData.push({
-        parentName: Maybe.none(),
-        name: categoryName,
-        groupedNames: [],
-        sums: categorySum,
-      });
+      outerData.push(category);
 
       let childCategoriesData = this.getInnerData(
-        { color: color, name: categoryName, number: i },
-        childCategories,
+        { color: color, name: this.rootCategoryName(category), sums: categorySums, number: i },
+        (category as NormalRootCategory)?.children, // TODO: handle children of "other"
         this.report.categories
       );
-      let remaining = childCategoriesData.reduce(
-        (prev, current) => {
-          return {
-            expense: prev.expense - current.data.sums.expense,
-            income: prev.income - current.data.sums.income,
-          };
-        },
-        { expense: categorySum.expense, income: categorySum.income }
-      );
-      if (remaining.expense > 0) {
-        // Categories with the same name share the same color. We don't want this.
-        let parentName = this.uniqueCategoryName("Parent", i);
-        childCategoriesData = [
-          {
-            color: color,
-            data: {
-              parentName: Maybe.some(parentName),
-              name: parentName,
-              groupedNames: [],
-              sums: remaining,
-            },
-          },
-          ...childCategoriesData,
-        ];
-      }
 
       for (let j = 0; j < childCategoriesData.length; j++) {
         innerColors.push(childCategoriesData[j].color);
-        innerData.push(childCategoriesData[j].data);
+        innerData.push(childCategoriesData[j].category);
       }
     }
     this.byCategoryChartOptions = {
@@ -259,9 +270,47 @@ export class ReportsComponent implements OnInit {
           },
           tooltip: {
             formatter: (data: any) => {
-              // Normal: show parent data
-              // Other: show all grouped categories, including percentages
-              return "";
+              let category: RootCategory = data.data.category;
+              let name = this.rootCategoryName(category);
+              let amount = this.rootCategorySums(category).expense;
+              let percentage = amount / this.report.totals.expense;
+
+              let currencyPipe = new CurrencyPipe("nl-NL");
+              let percentPipe = new PercentPipe("nl-NL");
+
+              switch (category.type) {
+                case RootCategoryType.Normal:
+                  return `<div class='chart-tooltip'>
+                    <span class='tooltip-header'>${name}</span>
+                    <div>${currencyPipe.transform(amount, "EUR")} (${percentPipe.transform(
+                    percentage
+                  )})</div>
+                    </div>`;
+                case RootCategoryType.Other:
+                  let otherCategory = category as OtherRootCategory;
+
+                  let tooltip = `<div class='chart-tooltip'>
+                    <span class='tooltip-header'>${
+                      otherCategory.groupedCategories.length + " categories"
+                    }</span>
+                    <div>${currencyPipe.transform(amount, "EUR")} (${percentPipe.transform(
+                    percentage
+                  )})</div>`;
+
+                  for (let i = 0; i < otherCategory.groupedCategories.length; i++) {
+                    let c = otherCategory.groupedCategories[i];
+                    let p = c.sums.expense / this.report.totals.expense;
+                    tooltip += `<div>${c.name}: ${currencyPipe.transform(
+                      c.sums.expense,
+                      "EUR"
+                    )} (${percentPipe.transform(p)})</div>`;
+                  }
+                  otherCategory.groupedCategories.map((c) => {});
+
+                  tooltip += `</div>`;
+
+                  return tooltip;
+              }
             },
           },
           label: {
@@ -271,11 +320,11 @@ export class ReportsComponent implements OnInit {
             textBorderWidth: 2,
             fontSize: 16,
           },
-          data: outerData.map((d) => {
+          data: outerData.map((c) => {
             return {
-              name: d.name,
-              value: d.sums.expense,
-              data: d,
+              name: this.rootCategoryName(c),
+              value: this.rootCategorySums(c).expense,
+              category: c,
             };
           }),
         },
@@ -289,12 +338,61 @@ export class ReportsComponent implements OnInit {
           },
           tooltip: {
             formatter: (data: any) => {
-              // Normal: show parent data + child data
-              // Parent: explain that no child category is selected
-              // Other: show all grouped categories, including percentages
-              return "";
+              let category: ChildCategory = data.data.category;
+              let name = category.name;
+              let amount = this.childCategorySums(category).expense;
+              let percentage = amount / this.report.totals.expense;
+
+              let currencyPipe = new CurrencyPipe("nl-NL");
+              let percentPipe = new PercentPipe("nl-NL");
+
+              switch (category.type) {
+                case ChildCategoryType.Normal:
+                  return `<div class='chart-tooltip'>
+                    <span class='tooltip-header'>${name}</span>
+                    <div>${currencyPipe.transform(amount, "EUR")} (${percentPipe.transform(
+                    percentage
+                  )})</div>
+                    </div>`;
+                case ChildCategoryType.Other:
+                  let otherCategory = category as OtherChildCategory;
+
+                  let tooltip = `<div class='chart-tooltip'>
+                    <span class='tooltip-header'>${
+                      otherCategory.groupedCategories.length + " categories"
+                    }</span>
+                    <div>${currencyPipe.transform(amount, "EUR")} (${percentPipe.transform(
+                    percentage
+                  )})</div>`;
+
+                  for (let i = 0; i < otherCategory.groupedCategories.length; i++) {
+                    let c = otherCategory.groupedCategories[i];
+                    let p = c.sums.expense / this.report.totals.expense;
+                    tooltip += `<div>${c.name}: ${currencyPipe.transform(
+                      c.sums.expense,
+                      "EUR"
+                    )} (${percentPipe.transform(p)})</div>`;
+                  }
+                  otherCategory.groupedCategories.map((c) => {});
+
+                  tooltip += `</div>`;
+
+                  return tooltip;
+                case ChildCategoryType.Implicit:
+                  let implicitCategory = category as NormalChildCategory;
+
+                  return `<div class='chart-tooltip'>
+                    <span class='tooltip-header'>Not further specified</span>
+                    <div>Portion which was added directly to the root category "${
+                      implicitCategory.parentName
+                    }".</div>
+                    <div>${currencyPipe.transform(amount, "EUR")} (${percentPipe.transform(
+                    percentage
+                  )})</div></div>`;
+              }
             },
           },
+          minShowLabelAngle: MIN_ANGLE_CHILD_LABEL,
           label: {
             color: "white",
             position: "inside",
@@ -302,11 +400,11 @@ export class ReportsComponent implements OnInit {
             textBorderWidth: 2,
             fontSize: 12,
           },
-          data: innerData.map((d) => {
+          data: innerData.map((c) => {
             return {
-              name: d.name,
-              value: d.sums.expense,
-              data: d,
+              name: c.name,
+              value: this.childCategorySums(c).expense,
+              category: c,
             };
           }),
         },
@@ -315,70 +413,156 @@ export class ReportsComponent implements OnInit {
   }
 
   private getInnerData(
-    rootCategory: { color: string; name: string; number: number },
+    rootCategory: { color: string; name: string; sums: ITransactionSums; number: number },
     childCategories: ChildCategories,
     categoryMap: Map<number, Category>
-  ): ChildCategoryData[] {
-    const minPercentageToShow = 0;
+  ): DeterminedChildCategory[] {
+    if (!childCategories) childCategories = new Map();
 
-    if (!childCategories) return [];
+    let categoriesToShow: ChildCategory[] = [];
+    let childCategoriesWithRemaining: Map<Maybe<number>, ITransactionSums> = new Map(
+      Array.from(childCategories).map((x) => [Maybe.some(x[0]), x[1]])
+    );
 
-    let categories = Array.from(childCategories).sort((a, b) => b[1].expense - a[1].expense);
+    // Sort the categories in descending order
+    let categories = Array.from(childCategoriesWithRemaining).map((x) => {
+      return { id: x[0], sums: x[1] };
+    });
+    let remaining = categories.reduce(
+      (prev, current) => {
+        return {
+          expense: prev.expense - current.sums.expense,
+          income: prev.income - current.sums.income,
+        };
+      },
+      { expense: rootCategory.sums.expense, income: rootCategory.sums.income }
+    );
+    if (remaining.expense > 0) {
+      categories.push({
+        id: Maybe.none(),
+        sums: remaining,
+      });
+    }
 
-    let categoriesToShow: [number, ITransactionSums, string[]][] = [];
-    let otherCategories = [];
-    for (let i = 0; i < categories.length; i++) {
-      let [categoryId, categorySums] = categories[i];
-      if ((categorySums.expense / this.report.totals.expense) * 100 < minPercentageToShow) {
-        otherCategories.push(categories[i]);
+    let sortedCategories = categories.sort((a, b) => b.sums.expense - a.sums.expense);
+
+    // The categories which are too small to see will be grouped
+    let categoriesToGroup: { id: Maybe<number>; sums: ITransactionSums }[] = [];
+    for (let i = 0; i < sortedCategories.length; i++) {
+      let category = sortedCategories[i];
+      let angle = (category.sums.expense / this.report.totals.expense) * 360;
+      console.log(category, angle);
+
+      if (angle < MIN_ANGLE_CHILD_CATEGORY) {
+        categoriesToGroup.push(category);
+      } else if (category.id.isSome) {
+        categoriesToShow.push({
+          name: categoryMap.get(category.id.value).description,
+          parentName: rootCategory.name,
+          sums: category.sums,
+          type: ChildCategoryType.Normal,
+        });
       } else {
-        categoriesToShow.push([categoryId, categorySums, []]);
+        categoriesToShow.push({
+          // TODO: now "Other" always only has a single "Parent" child category, can we improve this?
+          name: this.uniqueCategoryName("Parent", rootCategory.number),
+          parentName: rootCategory.name,
+          sums: category.sums,
+          type: ChildCategoryType.Implicit,
+        });
       }
     }
 
-    if (otherCategories.length > 0) {
-      let othersSum: ITransactionSums = otherCategories.reduce(
-        (prev: ITransactionSums, current) => {
+    if (categoriesToGroup.length > 0) {
+      categoriesToShow.push({
+        name: this.uniqueCategoryName("Other", rootCategory.number),
+        parentName: rootCategory.name,
+        groupedCategories: categoriesToGroup.map((c) => {
           return {
-            expense: prev.expense + current[1].expense,
-            income: prev.income + current[1].income,
+            name: c.id
+              .map((cId) => categoryMap.get(cId).description)
+              .valueOrElse(this.uniqueCategoryName("Parent", rootCategory.number)),
+            sums: c.sums,
           };
-        },
-        { expense: 0, income: 0 }
-      );
-
-      let otherCategoryNames = otherCategories.map((cId) => categoryMap.get(cId).description);
-      categoriesToShow.push([-1, othersSum, otherCategoryNames]);
+        }),
+        type: ChildCategoryType.Other,
+      });
     }
 
-    let numberOfChildCategories = categoriesToShow.length;
-    let lightenStep = 30 / (numberOfChildCategories + 1);
+    console.log(categoriesToShow);
 
-    let data: ChildCategoryData[] = [];
+    let numberOfChildCategories = categoriesToShow.length;
+    let lightenStep = MAX_OPACITY_CHILD_CATEGORY / (numberOfChildCategories + 1);
+
+    let data: DeterminedChildCategory[] = [];
 
     for (let i = 0; i < numberOfChildCategories; i++) {
-      let [categoryId, categorySum, groupedNames] = categoriesToShow[i];
+      let category = categoriesToShow[i];
       let percentage = lightenStep * (i + 1);
-      let color = ColorUtils.colorShade(rootCategory.color, percentage);
+      let color =
+        category.type === ChildCategoryType.Implicit
+          ? rootCategory.color
+          : ColorUtils.lighten(rootCategory.color, percentage);
 
       data.push({
         color: color,
-        data: {
-          name:
-            categoryId == -1
-              ? this.uniqueCategoryName("Other", rootCategory.number)
-              : categoryMap.get(categoryId).description,
-          parentName: Maybe.some(rootCategory.name),
-          groupedNames: groupedNames,
-          sums: categorySum,
-        },
+        category: category,
       });
     }
+
+    console.log(data);
 
     return data;
   }
 
   private uniqueCategoryName(name, number) {
+    // Categories with the same name share the same color. We don't want this.
     return name + " ".repeat(number);
+  }
+
+  private rootCategorySums(category: RootCategory) {
+    if (category.type === RootCategoryType.Normal) {
+      return (category as NormalRootCategory).sums;
+    } else if (category.type === RootCategoryType.Other) {
+      return (category as OtherRootCategory).groupedCategories.reduce(
+        (prev, current) => {
+          prev.expense += current.sums.expense;
+          prev.income += current.sums.income;
+          return prev;
+        },
+        { expense: 0, income: 0 }
+      );
+    }
+
+    throw "Unknown category type.";
+  }
+
+  private rootCategoryName(category: RootCategory) {
+    if (category.type === RootCategoryType.Normal) {
+      return (category as NormalRootCategory).name;
+    } else if (category.type === RootCategoryType.Other) {
+      return "Other";
+    }
+
+    throw "Unknown category type.";
+  }
+
+  private childCategorySums(category: ChildCategory) {
+    if (category.type === ChildCategoryType.Normal) {
+      return (category as NormalChildCategory).sums;
+    } else if (category.type === ChildCategoryType.Other) {
+      return (category as OtherChildCategory).groupedCategories.reduce(
+        (prev, current) => {
+          prev.expense += current.sums.expense;
+          prev.income += current.sums.income;
+          return prev;
+        },
+        { expense: 0, income: 0 }
+      );
+    } else if (category.type === ChildCategoryType.Implicit) {
+      return (category as NormalChildCategory).sums;
+    }
+
+    throw "Unknown category type.";
   }
 }

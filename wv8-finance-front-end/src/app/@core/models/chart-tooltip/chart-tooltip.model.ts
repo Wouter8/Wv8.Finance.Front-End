@@ -1,4 +1,4 @@
-import { CurrencyPipe } from "@angular/common";
+import { CurrencyPipe, PercentPipe } from "@angular/common";
 
 export class ChartTooltip {
   private headerText: string;
@@ -24,10 +24,20 @@ export class ChartTooltip {
     return this;
   }
 
+  public addPercentageRow(label: string, value: number, total: number): ChartTooltip {
+    this.rows.push(new ChartTooltipPercentageRow(label, value, total));
+    return this;
+  }
+
   public addEuroRow(data: any): ChartTooltip {
     this.rows.push(
       new ChartTooltipEuroRow(this.getValue(data), this.getLabel(data), this.getColor(data))
     );
+    return this;
+  }
+
+  public addEuroRow2(label: string, value: number, color?: string): ChartTooltip {
+    this.rows.push(new ChartTooltipEuroRow(value, label, color));
     return this;
   }
 
@@ -79,6 +89,20 @@ class ChartTooltipEuroRow extends ChartTooltipRow {
   renderContent() {
     const currencyPipe: CurrencyPipe = new CurrencyPipe("nl-NL");
     return currencyPipe.transform(this.amount, "EUR");
+  }
+}
+
+class ChartTooltipPercentageRow extends ChartTooltipRow {
+  private percentage: number;
+
+  constructor(label: string, value: number, total: number) {
+    super(label, null);
+    this.percentage = value / total;
+  }
+
+  renderContent() {
+    const percentPipe = new PercentPipe("nl-NL");
+    return percentPipe.transform(this.percentage);
   }
 }
 
