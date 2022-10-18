@@ -1,5 +1,6 @@
 import { CurrencyPipe, DatePipe, PercentPipe } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import { NbCalendarRange, NbDateService } from "@nebular/theme";
 import { Maybe } from "@wv8/typescript.core";
 import { EChartOption } from "echarts";
@@ -88,19 +89,29 @@ export class ReportsComponent implements OnInit {
     private reportService: ReportData,
     private dateService: NbDateService<Date>,
     private currencyPipe: CurrencyPipe,
-    private datePipe: DatePipe
-  ) {
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
-    let monthStart = this.dateService.getMonthStart(today);
+    private datePipe: DatePipe,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
-    this.period = {
-      start: this.dateService.addMonth(monthStart, -1),
-      end: this.dateService.addDay(monthStart, -1),
-    };
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      if (params.periodStart && params.periodEnd) {
+        this.period = {
+          start: new Date(params.periodStart),
+          end: new Date(params.periodEnd),
+        };
+      } else {
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+        let monthStart = this.dateService.getMonthStart(today);
+        this.period = {
+          start: this.dateService.addMonth(monthStart, -1),
+          end: this.dateService.addDay(monthStart, -1),
+        };
+      }
+    });
   }
-
-  ngOnInit() {}
 
   periodSet(period: NbCalendarRange<Date>) {
     this.period = period;
@@ -110,6 +121,11 @@ export class ReportsComponent implements OnInit {
   async loadReport() {
     let debounceNumber = ++this.debounceCounter;
     this.loading = true;
+    let queryParams: Params = {
+      periodStart: this.period.start.toDateString(),
+      periodEnd: this.period.end.toDateString(),
+    };
+    this.router.navigate([], { relativeTo: this.route, queryParams: queryParams });
     var report = await this.reportService.getPeriodReport(this.period.start, this.period.end);
     this.handleResponse(debounceNumber, report);
   }
@@ -121,7 +137,7 @@ export class ReportsComponent implements OnInit {
     this.loading = false;
 
     this.setNetWorthChartOptions();
-    this.setByTimeIntervalChartOptions();
+    this.setByCategoryChartOptions(); // TODO: Fix chart when no data (= no transactions)
   }
 
   private setNetWorthChartOptions() {
@@ -173,7 +189,7 @@ export class ReportsComponent implements OnInit {
     };
   }
 
-  private setByTimeIntervalChartOptions() {
+  private setByCategoryChartOptions() {
     const rootColors = [
       "#e60049",
       "#0bb4ff",
@@ -522,7 +538,7 @@ export class ReportsComponent implements OnInit {
     count++;
     this.categoryNameCount.set(name, count);
     // Categories with the same name share the same color. We don't want this.
-    return name + " ".repeat(count);
+    return name + "ㅤ".repeat(count);
   }
 
   private rootCategorySums(category: RootCategory) {
