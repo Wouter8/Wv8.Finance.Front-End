@@ -1,13 +1,7 @@
 import { Maybe, IMaybe } from "@wv8/typescript.core";
 import { IntervalUnit } from "../enums/interval-unit";
-import {
-  IInputBaseTransaction,
-  InputBaseTransaction,
-} from "./input-base-transaction";
-import {
-  IInputPaymentRequest,
-  InputPaymentRequest,
-} from "./input-payment-request";
+import { IInputBaseTransaction, InputBaseTransaction } from "./input-base-transaction";
+import { IInputPaymentRequest, InputPaymentRequest } from "./input-payment-request";
 import { InputSplitwiseSplit } from "./input-splitwise-split";
 
 export interface IInputRecurringTransaction extends IInputBaseTransaction {
@@ -54,7 +48,6 @@ export class InputRecurringTransaction extends InputBaseTransaction {
   }
 
   public serialize(): IInputRecurringTransaction {
-    console.log(this.endDate, this.endDate.map((d) => d.toDateString()));
     return {
       accountId: this.accountId,
       description: this.description,

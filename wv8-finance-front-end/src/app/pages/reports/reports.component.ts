@@ -11,6 +11,7 @@ import { CategoryService } from "../../@core/services/category.service";
 import { ColorUtils } from "../../@core/utils/color-utils";
 
 const MIN_ANGLE_ROOT_CATEGORY = 20;
+const MIN_ANGLE_ROOT_LABEL = 10;
 const MIN_ANGLE_CHILD_CATEGORY = 40;
 const MIN_ANGLE_CHILD_LABEL = 20;
 const MAX_OPACITY_CHILD_CATEGORY = 30;
@@ -251,6 +252,7 @@ export class ReportsComponent implements OnInit {
         innerData.push(childCategoriesData[j].category);
       }
     }
+
     this.byCategoryChartOptions = {
       color: outerColors.concat(innerColors),
       tooltip: {
@@ -313,6 +315,7 @@ export class ReportsComponent implements OnInit {
               }
             },
           },
+          minShowLabelAngle: MIN_ANGLE_ROOT_LABEL,
           label: {
             color: "white",
             position: "inside",
@@ -451,7 +454,6 @@ export class ReportsComponent implements OnInit {
     for (let i = 0; i < sortedCategories.length; i++) {
       let category = sortedCategories[i];
       let angle = (category.sums.expense / this.report.totals.expense) * 360;
-      console.log(category, angle);
 
       if (angle < MIN_ANGLE_CHILD_CATEGORY) {
         categoriesToGroup.push(category);
@@ -465,7 +467,7 @@ export class ReportsComponent implements OnInit {
       } else {
         categoriesToShow.push({
           // TODO: now "Other" always only has a single "Parent" child category, can we improve this?
-          name: this.uniqueCategoryName("Parent", rootCategory.number),
+          name: this.uniqueCategoryName("Parent"),
           parentName: rootCategory.name,
           sums: category.sums,
           type: ChildCategoryType.Implicit,
@@ -475,21 +477,19 @@ export class ReportsComponent implements OnInit {
 
     if (categoriesToGroup.length > 0) {
       categoriesToShow.push({
-        name: this.uniqueCategoryName("Other", rootCategory.number),
+        name: this.uniqueCategoryName("Other"),
         parentName: rootCategory.name,
         groupedCategories: categoriesToGroup.map((c) => {
           return {
             name: c.id
               .map((cId) => categoryMap.get(cId).description)
-              .valueOrElse(this.uniqueCategoryName("Parent", rootCategory.number)),
+              .valueOrElse(this.uniqueCategoryName("Parent")),
             sums: c.sums,
           };
         }),
         type: ChildCategoryType.Other,
       });
     }
-
-    console.log(categoriesToShow);
 
     let numberOfChildCategories = categoriesToShow.length;
     let lightenStep = MAX_OPACITY_CHILD_CATEGORY / (numberOfChildCategories + 1);
@@ -510,14 +510,19 @@ export class ReportsComponent implements OnInit {
       });
     }
 
-    console.log(data);
-
     return data;
   }
 
-  private uniqueCategoryName(name, number) {
+  private categoryNameCount: Map<string, number> = new Map();
+
+  private uniqueCategoryName(name) {
+    if (!this.categoryNameCount.has(name)) this.categoryNameCount.set(name, 0);
+
+    let count = this.categoryNameCount.get(name);
+    count++;
+    this.categoryNameCount.set(name, count);
     // Categories with the same name share the same color. We don't want this.
-    return name + " ".repeat(number);
+    return name + " ".repeat(count);
   }
 
   private rootCategorySums(category: RootCategory) {
@@ -541,7 +546,7 @@ export class ReportsComponent implements OnInit {
     if (category.type === RootCategoryType.Normal) {
       return (category as NormalRootCategory).name;
     } else if (category.type === RootCategoryType.Other) {
-      return "Other";
+      return this.uniqueCategoryName("Other");
     }
 
     throw "Unknown category type.";

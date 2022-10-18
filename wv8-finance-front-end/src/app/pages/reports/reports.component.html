@@ -12,11 +12,19 @@
   </div>
   <div class="report" [ngClass]="{ loading: loading }">
     <div class="row">
-      <div class="col-sm-12 col-md-6">
+      <div class="col-sm-12">
         <nb-card>
           <nb-card-header>Net worth</nb-card-header>
           <nb-card-body>
             <div echarts [options]="netWorthChartOptions" class="echart"></div
+          ></nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <nb-card>
+          <nb-card-header>Per category</nb-card-header>
+          <nb-card-body>
+            <div echarts [options]="byCategoryChartOptions" class="echart"></div
           ></nb-card-body>
         </nb-card>
       </div>
@@ -27,9 +35,8 @@
             <div *ngIf="!loading" class="totals">
               <div class="total-row">
                 <div class="row-label">Total income</div>
-                <div class="row-value">
-                  {{ report.totals.income | currency: "EUR" }}
-                </div>
+                {{ report.totals.income | currency: "EUR" }}
+                <div class="row-value"></div>
               </div>
               <div class="total-row">
                 <div class="row-label">Total expenses</div>
@@ -41,19 +48,14 @@
               <div class="total-row result">
                 <div class="row-label">Result</div>
                 <div class="row-value">
-                  {{ report.totals.expense | currency: "EUR" }}
+                  {{
+                    report.totals.income - report.totals.expense
+                      | currency: "EUR"
+                  }}
                 </div>
               </div>
             </div>
           </nb-card-body>
-        </nb-card>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <nb-card>
-          <nb-card-header>Per category</nb-card-header>
-          <nb-card-body>
-            <div echarts [options]="byCategoryChartOptions" class="echart"></div
-          ></nb-card-body>
         </nb-card>
       </div>
     </div>

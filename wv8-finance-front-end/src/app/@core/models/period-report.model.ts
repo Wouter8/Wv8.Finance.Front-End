@@ -27,7 +27,6 @@ export class PeriodReport extends Report {
     instance.sumsPerInterval = dto.sumsPerInterval;
     instance.categories = MapUtils.dictToMap(dto.categories, null, (c) => Category.fromDto(c));
 
-    console.log(instance);
     return instance;
   }
 }
