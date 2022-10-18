@@ -11,9 +11,9 @@ import { PeriodReport } from "../../@core/models/period-report.model";
 import { CategoryService } from "../../@core/services/category.service";
 import { ColorUtils } from "../../@core/utils/color-utils";
 
-const MIN_ANGLE_ROOT_CATEGORY = 20;
+const MIN_ANGLE_ROOT_CATEGORY = 10;
 const MIN_ANGLE_ROOT_LABEL = 10;
-const MIN_ANGLE_CHILD_CATEGORY = 40;
+const MIN_ANGLE_CHILD_CATEGORY = 60;
 const MIN_ANGLE_CHILD_LABEL = 20;
 const MAX_OPACITY_CHILD_CATEGORY = 30;
 
