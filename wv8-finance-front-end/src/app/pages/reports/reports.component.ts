@@ -12,9 +12,9 @@ import { CategoryService } from "../../@core/services/category.service";
 import { ColorUtils } from "../../@core/utils/color-utils";
 
 const MIN_ANGLE_ROOT_CATEGORY = 10;
-const MIN_ANGLE_ROOT_LABEL = 10;
-const MIN_ANGLE_CHILD_CATEGORY = 60;
-const MIN_ANGLE_CHILD_LABEL = 20;
+const MIN_ANGLE_ROOT_LABEL = 0; //18; // 5%
+const MIN_ANGLE_CHILD_CATEGORY = 20;
+const MIN_ANGLE_CHILD_LABEL = 0; //20;
 const MAX_OPACITY_CHILD_CATEGORY = 30;
 
 enum RootCategoryType {
@@ -55,7 +55,6 @@ type NormalChildCategory = {
   type: ChildCategoryType;
 };
 type OtherChildCategory = {
-  // This will always be "Other", optionally followed by spaces to make the name unique
   name: string;
   parentName: string;
   groupedCategories: BaseCategory[];
@@ -77,6 +76,7 @@ type DeterminedChildCategory = {
 export class ReportsComponent implements OnInit {
   loading: boolean = false;
   debounceCounter: number = 0;
+  hasTransactionData = false;
 
   report: PeriodReport = null;
 
@@ -216,12 +216,16 @@ export class ReportsComponent implements OnInit {
         return { id: x[0], sums: x[1] };
       });
 
+    if (this.report.totals.expense === 0) return;
+
     // The categories which are too small to see will be grouped
     let categoriesToGroup: { id: number; sums: ITransactionSums }[] = [];
 
     for (let i = 0; i < sortedCategories.length; i++) {
       let category = sortedCategories[i];
       let angle = (category.sums.expense / this.report.totals.expense) * 360;
+
+      if (angle === 0) continue;
 
       if (angle < MIN_ANGLE_ROOT_CATEGORY) {
         categoriesToGroup.push(category);
@@ -258,7 +262,12 @@ export class ReportsComponent implements OnInit {
       outerData.push(category);
 
       let childCategoriesData = this.getInnerData(
-        { color: color, name: this.rootCategoryName(category), sums: categorySums, number: i },
+        {
+          color: color,
+          name: this.rootCategoryName(category),
+          sums: categorySums,
+          number: i,
+        },
         (category as NormalRootCategory)?.children, // TODO: handle children of "other"
         this.report.categories
       );
@@ -273,6 +282,7 @@ export class ReportsComponent implements OnInit {
       color: outerColors.concat(innerColors),
       tooltip: {
         trigger: "item",
+        confine: true,
       },
       series: [
         {
@@ -289,7 +299,7 @@ export class ReportsComponent implements OnInit {
           tooltip: {
             formatter: (data: any) => {
               let category: RootCategory = data.data.category;
-              let name = this.rootCategoryName(category);
+              let name = this.rootCategoryName(category).trim();
               let amount = this.rootCategorySums(category).expense;
               let percentage = amount / this.report.totals.expense;
 
@@ -307,23 +317,26 @@ export class ReportsComponent implements OnInit {
                 case RootCategoryType.Other:
                   let otherCategory = category as OtherRootCategory;
 
+                  let categoriesWithExpenes = otherCategory.groupedCategories.filter(
+                    (c) => c.sums.expense > 0
+                  );
+
                   let tooltip = `<div class='chart-tooltip'>
                     <span class='tooltip-header'>${
-                      otherCategory.groupedCategories.length + " categories"
+                      categoriesWithExpenes.length + " categories"
                     }</span>
                     <div>${currencyPipe.transform(amount, "EUR")} (${percentPipe.transform(
                     percentage
                   )})</div>`;
 
-                  for (let i = 0; i < otherCategory.groupedCategories.length; i++) {
-                    let c = otherCategory.groupedCategories[i];
+                  for (let i = 0; i < categoriesWithExpenes.length; i++) {
+                    let c = categoriesWithExpenes[i];
                     let p = c.sums.expense / this.report.totals.expense;
-                    tooltip += `<div>${c.name}: ${currencyPipe.transform(
+                    tooltip += `<div>${c.name.trim()}: ${currencyPipe.transform(
                       c.sums.expense,
                       "EUR"
                     )} (${percentPipe.transform(p)})</div>`;
                   }
-                  otherCategory.groupedCategories.map((c) => {});
 
                   tooltip += `</div>`;
 
@@ -341,7 +354,7 @@ export class ReportsComponent implements OnInit {
           },
           data: outerData.map((c) => {
             return {
-              name: this.rootCategoryName(c),
+              name: `${this.rootCategoryName(c)}`,
               value: this.rootCategorySums(c).expense,
               category: c,
             };
@@ -358,7 +371,7 @@ export class ReportsComponent implements OnInit {
           tooltip: {
             formatter: (data: any) => {
               let category: ChildCategory = data.data.category;
-              let name = category.name;
+              let name = category.name.trim();
               let amount = this.childCategorySums(category).expense;
               let percentage = amount / this.report.totals.expense;
 
@@ -376,23 +389,28 @@ export class ReportsComponent implements OnInit {
                 case ChildCategoryType.Other:
                   let otherCategory = category as OtherChildCategory;
 
+                  let categoriesWithExpenes = otherCategory.groupedCategories.filter(
+                    (c) => c.sums.expense > 0
+                  );
+
                   let tooltip = `<div class='chart-tooltip'>
                     <span class='tooltip-header'>${
-                      otherCategory.groupedCategories.length + " categories"
+                      categoriesWithExpenes.length + " categories"
                     }</span>
                     <div>${currencyPipe.transform(amount, "EUR")} (${percentPipe.transform(
                     percentage
                   )})</div>`;
 
-                  for (let i = 0; i < otherCategory.groupedCategories.length; i++) {
-                    let c = otherCategory.groupedCategories[i];
-                    let p = c.sums.expense / this.report.totals.expense;
-                    tooltip += `<div>${c.name}: ${currencyPipe.transform(
-                      c.sums.expense,
-                      "EUR"
-                    )} (${percentPipe.transform(p)})</div>`;
+                  for (let i = 0; i < categoriesWithExpenes.length; i++) {
+                    let c = categoriesWithExpenes[i];
+                    if (c.sums.expense > 0) {
+                      let p = c.sums.expense / this.report.totals.expense;
+                      tooltip += `<div>${c.name.trim()}: ${currencyPipe.transform(
+                        c.sums.expense,
+                        "EUR"
+                      )} (${percentPipe.transform(p)})</div>`;
+                    }
                   }
-                  otherCategory.groupedCategories.map((c) => {});
 
                   tooltip += `</div>`;
 
@@ -402,26 +420,17 @@ export class ReportsComponent implements OnInit {
 
                   return `<div class='chart-tooltip'>
                     <span class='tooltip-header'>Not further specified</span>
-                    <div>Portion which was added directly to the root category "${
-                      implicitCategory.parentName
-                    }".</div>
+                    <div>Portion which was added directly to the root category "${implicitCategory.parentName.trim()}".</div>
                     <div>${currencyPipe.transform(amount, "EUR")} (${percentPipe.transform(
                     percentage
                   )})</div></div>`;
               }
             },
           },
-          minShowLabelAngle: MIN_ANGLE_CHILD_LABEL,
-          label: {
-            color: "white",
-            position: "inside",
-            textBorderColor: "black",
-            textBorderWidth: 2,
-            fontSize: 12,
-          },
+          label: { show: false },
           data: innerData.map((c) => {
             return {
-              name: c.name,
+              name: `${c.parentName} -> ${c.name}`,
               value: this.childCategorySums(c).expense,
               category: c,
             };
@@ -432,7 +441,12 @@ export class ReportsComponent implements OnInit {
   }
 
   private getInnerData(
-    rootCategory: { color: string; name: string; sums: ITransactionSums; number: number },
+    rootCategory: {
+      color: string;
+      name: string;
+      sums: ITransactionSums;
+      number: number;
+    },
     childCategories: ChildCategories,
     categoryMap: Map<number, Category>
   ): DeterminedChildCategory[] {
@@ -483,23 +497,21 @@ export class ReportsComponent implements OnInit {
       } else {
         categoriesToShow.push({
           // TODO: now "Other" always only has a single "Parent" child category, can we improve this?
-          name: this.uniqueCategoryName("Parent"),
+          name: "Unknown",
           parentName: rootCategory.name,
           sums: category.sums,
-          type: ChildCategoryType.Implicit,
+          type: ChildCategoryType.Normal,
         });
       }
     }
 
     if (categoriesToGroup.length > 0) {
       categoriesToShow.push({
-        name: this.uniqueCategoryName("Other"),
+        name: "Other",
         parentName: rootCategory.name,
         groupedCategories: categoriesToGroup.map((c) => {
           return {
-            name: c.id
-              .map((cId) => categoryMap.get(cId).description)
-              .valueOrElse(this.uniqueCategoryName("Parent")),
+            name: c.id.map((cId) => categoryMap.get(cId).description).valueOrElse("Parent"),
             sums: c.sums,
           };
         }),
@@ -529,18 +541,6 @@ export class ReportsComponent implements OnInit {
     return data;
   }
 
-  private categoryNameCount: Map<string, number> = new Map();
-
-  private uniqueCategoryName(name) {
-    if (!this.categoryNameCount.has(name)) this.categoryNameCount.set(name, 0);
-
-    let count = this.categoryNameCount.get(name);
-    count++;
-    this.categoryNameCount.set(name, count);
-    // Categories with the same name share the same color. We don't want this.
-    return name + "ㅤ".repeat(count);
-  }
-
   private rootCategorySums(category: RootCategory) {
     if (category.type === RootCategoryType.Normal) {
       return (category as NormalRootCategory).sums;
@@ -562,7 +562,7 @@ export class ReportsComponent implements OnInit {
     if (category.type === RootCategoryType.Normal) {
       return (category as NormalRootCategory).name;
     } else if (category.type === RootCategoryType.Other) {
-      return this.uniqueCategoryName("Other");
+      return "Other";
     }
 
     throw "Unknown category type.";

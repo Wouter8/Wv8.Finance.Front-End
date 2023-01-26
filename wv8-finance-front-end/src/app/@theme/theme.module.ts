@@ -65,6 +65,7 @@ import { CreateOrEditExpenseComponent } from "./components/create-or-edit-transa
 import { CreateOrEditTransferComponent } from "./components/create-or-edit-transaction/create-or-edit-transfer/create-or-edit-transfer.component";
 import { TableTransactionAmountCellComponent } from "./components/table/table-transaction-amount-cell/table-transaction-amount-cell.component";
 import { WarningComponent } from "./components/warning/warning.component";
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -153,7 +154,7 @@ const IMPORT_MODULES = [FormsModule];
 @NgModule({
   imports: [CommonModule, ...NB_MODULES, ...IMPORT_MODULES],
   exports: [CommonModule, ...PIPES, ...COMPONENTS],
-  declarations: [...COMPONENTS, ...PIPES],
+  declarations: [...COMPONENTS, ...PIPES, AutocompleteComponent],
   entryComponents: [...ENTRY_COMPONENTS],
 })
 export class ThemeModule {

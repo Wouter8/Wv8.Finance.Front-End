@@ -24,7 +24,15 @@
         <nb-card>
           <nb-card-header>Per category</nb-card-header>
           <nb-card-body>
-            <div echarts [options]="byCategoryChartOptions" class="echart"></div
+            <div *ngIf="!report || report.totals.expense == 0" class="no-data">
+              No data
+            </div>
+            <div
+              *ngIf="report && report.totals.expense > 0"
+              echarts
+              [options]="byCategoryChartOptions"
+              class="echart"
+            ></div
           ></nb-card-body>
         </nb-card>
       </div>
@@ -35,13 +43,14 @@
             <div *ngIf="!loading" class="totals">
               <div class="total-row">
                 <div class="row-label">Total income</div>
-                {{ report.totals.income | currency: "EUR" }}
-                <div class="row-value"></div>
+                <div class="row-value">
+                  {{ report.totals.income | currency : "EUR" }}
+                </div>
               </div>
               <div class="total-row">
                 <div class="row-label">Total expenses</div>
                 <div class="row-value">
-                  {{ report.totals.expense | currency: "EUR" }}
+                  {{ report.totals.expense | currency : "EUR" }}
                 </div>
               </div>
               <hr />
@@ -50,7 +59,7 @@
                 <div class="row-value">
                   {{
                     report.totals.income - report.totals.expense
-                      | currency: "EUR"
+                      | currency : "EUR"
                   }}
                 </div>
               </div>
