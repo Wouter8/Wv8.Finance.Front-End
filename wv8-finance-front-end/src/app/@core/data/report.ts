@@ -54,5 +54,9 @@ export abstract class ReportData {
   abstract getCurrentDateReport(): Promise<CurrentDateReport>;
   abstract getCategoryReport(categoryId: number, start: Date, end: Date): Promise<CategoryReport>;
   abstract getAccountReport(accountId: number, start: Date, end: Date): Promise<AccountReport>;
-  abstract getPeriodReport(start: Date, end: Date): Promise<PeriodReport>;
+  abstract getPeriodReport(
+    start: Date,
+    end: Date,
+    categoryIds: Array<number>
+  ): Promise<PeriodReport>;
 }

@@ -55,13 +55,14 @@ export class ReportService extends ReportData {
       .toPromise();
   }
 
-  getPeriodReport(start: Date, end: Date): Promise<PeriodReport> {
+  getPeriodReport(start: Date, end: Date, categoryIds: Array<number>): Promise<PeriodReport> {
     const url = `${ReportService.BaseUrl}`;
 
     return this.http
-      .get<IPeriodReport>(url, {
+      .post<IPeriodReport>(url, null, {
         start: start.toDateString(),
         end: end.toDateString(),
+        categoryIds: categoryIds,
       })
       .pipe(map((r) => PeriodReport.fromDto(r)))
       .toPromise();

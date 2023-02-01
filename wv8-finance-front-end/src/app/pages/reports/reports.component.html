@@ -1,4 +1,4 @@
-<div class="page" *ngIf="period">
+<div class="page" *ngIf="initializedFilters">
   <div class="filters">
     <div class="period-filter">
       <period-picker
@@ -9,34 +9,34 @@
       >
       </period-picker>
     </div>
+    <div class="category-filter">
+      <wv8-autocomplete
+        [items]="categories"
+        [itemTitle]="categoryTitle"
+        [itemIcon]="categoryIcon"
+        [multiSelect]="true"
+        [selectedItems]="selectedCategories"
+        (selectedItemsChanged)="selectedCategoriesChanged($event)"
+      >
+      </wv8-autocomplete>
+    </div>
   </div>
   <div class="report" [ngClass]="{ loading: loading }">
     <div class="row">
-      <div class="col-sm-12">
+      <div class="col-sm-8">
         <nb-card>
           <nb-card-header>Net worth</nb-card-header>
           <nb-card-body>
-            <div echarts [options]="netWorthChartOptions" class="echart"></div
-          ></nb-card-body>
-        </nb-card>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <nb-card>
-          <nb-card-header>Per category</nb-card-header>
-          <nb-card-body>
-            <div *ngIf="!report || report.totals.expense == 0" class="no-data">
-              No data
-            </div>
             <div
-              *ngIf="report && report.totals.expense > 0"
+              id="net-worth-chart"
               echarts
-              [options]="byCategoryChartOptions"
+              [options]="netWorthChartOptions"
               class="echart"
             ></div
           ></nb-card-body>
         </nb-card>
       </div>
-      <div class="col-sm-12 col-md-6">
+      <div class="col-sm-4">
         <nb-card>
           <nb-card-header>Totals</nb-card-header>
           <nb-card-body>
@@ -65,6 +65,65 @@
               </div>
             </div>
           </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <nb-card>
+          <nb-card-header>
+            <div class="card-title">Per category</div>
+            <div class="toggle-options">
+              <div
+                class="toggle-option"
+                [ngClass]="{ active: byCategoryTab == 1 }"
+                (click)="changeByCategoryTab(1)"
+              >
+                Result
+              </div>
+              <div
+                class="toggle-option"
+                [ngClass]="{ active: byCategoryTab == 2 }"
+                (click)="changeByCategoryTab(2)"
+              >
+                Expense
+              </div>
+              <div
+                class="toggle-option"
+                [ngClass]="{ active: byCategoryTab == 3 }"
+                (click)="changeByCategoryTab(3)"
+              >
+                Income
+              </div>
+            </div>
+          </nb-card-header>
+          <nb-card-body class="by-category-chart-container">
+            <div *ngIf="byCategoryTab == 1">
+              <div class="no-data">No data</div>
+            </div>
+            <div *ngIf="byCategoryTab == 2">
+              <div
+                *ngIf="!report || report.totals.expense == 0"
+                class="no-data"
+              >
+                No data
+              </div>
+              <div
+                *ngIf="report && report.totals.expense > 0"
+                echarts
+                [options]="expenseByCategoryChartOptions"
+                class="echart by-category-chart"
+              ></div>
+            </div>
+            <div *ngIf="byCategoryTab == 3">
+              <div *ngIf="!report || report.totals.income == 0" class="no-data">
+                No data
+              </div>
+              <div
+                *ngIf="report && report.totals.income > 0"
+                echarts
+                [options]="incomeByCategoryChartOptions"
+                class="echart by-category-chart"
+              ></div></div
+          ></nb-card-body>
         </nb-card>
       </div>
     </div>

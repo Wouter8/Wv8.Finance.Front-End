@@ -10,8 +10,59 @@
 }
 
 .filters {
-  .period-filter {
+  display: flex;
+  gap: 1rem;
+  // align-items: flex-start;
+  justify-content: flex-start;
+
+  > * {
     width: 240px;
+  }
+
+  z-index: 1;
+}
+
+nb-card-header {
+  display: flex;
+
+  align-items: center;
+
+  .card-title {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .toggle-options {
+    display: flex;
+    height: 24px;
+
+    margin-right: 0;
+
+    .toggle-option {
+      padding-left: 8px;
+      padding-right: 8px;
+
+      cursor: pointer;
+
+      color: lightgrey;
+      font-weight: normal;
+
+      &:not(:last-child) {
+        border-right: 1px solid lightgrey;
+      }
+
+      &:last-child {
+        padding-right: 0px;
+      }
+
+      &:hover {
+        color: grey;
+      }
+
+      &.active {
+        color: #3366ff;
+      }
+    }
   }
 }
 
@@ -21,6 +72,41 @@
   position: relative;
 
   margin-top: 8px;
+
+  #net-worth-chart {
+    height: 320px;
+  }
+
+  .by-category-chart-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 320px;
+      height: 320px;
+      max-height: 320px;
+      width: 100%;
+
+      .by-category-chart {
+        min-height: 320px;
+        height: 320px;
+        max-height: 320px;
+        width: 100%;
+      }
+    }
+  }
+
+  .no-data {
+    color: grey;
+    font-style: italic;
+  }
 
   .totals {
     .total-row {
