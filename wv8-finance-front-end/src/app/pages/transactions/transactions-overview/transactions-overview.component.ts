@@ -17,6 +17,7 @@ import { Account } from "../../../@core/models/account.model";
 import { TransactionType } from "../../../@core/enums/transaction-type.enum";
 import { AccountData } from "../../../@core/data/account";
 import { CreateOrEditTransactionComponent } from "../../../@theme/components/create-or-edit-transaction/create-or-edit-transaction.component";
+import { debounce } from "../../../@core/utils/debounce";
 
 @Component({
   selector: "transactions-overview",
@@ -34,9 +35,12 @@ export class TransactionsOverviewComponent implements OnInit {
   accountFilter: number = undefined;
   rangeFilter: NbCalendarRange<Date> = undefined;
   typeFilter: TransactionType = undefined;
+  initializedFilters: boolean = false;
 
   pageNumber: number = 1;
   rowsPerPage: number = 15;
+
+  debounceCounter: number = 0;
 
   retrievalFunction = this.filter.bind(this);
 
@@ -52,36 +56,39 @@ export class TransactionsOverviewComponent implements OnInit {
 
   async ngOnInit() {
     this.accounts = await this.accountService.getAccounts(true, Maybe.none());
-    this.route.queryParams.subscribe((params) => {
-      if (params.periodStart && params.periodEnd) {
-        this.rangeFilter = {
-          start: new Date(params.periodStart),
-          end: new Date(params.periodEnd),
-        };
-      }
-      if (params.account) this.accountFilter = params.accountFilter;
-      if (params.category) this.categoryFilter = params.category;
-      if (params.description) this.descriptionFilter = params.description;
-      if (params.type) this.typeFilter = params.type;
-      if (params.page) this.pageNumber = params.page;
-      // TODO: Filter components are not propertly updated if set by the lines above (UI does not reflect the value)
-    });
+    let params = this.route.snapshot.queryParamMap;
+    if (params.has("periodStart") && params.has("periodEnd")) {
+      this.rangeFilter = {
+        start: new Date(params.get("periodStart")),
+        end: new Date(params.get("periodEnd")),
+      };
+    } else {
+      this.rangeFilter = {
+        start: undefined,
+        end: undefined,
+      };
+    }
+    if (params.has("account")) this.accountFilter = parseInt(params.get("account"));
+    if (params.has("category")) this.categoryFilter = parseInt(params.get("category"));
+    if (params.has("description")) this.descriptionFilter = params.get("description");
+    if (params.has("type")) this.typeFilter = parseInt(params.get("type"));
+    if (params.has("page")) this.pageNumber = parseInt(params.get("page"));
+    this.initializedFilters = true;
+    // TODO: Filter components are not propertly updated if set by the lines above (UI does not reflect the value)
     this.loadData();
   }
 
   onClickAdd(event: MouseEvent) {
-    this.dialogService
-      .open(CreateOrEditTransactionComponent)
-      .onClose.subscribe((data: { success: boolean; transaction: Transaction }) => {
-        if (data.success) {
-          this.transactionGroup.transactions.unshift(data.transaction);
+    this.dialogService.open(CreateOrEditTransactionComponent).onClose.subscribe((data: { success: boolean; transaction: Transaction }) => {
+      if (data.success) {
+        this.transactionGroup.transactions.unshift(data.transaction);
 
-          // Reset to trigger changes in table component.
-          this.transactionGroup.transactions = [...this.transactionGroup.transactions];
+        // Reset to trigger changes in table component.
+        this.transactionGroup.transactions = [...this.transactionGroup.transactions];
 
-          this.toasterService.success("", "Added transaction");
-        }
-      });
+        this.toasterService.success("", "Added transaction");
+      }
+    });
   }
 
   private setQueryParameters() {
@@ -96,27 +103,25 @@ export class TransactionsOverviewComponent implements OnInit {
     if (this.typeFilter) queryParams.type = this.typeFilter;
     queryParams.page = this.pageNumber; // TODO: Hashtag instead of query param?
 
-    this.router.navigate([], { relativeTo: this.route, queryParams: queryParams });
+    this.router.navigate([], { relativeTo: this.route, queryParams: queryParams, replaceUrl: true });
   }
 
   async setPageNumber(newPageNumber) {
     this.pageNumber = newPageNumber;
-    await this.filter();
   }
 
-  async filter() {
-    this.pageNumber = 1;
-    this.descriptionFilter =
-      this.descriptionFilter && this.descriptionFilter.trim().length > 0
-        ? this.descriptionFilter.trim()
-        : undefined;
+  async filter(page: number) {
+    this.pageNumber = page;
+    this.descriptionFilter = this.descriptionFilter && this.descriptionFilter.trim().length > 0 ? this.descriptionFilter.trim() : undefined;
     await this.loadData();
   }
 
   onSetPeriod(event: NbCalendarRange<Date>) {
     this.rangeFilter = event;
-    this.filter();
+    this.filter(1);
   }
+
+  public debouncedFilter = debounce(this.filter.bind(this));
 
   private async loadData() {
     this.setQueryParameters();
@@ -128,7 +133,9 @@ export class TransactionsOverviewComponent implements OnInit {
       range.start = this.rangeFilter.start;
       range.end = this.rangeFilter.end;
     }
-    this.transactionGroup = await this.transactionservice.getTransactionsByFilter(
+
+    let debounceNumber = ++this.debounceCounter;
+    let response = await this.transactionservice.getTransactionsByFilter(
       new Maybe(this.typeFilter),
       new Maybe(this.accountFilter),
       new Maybe(this.descriptionFilter),
@@ -138,5 +145,13 @@ export class TransactionsOverviewComponent implements OnInit {
       (this.pageNumber - 1) * this.rowsPerPage,
       this.rowsPerPage
     );
+    this.handleResponse(debounceNumber, response);
+  }
+
+  private handleResponse(debounceNumber: number, response: TransactionGroup) {
+    // Only handle this response if it the last requested.
+    if (this.debounceCounter !== debounceNumber) return;
+
+    this.transactionGroup = response;
   }
 }

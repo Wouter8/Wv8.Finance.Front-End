@@ -1,23 +1,10 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  Input,
-  Output,
-  EventEmitter
-} from "@angular/core";
-import {
-  NbRangepickerComponent,
-  NbDateService,
-  NbCalendarRange,
-  NbCalendarRangeComponent
-} from "@nebular/theme";
+import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from "@angular/core";
+import { NbRangepickerComponent, NbDateService, NbCalendarRange, NbCalendarRangeComponent } from "@nebular/theme";
 
 @Component({
   selector: "period-picker",
   templateUrl: "./period-picker.component.html",
-  styleUrls: ["./period-picker.component.scss"]
+  styleUrls: ["./period-picker.component.scss"],
 })
 export class PeriodPickerComponent implements OnInit {
   @ViewChild("periodPicker", { static: true })
@@ -50,18 +37,16 @@ export class PeriodPickerComponent implements OnInit {
   constructor(private dateService: NbDateService<Date>) {}
 
   ngOnInit() {
-    if (!this.setInitialValue) return;
-
-    if (this.start) {
+    if (this.start && this.end) {
       this.range = {
         start: this.start,
-        end: this.end
+        end: this.end,
       };
-    } else {
+    } else if (this.setInitialValue) {
       let today = new Date();
       this.range = {
         start: this.dateService.getMonthStart(today),
-        end: this.dateService.getMonthEnd(today)
+        end: this.dateService.getMonthEnd(today),
       };
     }
 

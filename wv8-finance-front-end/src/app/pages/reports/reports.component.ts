@@ -115,7 +115,6 @@ export class ReportsComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    console.log("init");
     this.categories = await this.categoryService.getCategories(false, true);
     let params = this.route.snapshot.queryParamMap;
     if (params.has("catId")) {

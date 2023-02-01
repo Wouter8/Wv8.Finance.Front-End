@@ -1,16 +1,5 @@
-import {
-  Component,
-  OnInit,
-  Output,
-  EventEmitter,
-  ViewChild,
-  Input
-} from "@angular/core";
-import {
-  TableSettings,
-  CustomTableSettings,
-  Pager
-} from "./table-settings.model";
+import { Component, OnInit, Output, EventEmitter, ViewChild, Input } from "@angular/core";
+import { TableSettings, CustomTableSettings, Pager } from "./table-settings.model";
 import { LocalDataSource } from "ng2-smart-table";
 import { Maybe } from "@wv8/typescript.core";
 import { TablePagination } from "./table-pagination-model";
@@ -18,7 +7,7 @@ import { TablePagination } from "./table-pagination-model";
 @Component({
   selector: "wv8-table",
   templateUrl: "./table.component.html",
-  styleUrls: ["./table.component.scss"]
+  styleUrls: ["./table.component.scss"],
 })
 export class TableComponent<T> implements OnInit {
   @ViewChild("table", { static: true })
@@ -28,6 +17,7 @@ export class TableComponent<T> implements OnInit {
   onPageChange: (page: number) => void;
   @Output("select")
   onSelect = new EventEmitter<T>();
+  @Input() initialPage: number = 1;
 
   source: LocalDataSource = new LocalDataSource();
   settings: TableSettings;
@@ -35,7 +25,7 @@ export class TableComponent<T> implements OnInit {
   totalPages: number = 1;
   pager: Pager = {
     display: false,
-    perPage: 25
+    perPage: 25,
   };
 
   private DEFAULT_SETTINGS: TableSettings = {
@@ -45,16 +35,18 @@ export class TableComponent<T> implements OnInit {
     mode: "external",
     selectMode: false,
     pager: {
-      display: false
+      display: false,
     },
     attr: {
       class: "table",
-    }
+    },
   };
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.currentPage = this.initialPage;
+  }
 
   goToPage(i: number) {
     this.currentPage = i;
@@ -63,10 +55,7 @@ export class TableComponent<T> implements OnInit {
 
   getPaginationNumbers(): number[] {
     let result = [];
-    let i =
-      this.currentPage == this.totalPages
-        ? this.currentPage - 2
-        : this.currentPage - 1;
+    let i = this.currentPage == this.totalPages ? this.currentPage - 2 : this.currentPage - 1;
     while (result.length < 3) {
       if (i > 0) {
         result.push(i);
@@ -89,25 +78,16 @@ export class TableComponent<T> implements OnInit {
     this.settings.columns = settings.columns;
 
     if (settings.pager) {
-      this.pager.display = new Maybe(settings.pager.display).valueOrElse(
-        this.pager.display
-      );
-      this.pager.perPage = new Maybe(settings.pager.perPage).valueOrElse(
-        this.pager.perPage
-      );
+      this.pager.display = new Maybe(settings.pager.display).valueOrElse(this.pager.display);
+      this.pager.perPage = new Maybe(settings.pager.perPage).valueOrElse(this.pager.perPage);
     }
-    this.settings.selectMode = new Maybe(settings.selectMode).valueOrElse(
-      this.DEFAULT_SETTINGS.selectMode
-    );
-    this.settings.hideSubHeader = new Maybe(settings.hideFilter).valueOrElse(
-      this.DEFAULT_SETTINGS.hideSubHeader
-    );
+    this.settings.selectMode = new Maybe(settings.selectMode).valueOrElse(this.DEFAULT_SETTINGS.selectMode);
+    this.settings.hideSubHeader = new Maybe(settings.hideFilter).valueOrElse(this.DEFAULT_SETTINGS.hideSubHeader);
 
     this.settings.rowClassFunction = (row: { data: T }) => {
       let rowClasses: string[] = [];
       if (settings.clickable) rowClasses.push("clickable");
-      if (settings.rowClassFunction)
-        rowClasses = rowClasses.concat(settings.rowClassFunction(row.data));
+      if (settings.rowClassFunction) rowClasses = rowClasses.concat(settings.rowClassFunction(row.data));
       return rowClasses.join(" ");
     };
   }

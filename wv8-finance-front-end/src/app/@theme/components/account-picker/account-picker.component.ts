@@ -1,12 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  OnChanges,
-  SimpleChanges,
-} from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from "@angular/core";
 import { AccountData } from "../../../@core/data/account";
 import { Account } from "../../../@core/models/account.model";
 import { Maybe } from "@wv8/typescript.core";
@@ -43,7 +35,7 @@ export class AccountPickerComponent implements OnInit, OnChanges {
     if (this.accountId) {
       this.selectAccount(this.accountId);
     } else if (!this.initialAccountSelected && this.selectDefault) {
-      let defaultAccounts = this.accounts.filter((a) => a.isDefault);
+      let defaultAccounts = this.accounts.filter(a => a.isDefault);
       if (defaultAccounts.length > 0) this.selectAccount(defaultAccounts[0].id);
     }
   }
@@ -58,11 +50,9 @@ export class AccountPickerComponent implements OnInit, OnChanges {
         : (
             await this.accountService.getAccounts(
               this.includeObsolete,
-              this.onlyNormalAccounts
-                ? Maybe.some(AccountType.Normal)
-                : Maybe.none()
+              this.onlyNormalAccounts ? Maybe.some(AccountType.Normal) : Maybe.none()
             )
-          ).filter((c) => this.filterAccounts.indexOf(c.id) < 0);
+          ).filter(c => this.filterAccounts.indexOf(c.id) < 0);
   }
 
   private selectAccount(id: number) {
@@ -81,9 +71,7 @@ export class AccountPickerComponent implements OnInit, OnChanges {
     }
 
     if (this.accountId) {
-      this.selectedAccount = this.accounts.filter(
-        (c) => c.id == this.accountId
-      )[0];
+      this.selectedAccount = this.accounts.filter(c => c.id == this.accountId)[0];
     }
 
     this.accountIdChange.emit(this.selectedAccount.id);

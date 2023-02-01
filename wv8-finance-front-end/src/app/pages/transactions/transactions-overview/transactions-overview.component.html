@@ -7,31 +7,60 @@
           <nb-icon icon="plus-outline"></nb-icon>
         </button>
 
-        <div class="header-filter">
+        <div *ngIf="initializedFilters" class="header-filter">
           <div class="row">
             <div class="col-xxxl-1 show-on-xxxl"></div>
             <div class="col-sm-12 col-lg-6 col-xl-4 col-xxxl-2">
-              <account-picker placeholderText="Filter account" [showResetOption]="true" [selectDefault]="false"
-                [(accountId)]="accountFilter" (accountIdChange)="filter()" [fullWidth]="true"></account-picker>
+              <account-picker
+                placeholderText="Filter account"
+                [showResetOption]="true"
+                [selectDefault]="false"
+                [(accountId)]="accountFilter"
+                (accountIdChange)="filter(1)"
+                [fullWidth]="true"
+              ></account-picker>
             </div>
             <div class="col-sm-12 col-lg-6 col-xl-4 col-xxxl-2">
-              <category-picker placeholderText="Filter category" [showResetOption]="true" [(category)]="categoryFilter"
-                (categoryChange)="filter()" [fullWidth]="true"></category-picker>
+              <category-picker
+                placeholderText="Filter category"
+                [showResetOption]="true"
+                [(category)]="categoryFilter"
+                (categoryChange)="filter(1)"
+                [fullWidth]="true"
+              ></category-picker>
             </div>
             <div class="col-sm-12 col-lg-6 col-xl-4 col-xxxl-2">
-              <input nbInput type="text" [fieldSize]="'small'" placeholder="Filter description"
-                [(ngModel)]="descriptionFilter" (keyup)="filter()" [fullWidth]="true" />
+              <input
+                nbInput
+                type="text"
+                [fieldSize]="'small'"
+                placeholder="Filter description"
+                [(ngModel)]="descriptionFilter"
+                (keyup)="debouncedFilter(1)"
+                [fullWidth]="true"
+              />
             </div>
             <div class="col-sm-12 col-lg-6 col-xl-4 col-xxxl-2">
-              <nb-select placeholder="Filter type" [(selected)]="typeFilter" (selectedChange)="filter()"
-                [fullWidth]="true" size="small" [fullWidth]="true">
+              <nb-select
+                placeholder="Filter type"
+                [(selected)]="typeFilter"
+                (selectedChange)="filter(1)"
+                [fullWidth]="true"
+                size="small"
+                [fullWidth]="true"
+              >
                 <nb-option [value]="undefined">None</nb-option>
-                <nb-option *ngFor="let type of transactionTypes | enumToArray" [value]="type.index">{{ type.name }}
-                </nb-option>
+                <nb-option *ngFor="let type of transactionTypes | enumToArray" [value]="type.index">{{ type.name }} </nb-option>
               </nb-select>
             </div>
             <div class="col-sm-12 col-lg-6 col-xl-4 col-xxxl-2">
-              <period-picker (periodChanged)="onSetPeriod($event)" [showClearButton]="true" [setInitialValue]="false">
+              <period-picker
+                (periodChanged)="onSetPeriod($event)"
+                [start]="rangeFilter.start"
+                [end]="rangeFilter.end"
+                [showClearButton]="true"
+                [setInitialValue]="false"
+              >
               </period-picker>
             </div>
             <div class="col-xxxl-1 show-on-xxxl"></div>
@@ -40,9 +69,15 @@
       </nb-card-header>
 
       <nb-card-body>
-        <transaction-table *ngIf="transactionGroup" [rowsPerPage]="rowsPerPage"
-          [totalRows]="transactionGroup.totalSearchResults" [retrievalFunction]="retrievalFunction"
-          [transactions]="transactionGroup.transactions"></transaction-table>
+        <transaction-table
+          *ngIf="transactionGroup"
+          [rowsPerPage]="rowsPerPage"
+          [totalRows]="transactionGroup.totalSearchResults"
+          [retrievalFunction]="retrievalFunction"
+          [transactions]="transactionGroup.transactions"
+          [initialPage]="pageNumber"
+          (onPageChange)="setPageNumber($event)"
+        ></transaction-table>
       </nb-card-body>
     </nb-card>
   </div>

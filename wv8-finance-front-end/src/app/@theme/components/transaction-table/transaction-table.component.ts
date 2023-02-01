@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges } from "@angular/core";
+import { Component, OnInit, ViewChild, Input, OnChanges, Output, EventEmitter } from "@angular/core";
 import { CustomTableSettings, Columns } from "../table/table-settings.model";
 import { Transaction } from "../../../@core/models/transaction.model";
 import { TableNameCellComponent } from "../table/table-name-cell/table-name-cell.component";
@@ -26,6 +26,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   rowsPerPage: number = 15;
   @Input()
   retrievalFunction: (pageNumber: number) => Promise<void>;
+  @Input() initialPage: number = 1;
   @Input()
   showAccountColumn: boolean = true;
   @Input()
@@ -38,8 +39,9 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   showDateColumnIcon: boolean = true;
   @Input()
   italicOnUnprocessed: boolean = true;
+  @Output() onPageChange = new EventEmitter<number>();
 
-  onPageChangeFunction = this.onPageChange.bind(this);
+  onPageChangeFunction = this.onPageChange_.bind(this);
 
   constructor(private router: Router) {}
 
@@ -55,8 +57,9 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     this.router.navigateByUrl(`transactions/${event.id}`);
   }
 
-  async onPageChange(pageNumber: number) {
+  async onPageChange_(pageNumber: number) {
     this.table.currentPage = pageNumber;
+    this.onPageChange.emit(pageNumber);
     await this.retrievalFunction(pageNumber);
   }
 
@@ -99,17 +102,13 @@ export class TransactionTableComponent implements OnInit, OnChanges {
         type: "custom",
         renderComponent: TableNameCellComponent,
         sort: false,
-        onComponentInitFunction: (
-          instance: TableNameCellComponent<Transaction>
-        ) => {
+        onComponentInitFunction: (instance: TableNameCellComponent<Transaction>) => {
           instance.nameFunction = () =>
             instance.typedData.category.isSome
               ? instance.typedData.category.value.getCompleteName()
               : instance.typedData.receivingAccount.value.description;
           instance.iconFunction = () =>
-            instance.typedData.category.isSome
-              ? instance.typedData.category.value.icon
-              : instance.typedData.receivingAccount.value.icon;
+            instance.typedData.category.isSome ? instance.typedData.category.value.icon : instance.typedData.receivingAccount.value.icon;
 
           instance.showDefaultIcon = false;
           instance.iconSize = "small";
@@ -128,9 +127,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
         type: "custom",
         renderComponent: TableNameCellComponent,
         sort: false,
-        onComponentInitFunction: (
-          instance: TableNameCellComponent<Transaction>
-        ) => {
+        onComponentInitFunction: (instance: TableNameCellComponent<Transaction>) => {
           instance.nameFunction = () => instance.typedData.account.description;
           instance.iconFunction = () => instance.typedData.account.icon;
 
@@ -147,8 +144,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
       rowClassFunction: (row: Transaction) => {
         let classes: string[] = [];
 
-        if (this.italicOnUnprocessed && !row.processed)
-          classes.push("obsolete");
+        if (this.italicOnUnprocessed && !row.processed) classes.push("obsolete");
 
         return classes;
       },
