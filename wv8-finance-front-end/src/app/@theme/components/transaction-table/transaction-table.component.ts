@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges } from "@angular/core";
-import { CustomTableSettings, Columns } from "../table/table-settings.model";
+import { Component, OnInit, ViewChild, Input, OnChanges, Output, EventEmitter } from "@angular/core";
 import { Transaction } from "../../../@core/models/transaction.model";
 import { TableNameCellComponent } from "../table/table-name-cell/table-name-cell.component";
 import { TableDateCellComponent } from "../table/table-date-cell/table-date-cell.component";
@@ -8,6 +7,7 @@ import { TableTransactionTypeIconCellComponent } from "../table/table-transactio
 import { TableComponent } from "../table/table.component";
 import { Router } from "@angular/router";
 import { TableTransactionAmountCellComponent } from "../table/table-transaction-amount-cell/table-transaction-amount-cell.component";
+import { IColumn, IColumns, IColumnType, Settings } from "angular2-smart-table";
 
 @Component({
   selector: "transaction-table",
@@ -26,6 +26,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   rowsPerPage: number = 15;
   @Input()
   retrievalFunction: (pageNumber: number) => Promise<void>;
+  @Input() initialPage: number = 1;
   @Input()
   showAccountColumn: boolean = true;
   @Input()
@@ -38,8 +39,9 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   showDateColumnIcon: boolean = true;
   @Input()
   italicOnUnprocessed: boolean = true;
+  @Output() onPageChange = new EventEmitter<number>();
 
-  onPageChangeFunction = this.onPageChange.bind(this);
+  onPageChangeFunction = this.onPageChange_.bind(this);
 
   constructor(private router: Router) {}
 
@@ -55,8 +57,9 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     this.router.navigateByUrl(`transactions/${event.id}`);
   }
 
-  async onPageChange(pageNumber: number) {
+  async onPageChange_(pageNumber: number) {
     this.table.currentPage = pageNumber;
+    this.onPageChange.emit(pageNumber);
     await this.retrievalFunction(pageNumber);
   }
 
@@ -65,27 +68,28 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     this.table.totalPages = Math.ceil(this.totalRows / this.rowsPerPage);
   }
 
-  private getTableSettings(): CustomTableSettings<Transaction> {
-    let columns: Columns = {};
+  private getTableSettings(): Settings {
+    let columns: IColumns = {};
     columns["type"] = {
       title: "",
-      type: "custom",
+      type: IColumnType.Custom,
       width: "36px",
       renderComponent: TableTransactionTypeIconCellComponent,
-      sort: false,
+      isSortable: false,
     };
+
     columns["amount"] = {
       title: "Amount",
-      type: "custom",
+      type: IColumnType.Custom,
       renderComponent: TableTransactionAmountCellComponent,
-      sort: false,
+      isSortable: false,
     };
     if (this.showDateColumn) {
       columns["date"] = {
         title: "Date",
-        type: "custom",
+        type: IColumnType.Custom,
         renderComponent: TableDateCellComponent,
-        sort: false,
+        isSortable: false,
         onComponentInitFunction: (instance: TableDateCellComponent) => {
           instance.showFutureIcon = this.showDateColumnIcon;
           instance.determineIsFuture = () => !instance.rowData.processed;
@@ -96,20 +100,16 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     if (this.showCategoryColumn) {
       columns["categoryId"] = {
         title: "Category",
-        type: "custom",
+        type: IColumnType.Custom,
         renderComponent: TableNameCellComponent,
-        sort: false,
-        onComponentInitFunction: (
-          instance: TableNameCellComponent<Transaction>
-        ) => {
+        isSortable: false,
+        onComponentInitFunction: (instance: TableNameCellComponent<Transaction>) => {
           instance.nameFunction = () =>
             instance.typedData.category.isSome
               ? instance.typedData.category.value.getCompleteName()
               : instance.typedData.receivingAccount.value.description;
           instance.iconFunction = () =>
-            instance.typedData.category.isSome
-              ? instance.typedData.category.value.icon
-              : instance.typedData.receivingAccount.value.icon;
+            instance.typedData.category.isSome ? instance.typedData.category.value.icon : instance.typedData.receivingAccount.value.icon;
 
           instance.showDefaultIcon = false;
           instance.iconSize = "small";
@@ -119,18 +119,17 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     if (this.showDescriptionColumn) {
       columns["description"] = {
         title: "Description",
-        type: "text",
+        type: IColumnType.Text,
+        isSortable: false,
       };
     }
     if (this.showAccountColumn) {
       columns["accountId"] = {
         title: "Account",
-        type: "custom",
+        type: IColumnType.Custom,
         renderComponent: TableNameCellComponent,
-        sort: false,
-        onComponentInitFunction: (
-          instance: TableNameCellComponent<Transaction>
-        ) => {
+        isSortable: false,
+        onComponentInitFunction: (instance: TableNameCellComponent<Transaction>) => {
           instance.nameFunction = () => instance.typedData.account.description;
           instance.iconFunction = () => instance.typedData.account.icon;
 
@@ -142,13 +141,11 @@ export class TransactionTableComponent implements OnInit, OnChanges {
 
     return {
       columns,
-      hideFilter: true,
-      clickable: true,
+      filter: undefined,
       rowClassFunction: (row: Transaction) => {
         let classes: string[] = [];
 
-        if (this.italicOnUnprocessed && !row.processed)
-          classes.push("obsolete");
+        if (this.italicOnUnprocessed && !row.processed) classes.push("obsolete");
 
         return classes;
       },

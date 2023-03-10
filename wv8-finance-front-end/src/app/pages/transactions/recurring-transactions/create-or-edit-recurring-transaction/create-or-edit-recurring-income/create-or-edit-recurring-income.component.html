@@ -3,11 +3,18 @@
     <tr>
       <th>Account</th>
       <td>
-        <account-picker
-          [fullWidth]="true"
-          [(accountId)]="recurringTransaction.accountId"
-          [onlyNormalAccounts]="true"
-        ></account-picker>
+        <wv8-autocomplete
+          [items]="accounts"
+          [itemId]="accountId"
+          [itemTitle]="accountTitle"
+          [itemIcon]="accountIcon"
+          placeholder="Select account..."
+          [multiSelect]="false"
+          [canDeselect]="false"
+          [selectedItems]="[recurringTransaction.account]"
+          (selectedItemsChanged)="setAccount($event)"
+        >
+        </wv8-autocomplete>
       </td>
     </tr>
     <tr>
@@ -24,14 +31,7 @@
     <tr>
       <th>Description</th>
       <td>
-        <input
-          type="text"
-          placeholder="Description"
-          nbInput
-          fieldSize="small"
-          fullWidth
-          [(ngModel)]="recurringTransaction.description"
-        />
+        <input type="text" placeholder="Description" nbInput fieldSize="small" fullWidth [(ngModel)]="recurringTransaction.description" />
       </td>
     </tr>
     <tr>
@@ -55,11 +55,19 @@
     <tr>
       <th>Category</th>
       <td>
-        <category-picker
-          [fullWidth]="true"
-          [category]="recurringTransaction.categoryId.valueOrElse(undefined)"
-          (categoryChange)="setCategoryId($event)"
-        ></category-picker>
+        <wv8-autocomplete
+          [items]="categories"
+          [itemId]="categoryId"
+          [itemTitle]="categoryTitle"
+          [itemIcon]="categoryIcon"
+          [itemChildren]="categoryChildren"
+          placeholder="Select category..."
+          [multiSelect]="false"
+          [canDeselect]="false"
+          [selectedItems]="[recurringTransaction.category.valueOrElse(undefined)]"
+          (selectedItemsChanged)="setCategory($event)"
+        >
+        </wv8-autocomplete>
       </td>
     </tr>
     <tr>
@@ -80,16 +88,8 @@
     <tr>
       <th>Unit</th>
       <td>
-        <nb-select
-          placeholder="Unit"
-          [(selected)]="recurringTransaction.intervalUnit"
-          size="small"
-        >
-          <nb-option
-            *ngFor="let type of intervalUnits | enumToArray"
-            [value]="type.index"
-            >{{ type.name }}</nb-option
-          >
+        <nb-select placeholder="Unit" [(selected)]="recurringTransaction.intervalUnit" size="small">
+          <nb-option *ngFor="let type of intervalUnits | enumToArray" [value]="type.index">{{ type.name }}</nb-option>
         </nb-select>
       </td>
     </tr>
@@ -103,9 +103,7 @@
         ></nb-icon>
       </th>
       <td>
-        <nb-checkbox
-          [(checked)]="recurringTransaction.needsConfirmation"
-        ></nb-checkbox>
+        <nb-checkbox [(checked)]="recurringTransaction.needsConfirmation"></nb-checkbox>
       </td>
     </tr>
     <tr *ngIf="editing">
@@ -118,10 +116,7 @@
         ></nb-icon>
       </th>
       <td>
-        <nb-checkbox
-          [checked]="updateInstances"
-          (checkedChange)="onUpdateInstanceChange($event)"
-        ></nb-checkbox>
+        <nb-checkbox [checked]="updateInstances" (checkedChange)="onUpdateInstanceChange($event)"></nb-checkbox>
       </td>
     </tr>
   </tbody>

@@ -1,0 +1,164 @@
+:host {
+  height: 100%;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  // align-items: flex-start;
+  justify-content: flex-start;
+
+  > * {
+    width: 240px;
+  }
+
+  z-index: 1;
+}
+
+nb-card-header {
+  display: flex;
+
+  align-items: center;
+
+  .card-title {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .toggle-options {
+    display: flex;
+    height: 24px;
+
+    margin-right: 0;
+
+    .toggle-option {
+      padding-left: 8px;
+      padding-right: 8px;
+
+      cursor: pointer;
+
+      color: lightgrey;
+      font-weight: normal;
+
+      &:not(:last-child) {
+        border-right: 1px solid lightgrey;
+      }
+
+      &:last-child {
+        padding-right: 0px;
+      }
+
+      &:hover {
+        color: grey;
+      }
+
+      &.active {
+        color: #3366ff;
+      }
+    }
+  }
+}
+
+.report {
+  flex-grow: 1;
+
+  position: relative;
+
+  margin-top: 8px;
+
+  #net-worth-chart {
+    height: 320px;
+  }
+
+  .by-category-chart-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow-x: visible;
+
+    padding: 0;
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 320px;
+      height: 320px;
+      max-height: 320px;
+      width: 100%;
+
+      .by-category-chart {
+        min-height: 320px;
+        height: 320px;
+        max-height: 320px;
+        width: 100%;
+      }
+    }
+  }
+
+  .no-data {
+    color: grey;
+    font-style: italic;
+  }
+
+  .totals {
+    .total-row {
+      display: flex;
+
+      padding-bottom: 6px;
+
+      &:last-child {
+        padding-bottom: 0;
+      }
+
+      .row-value {
+        flex-grow: 1;
+        text-align: right;
+      }
+
+      &.result {
+        font-weight: bold;
+      }
+    }
+
+    hr {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &.loading {
+    max-height: calc(100vh - 76px - 2.25rem - 32px - 8px - 0.75rem);
+    overflow: hidden;
+
+    nb-card-body {
+      min-height: 200px;
+    }
+  }
+
+  .loading {
+    position: absolute;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    background-color: rgba(150, 150, 150, 0.125);
+
+    i {
+      margin: auto;
+      font-size: 64px;
+    }
+  }
+}

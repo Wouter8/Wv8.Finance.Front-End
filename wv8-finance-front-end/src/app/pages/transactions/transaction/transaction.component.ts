@@ -6,12 +6,12 @@ import { NbDialogService, NbToastrService } from "@nebular/theme";
 import { Maybe } from "@wv8/typescript.core";
 import { ConfirmDialogComponent } from "../../../@theme/components/confirm-dialog/confirm-dialog.component";
 import { ConfirmTransactionComponent } from "../confirm-transaction/confirm-transaction.component";
-import { CreateOrEditTransactionComponent } from '../../../@theme/components/create-or-edit-transaction/create-or-edit-transaction.component';
+import { CreateOrEditTransactionComponent } from "../../../@theme/components/create-or-edit-transaction/create-or-edit-transaction.component";
 
 @Component({
   selector: "transaction",
   templateUrl: "./transaction.component.html",
-  styleUrls: ["./transaction.component.scss"]
+  styleUrls: ["./transaction.component.scss"],
 })
 export class TransactionComponent implements OnInit {
   transaction: Transaction;
@@ -29,9 +29,7 @@ export class TransactionComponent implements OnInit {
       let id = new Maybe<number>(params.id);
       if (id.isSome) {
         try {
-          this.transaction = await this.transactionService.getTransaction(
-            id.value
-          );
+          this.transaction = await this.transactionService.getTransaction(id.value);
         } catch {
           this.toasterService.danger("", "transaction not found");
           this.router.navigateByUrl("/transactions");
@@ -43,7 +41,7 @@ export class TransactionComponent implements OnInit {
   async onDeleteClick() {
     this.dialogService
       .open(ConfirmDialogComponent, {
-        context: { body: `Delete transaction?` }
+        context: { body: `Delete transaction?` },
       })
       .onClose.subscribe(async (confirmed: boolean) => {
         if (confirmed) {
@@ -58,32 +56,28 @@ export class TransactionComponent implements OnInit {
   async onConfirmClick() {
     this.dialogService
       .open(ConfirmTransactionComponent, {
-        context: { transaction: this.transaction.copy() }
+        context: { transaction: this.transaction.copy() },
       })
-      .onClose.subscribe(
-        (data: { success: boolean; transaction: Transaction }) => {
-          if (data.success) {
-            this.transaction = data.transaction;
+      .onClose.subscribe((data: { success: boolean; transaction: Transaction }) => {
+        if (data.success) {
+          this.transaction = data.transaction;
 
-            this.toasterService.success("", "Confirmed transaction");
-          }
+          this.toasterService.success("", "Confirmed transaction");
         }
-      );
+      });
   }
 
   onEditClick() {
     this.dialogService
       .open(CreateOrEditTransactionComponent, {
-        context: { transaction: this.transaction.copy() }
+        context: { transaction: this.transaction.copy() },
       })
-      .onClose.subscribe(
-        (data: { success: boolean; transaction: Transaction }) => {
-          if (data.success) {
-            this.transaction = data.transaction;
+      .onClose.subscribe((data?: { success: boolean; transaction: Transaction }) => {
+        if (data?.success) {
+          this.transaction = data.transaction;
 
-            this.toasterService.success("", "Updated transaction");
-          }
+          this.toasterService.success("", "Updated transaction");
         }
-      );
+      });
   }
 }

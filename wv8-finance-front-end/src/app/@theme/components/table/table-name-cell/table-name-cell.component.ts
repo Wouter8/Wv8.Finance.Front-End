@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { ViewCell } from "ng2-smart-table";
+import { ViewCell } from "angular2-smart-table";
 
 @Component({
   selector: "table-name-cell",
   templateUrl: "./table-name-cell.component.html",
-  styleUrls: ["./table-name-cell.component.scss"]
+  styleUrls: ["./table-name-cell.component.scss"],
 })
 export class TableNameCellComponent<T> implements OnInit, ViewCell {
   @Input()
@@ -46,15 +46,9 @@ export class TableNameCellComponent<T> implements OnInit, ViewCell {
   ngOnInit() {
     this.typedData = this.rowData;
 
-    this.name = this.nameFunction
-      ? this.nameFunction()
-      : this.rowData["description"];
-    this.isDefault = this.isDefaultFunction
-      ? this.isDefaultFunction()
-      : this.rowData["isDefault"];
-    this.isObsolete = this.isObsoleteFunction
-      ? this.isObsoleteFunction()
-      : this.rowData["isObsolete"];
+    this.name = this.nameFunction ? this.nameFunction() : this.rowData["description"];
+    this.isDefault = this.isDefaultFunction ? this.isDefaultFunction() : this.rowData["isDefault"];
+    this.isObsolete = this.isObsoleteFunction ? this.isObsoleteFunction() : this.rowData["isObsolete"];
     this.icon = this.iconFunction ? this.iconFunction() : this.rowData["icon"];
   }
 }

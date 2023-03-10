@@ -1,19 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { ViewCell } from 'ng2-smart-table';
+import { Component, OnInit } from "@angular/core";
+import { ViewCell } from "angular2-smart-table";
 
 @Component({
-  selector: 'table-obsolete-cell',
-  templateUrl: './table-obsolete-cell.component.html',
-  styleUrls: ['./table-obsolete-cell.component.scss']
+  selector: "table-obsolete-cell",
+  templateUrl: "./table-obsolete-cell.component.html",
+  styleUrls: ["./table-obsolete-cell.component.scss"],
 })
 export class TableObsoleteCellComponent implements OnInit, ViewCell {
-  
   value: any;
   rowData: any;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

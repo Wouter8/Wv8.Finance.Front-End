@@ -1,29 +1,27 @@
-<warning
-  *ngIf="warningMessage.isSome"
-  [message]="warningMessage.value"
-  [marginBottom]="8"
-></warning>
+<warning *ngIf="warningMessage.isSome" [message]="warningMessage.value" [marginBottom]="8"></warning>
 <table class="transaction-input-table">
   <tbody>
     <tr>
       <th>Account</th>
       <td>
-        <account-picker
-          [fullWidth]="true"
-          [(accountId)]="transaction.accountId"
-          [onlyNormalAccounts]="true"
-          [disabled]="warningMessage.isSome"
-        ></account-picker>
+        <wv8-autocomplete
+          [items]="accounts"
+          [itemId]="accountId"
+          [itemTitle]="accountTitle"
+          [itemIcon]="accountIcon"
+          placeholder="Select account..."
+          [multiSelect]="false"
+          [canDeselect]="false"
+          [selectedItems]="[transaction.account]"
+          (selectedItemsChanged)="setAccount($event)"
+        >
+        </wv8-autocomplete>
       </td>
     </tr>
     <tr>
       <th>Date</th>
       <td>
-        <date-picker
-          [date]="transaction.date"
-          (dateChange)="dateChanged($event)"
-          [disabled]="warningMessage.isSome"
-        ></date-picker>
+        <date-picker [date]="transaction.date" (dateChange)="dateChanged($event)" [disabled]="warningMessage.isSome"></date-picker>
       </td>
     </tr>
     <tr>
@@ -58,11 +56,7 @@
             [disabled]="warningMessage.isSome"
           />
         </nb-form-field>
-        <div
-          *ngIf="splitwiseIntegrationEnabled && warningMessage.isNone"
-          class="amount-start-split"
-          (click)="toggleSpecifyingSplits()"
-        >
+        <div *ngIf="splitwiseIntegrationEnabled && warningMessage.isNone" class="amount-start-split" (click)="toggleSpecifyingSplits()">
           <span *ngIf="hasSplits">Remove splits...</span>
           <span *ngIf="!hasSplits">Specify splits...</span>
         </div>
@@ -80,11 +74,7 @@
           [disabled]="warningMessage.isSome"
           size="tiny"
         >
-          <nb-option
-            *ngFor="let type of splitTypes | enumToArray"
-            [value]="type.index"
-            >{{ type.name }}</nb-option
-          >
+          <nb-option *ngFor="let type of splitTypes | enumToArray" [value]="type.index">{{ type.name }}</nb-option>
         </nb-select>
       </th>
       <td>
@@ -106,18 +96,10 @@
                 (checkedChange)="calculateSplitAmounts()"
                 [disabled]="warningMessage.isSome"
               ></nb-checkbox>
-              <span class="name" [ngClass]="{ me: split.userId == -1 }">
-                {{ split.name }}</span
-              >
+              <span class="name" [ngClass]="{ me: split.userId == -1 }"> {{ split.name }}</span>
               <div *ngIf="splitType == splitTypes.Stakes" class="stake-input">
                 <div class="counter">
-                  <div
-                    *ngIf="split.stake > 0"
-                    class="minus"
-                    (click)="addToStake(split, -1)"
-                  >
-                    &#8211;
-                  </div>
+                  <div *ngIf="split.stake > 0" class="minus" (click)="addToStake(split, -1)">&#8211;</div>
                   <div
                     class="count"
                     [ngClass]="{
@@ -134,19 +116,11 @@
               <div *ngIf="splitType == splitTypes.Exact" class="exact-input">
                 <nb-form-field>
                   <nb-icon nbPrefix icon="euro-sign" pack="fas"></nb-icon>
-                  <input
-                    type="number"
-                    step="1"
-                    min="0"
-                    placeholder="0,00"
-                    nbInput
-                    fieldSize="tiny"
-                    [(ngModel)]="split.amount"
-                  />
+                  <input type="number" step="1" min="0" placeholder="0,00" nbInput fieldSize="tiny" [(ngModel)]="split.amount" />
                 </nb-form-field>
               </div>
               <span *ngIf="splitType != splitTypes.Exact" class="split-amount">
-                {{ split.amount | currency: "EUR" }}
+                {{ split.amount | currency : "EUR" }}
               </span>
             </td>
           </tr>
@@ -156,27 +130,28 @@
     <tr>
       <th>Category</th>
       <td>
-        <category-picker
-          [fullWidth]="true"
-          [category]="transaction.categoryId.valueOrElse(undefined)"
-          (categoryChange)="setCategoryId($event)"
-        ></category-picker>
+        <wv8-autocomplete
+          [items]="categories"
+          [itemId]="categoryId"
+          [itemTitle]="categoryTitle"
+          [itemIcon]="categoryIcon"
+          [itemChildren]="categoryChildren"
+          placeholder="Select category..."
+          [multiSelect]="false"
+          [canDeselect]="false"
+          [selectedItems]="[transaction.category.valueOrElse(undefined)]"
+          (selectedItemsChanged)="setCategory($event)"
+        >
+        </wv8-autocomplete>
       </td>
     </tr>
     <tr>
       <th>
         Needs confirmation
-        <nb-icon
-          icon="info-outline"
-          nbTooltip="Check this if you don't know the exact date or amount."
-          status="info"
-        ></nb-icon>
+        <nb-icon icon="info-outline" nbTooltip="Check this if you don't know the exact date or amount." status="info"></nb-icon>
       </th>
       <td>
-        <nb-checkbox
-          [disabled]="editing || warningMessage.isSome"
-          [(checked)]="transaction.needsConfirmation"
-        ></nb-checkbox>
+        <nb-checkbox [disabled]="editing || warningMessage.isSome" [(checked)]="transaction.needsConfirmation"></nb-checkbox>
       </td>
     </tr>
   </tbody>

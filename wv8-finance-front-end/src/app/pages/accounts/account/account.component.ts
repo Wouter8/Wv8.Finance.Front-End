@@ -15,7 +15,7 @@ import { CurrencyPipe } from "@angular/common";
 @Component({
   selector: "account",
   templateUrl: "./account.component.html",
-  styleUrls: ["./account.component.scss"]
+  styleUrls: ["./account.component.scss"],
 })
 export class AccountComponent implements OnInit {
   account: Account;
@@ -35,7 +35,7 @@ export class AccountComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.route.params.subscribe(async params => {
+    this.route.params.subscribe(async (params) => {
       let id = new Maybe<number>(params.id);
       if (id.isSome) {
         try {
@@ -66,7 +66,7 @@ export class AccountComponent implements OnInit {
     } else {
       this.dialogService
         .open(ConfirmDialogComponent, {
-          context: { body: `Mark ${this.account.description} obsolete?` }
+          context: { body: `Mark ${this.account.description} obsolete?` },
         })
         .onClose.subscribe(async (confirmed: boolean) => {
           if (confirmed) {
@@ -83,15 +83,13 @@ export class AccountComponent implements OnInit {
   async onEditClick() {
     this.dialogService
       .open(CreateOrEditAccountComponent, {
-        context: { account: this.account.copy() }
+        context: { account: this.account.copy() },
       })
-      .onClose.subscribe(
-        async (data: { success: boolean; account: Account }) => {
-          if (data && data.success) {
-            this.toasterService.success("", "Updated account");
-          }
+      .onClose.subscribe(async (data: { success: boolean; account: Account }) => {
+        if (data && data.success) {
+          this.toasterService.success("", "Updated account");
         }
-      );
+      });
   }
 
   private getChartOptions(report: AccountReport): EChartOption {
@@ -100,13 +98,9 @@ export class AccountComponent implements OnInit {
       tooltip: {
         trigger: "axis",
         formatter: (data) => {
-          let date = this.report.dates[data[0].dataIndex].toIntervalTooltip(
-            this.report.unit
-          );
+          let date = this.report.dates[data[0].dataIndex].toIntervalTooltip(this.report.unit);
 
-          return ChartTooltip.create(date)
-            .addEuroRow(data[0])
-            .render();
+          return ChartTooltip.create(date).addEuroRow(data[0]).render();
         },
       },
       grid: {
@@ -114,7 +108,7 @@ export class AccountComponent implements OnInit {
         right: "0px",
         bottom: "5px",
         top: "5px",
-        containLabel: true
+        containLabel: true,
       },
       xAxis: [
         {
@@ -126,13 +120,7 @@ export class AccountComponent implements OnInit {
         {
           type: "value",
           axisLabel: {
-            formatter: (v) =>
-              this.currencyPipe.transform(
-                Math.abs(v),
-                "EUR",
-                "symbol",
-                "1.0-0"
-              ),
+            formatter: (v) => this.currencyPipe.transform(Math.abs(v), "EUR", "symbol", "1.0-0"),
           },
         },
       ],
@@ -142,10 +130,10 @@ export class AccountComponent implements OnInit {
           type: "line",
           data: report.balances,
           areaStyle: {
-            opacity: 0.5
+            opacity: 0.5,
           },
         },
-      ]
+      ],
     };
   }
 }

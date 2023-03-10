@@ -10,10 +10,10 @@ import {
   NbTooltipModule,
   NbDatepickerModule,
   NbStepperModule,
-  NbFormFieldModule
+  NbFormFieldModule,
 } from "@nebular/theme";
 import { ThemeModule } from "../../@theme/theme.module";
-import { Ng2SmartTableModule } from "ng2-smart-table";
+import { Angular2SmartTableModule } from "angular2-smart-table";
 import { FormsModule } from "@angular/forms";
 import { BudgetsComponent } from "./budgets.component";
 import { BudgetComponent } from "./budget/budget.component";
@@ -27,7 +27,7 @@ import { BudgetsOverviewComponent } from "./budgets-overview/budgets-overview.co
     ThemeModule,
     NbIconModule,
     NbInputModule,
-    Ng2SmartTableModule,
+    Angular2SmartTableModule,
     NbCheckboxModule,
     NbDialogModule.forChild(),
     NbButtonModule,
@@ -35,14 +35,8 @@ import { BudgetsOverviewComponent } from "./budgets-overview/budgets-overview.co
     NbTooltipModule,
     NbDatepickerModule,
     NbStepperModule,
-    NbFormFieldModule
+    NbFormFieldModule,
   ],
-  declarations: [
-    BudgetsComponent,
-    BudgetComponent,
-    CreateOrEditBudgetComponent,
-    BudgetsOverviewComponent
-  ],
-  entryComponents: [CreateOrEditBudgetComponent]
+  declarations: [BudgetsComponent, BudgetComponent, CreateOrEditBudgetComponent, BudgetsOverviewComponent],
 })
 export class BudgetsModule {}

@@ -33,7 +33,7 @@ import { DEFAULT_THEME } from "./styles/theme.default";
 import { COSMIC_THEME } from "./styles/theme.cosmic";
 import { CORPORATE_THEME } from "./styles/theme.corporate";
 import { DARK_THEME } from "./styles/theme.dark";
-import { Ng2SmartTableModule } from "ng2-smart-table";
+import { Angular2SmartTableModule } from "angular2-smart-table";
 import { TableComponent } from "./components/table/table.component";
 import { TableEuroCellComponent } from "./components/table/table-euro-cell/table-euro-cell.component";
 import { TableBooleanCellComponent } from "./components/table/table-boolean-cell/table-boolean-cell.component";
@@ -65,6 +65,7 @@ import { CreateOrEditExpenseComponent } from "./components/create-or-edit-transa
 import { CreateOrEditTransferComponent } from "./components/create-or-edit-transaction/create-or-edit-transfer/create-or-edit-transfer.component";
 import { TableTransactionAmountCellComponent } from "./components/table/table-transaction-amount-cell/table-transaction-amount-cell.component";
 import { WarningComponent } from "./components/warning/warning.component";
+import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -80,7 +81,7 @@ const NB_MODULES = [
   NbCardModule,
   NbIconModule,
   NbEvaIconsModule,
-  Ng2SmartTableModule,
+  Angular2SmartTableModule,
   NbTooltipModule,
   NbPopoverModule,
   NbProgressBarModule,
@@ -125,15 +126,9 @@ const COMPONENTS = [
   TableMaybeDateCellComponent,
   TableTransactionAmountCellComponent,
   WarningComponent,
+  AutocompleteComponent,
 ];
-const PIPES = [
-  CapitalizePipe,
-  PluralPipe,
-  RoundPipe,
-  TimingPipe,
-  NumberWithCommasPipe,
-  EnumToArrayPipe,
-];
+const PIPES = [CapitalizePipe, PluralPipe, RoundPipe, TimingPipe, NumberWithCommasPipe, EnumToArrayPipe];
 const ENTRY_COMPONENTS = [
   TableBooleanCellComponent,
   TableEuroCellComponent,
@@ -154,7 +149,6 @@ const IMPORT_MODULES = [FormsModule];
   imports: [CommonModule, ...NB_MODULES, ...IMPORT_MODULES],
   exports: [CommonModule, ...PIPES, ...COMPONENTS],
   declarations: [...COMPONENTS, ...PIPES],
-  entryComponents: [...ENTRY_COMPONENTS],
 })
 export class ThemeModule {
   static forRoot(): ModuleWithProviders<ThemeModule> {

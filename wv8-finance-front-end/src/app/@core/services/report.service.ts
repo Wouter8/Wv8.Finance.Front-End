@@ -7,10 +7,12 @@ import {
   ICurrentDateReport,
   ICategoryReport,
   IAccountReport,
+  IPeriodReport,
 } from "../data/report";
 import { CurrentDateReport } from "../models/current-date-report.model";
 import { CategoryReport } from "../models/category-report.model";
 import { AccountReport } from "../models/account-report.model";
+import { PeriodReport } from "../models/period-report.model";
 
 @Injectable()
 export class ReportService extends ReportData {
@@ -29,11 +31,7 @@ export class ReportService extends ReportData {
       .toPromise();
   }
 
-  getCategoryReport(
-    categoryId: number,
-    start: Date,
-    end: Date
-  ): Promise<CategoryReport> {
+  getCategoryReport(categoryId: number, start: Date, end: Date): Promise<CategoryReport> {
     const url = `${ReportService.BaseUrl}/category/${categoryId}`;
 
     return this.http
@@ -45,11 +43,7 @@ export class ReportService extends ReportData {
       .toPromise();
   }
 
-  getAccountReport(
-    accountId: number,
-    start: Date,
-    end: Date
-  ): Promise<AccountReport> {
+  getAccountReport(accountId: number, start: Date, end: Date): Promise<AccountReport> {
     const url = `${ReportService.BaseUrl}/account/${accountId}`;
 
     return this.http
@@ -58,6 +52,19 @@ export class ReportService extends ReportData {
         end: end.toDateString(),
       })
       .pipe(map((r) => AccountReport.fromDto(r)))
+      .toPromise();
+  }
+
+  getPeriodReport(start: Date, end: Date, categoryIds: Array<number>): Promise<PeriodReport> {
+    const url = `${ReportService.BaseUrl}`;
+
+    return this.http
+      .post<IPeriodReport>(url, null, {
+        start: start.toDateString(),
+        end: end.toDateString(),
+        categoryIds: categoryIds,
+      })
+      .pipe(map((r) => PeriodReport.fromDto(r)))
       .toPromise();
   }
 }

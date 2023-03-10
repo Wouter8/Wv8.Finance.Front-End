@@ -14,7 +14,7 @@ import {
   NbFormFieldModule,
 } from "@nebular/theme";
 import { ThemeModule } from "../../@theme/theme.module";
-import { Ng2SmartTableModule } from "ng2-smart-table";
+import { Angular2SmartTableModule } from "angular2-smart-table";
 import { FormsModule } from "@angular/forms";
 import { TransactionsOverviewComponent } from "./transactions-overview/transactions-overview.component";
 import { TransactionComponent } from "./transaction/transaction.component";
@@ -36,7 +36,7 @@ import { ImportTransactionsComponent } from "./import-transactions/import-transa
     ThemeModule,
     NbIconModule,
     NbInputModule,
-    Ng2SmartTableModule,
+    Angular2SmartTableModule,
     NbCheckboxModule,
     NbDialogModule.forChild(),
     NbButtonModule,
@@ -60,11 +60,6 @@ import { ImportTransactionsComponent } from "./import-transactions/import-transa
     DeleteRecurringTransactionComponent,
     ConfirmTransactionComponent,
     ImportTransactionsComponent,
-  ],
-  entryComponents: [
-    CreateOrEditRecurringTransactionComponent,
-    DeleteRecurringTransactionComponent,
-    ConfirmTransactionComponent,
   ],
 })
 export class TransactionsModule {}

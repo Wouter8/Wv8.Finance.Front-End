@@ -19,7 +19,7 @@ import {
   NbFormFieldModule,
 } from "@nebular/theme";
 import { ThemeModule } from "../../@theme/theme.module";
-import { Ng2SmartTableModule } from "ng2-smart-table";
+import { Angular2SmartTableModule } from "angular2-smart-table";
 import { FormsModule } from "@angular/forms";
 import { NgxEchartsModule } from "ngx-echarts";
 
@@ -30,7 +30,7 @@ import { NgxEchartsModule } from "ngx-echarts";
     ThemeModule,
     NbIconModule,
     NbInputModule,
-    Ng2SmartTableModule,
+    Angular2SmartTableModule,
     NbTreeGridModule,
     NbCheckboxModule,
     NbDialogModule.forChild(),
@@ -42,12 +42,6 @@ import { NgxEchartsModule } from "ngx-echarts";
     NbFormFieldModule,
     NgxEchartsModule,
   ],
-  declarations: [
-    CategoryComponent,
-    CategoriesOverviewComponent,
-    CreateOrEditCategoryComponent,
-    CategoriesComponent,
-  ],
-  entryComponents: [CreateOrEditCategoryComponent],
+  declarations: [CategoryComponent, CategoriesOverviewComponent, CreateOrEditCategoryComponent, CategoriesComponent],
 })
 export class CategoriesModule {}

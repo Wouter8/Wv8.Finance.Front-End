@@ -8,7 +8,7 @@ import { Account } from "./account.model";
 export class BaseTransaction {
   id: number;
   description: string;
-  type: TransactionType;
+  type: TransactionType = TransactionType.Expense;
   amount: number;
   personalAmount: number;
   categoryId: Maybe<number> = Maybe.none();

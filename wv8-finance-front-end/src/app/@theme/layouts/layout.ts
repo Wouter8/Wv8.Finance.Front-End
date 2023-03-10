@@ -5,7 +5,7 @@ import {
   NbMenuService,
   NbThemeService,
   NbMediaBreakpointsService,
-  NbSidebarComponent
+  NbSidebarComponent,
 } from "@nebular/theme";
 import { map, takeUntil } from "rxjs/operators";
 import { MenuItemsService } from "../../@core/utils/menu-items.service";
@@ -19,28 +19,15 @@ import { MenuItemsService } from "../../@core/utils/menu-items.service";
         <ngx-header></ngx-header>
       </nb-layout-header>
 
-      <nb-sidebar
-        #sidebar
-        class="menu-sidebar"
-        tag="menu-sidebar"
-        responsive
-        start
-      >
-        <nb-menu
-          [items]="menuItemsService.menuItems"
-          [autoCollapse]="true"
-        ></nb-menu>
+      <nb-sidebar #sidebar class="menu-sidebar" tag="menu-sidebar" responsive start>
+        <nb-menu [items]="menuItemsService.menuItems" [autoCollapse]="true"></nb-menu>
       </nb-sidebar>
 
       <nb-layout-column>
         <ng-content select="router-outlet"></ng-content>
       </nb-layout-column>
-
-      <nb-layout-footer fixed>
-        <ngx-footer></ngx-footer>
-      </nb-layout-footer>
     </nb-layout>
-  `
+  `,
 })
 export class LayoutComponent implements OnInit, OnDestroy {
   @ViewChild("sidebar", { static: true })
@@ -62,15 +49,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.menuService.collapseAll();
-        if (
-          document.documentElement.clientWidth < sm &&
-          this.sidebar.expanded
-        ) {
+        if (document.documentElement.clientWidth < sm && this.sidebar.expanded) {
           this.toggleSidebar();
-        } else if (
-          document.documentElement.clientWidth < xl &&
-          this.sidebar.expanded
-        ) {
+        } else if (document.documentElement.clientWidth < xl && this.sidebar.expanded) {
           this.toggleSidebar();
         }
       });
@@ -78,7 +59,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.menuService
       .onSubmenuToggle()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(a => {
+      .subscribe((a) => {
         // If sidebar is not open, and submenu gets clicked which is expanded, the submenu should not close.
         // item.expanded has already changed (so false means that it has just closed)
         if (!this.sidebar.expanded && !a.item.expanded) {

@@ -1,25 +1,12 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  Input,
-  Output,
-  EventEmitter
-} from "@angular/core";
-import {
-  NbRangepickerComponent,
-  NbDateService,
-  NbCalendarRange,
-  NbCalendarRangeComponent
-} from "@nebular/theme";
+import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter, OnChanges } from "@angular/core";
+import { NbRangepickerComponent, NbDateService, NbCalendarRange, NbCalendarRangeComponent } from "@nebular/theme";
 
 @Component({
   selector: "period-picker",
   templateUrl: "./period-picker.component.html",
-  styleUrls: ["./period-picker.component.scss"]
+  styleUrls: ["./period-picker.component.scss"],
 })
-export class PeriodPickerComponent implements OnInit {
+export class PeriodPickerComponent implements OnChanges {
   @ViewChild("periodPicker", { static: true })
   periodPicker: NbRangepickerComponent<Date>;
   @ViewChild("periodPickerInput", { static: true })
@@ -40,6 +27,8 @@ export class PeriodPickerComponent implements OnInit {
   @Input()
   fieldSize: "small" | "normal" = "small";
   @Input()
+  notAfter: Date = undefined;
+  @Input()
   showClearButton: boolean = false;
 
   @Output()
@@ -49,38 +38,42 @@ export class PeriodPickerComponent implements OnInit {
 
   constructor(private dateService: NbDateService<Date>) {}
 
-  ngOnInit() {
-    if (!this.setInitialValue) return;
-
-    if (this.start) {
+  ngOnChanges() {
+    if (this.start && this.end) {
       this.range = {
         start: this.start,
-        end: this.end
+        end: this.end,
       };
-    } else {
+    } else if (this.setInitialValue) {
       let today = new Date();
       this.range = {
         start: this.dateService.getMonthStart(today),
-        end: this.dateService.getMonthEnd(today)
+        end: this.dateService.getMonthEnd(today),
       };
     }
 
     this.periodPicker.range = this.range;
-    this.onSetPeriod(this.range);
+
+    this.updateText();
   }
 
-  onSetPeriod(event: NbCalendarRange<Date>) {
+  updateText() {
     let inputText = "";
-    if (event.start) {
-      inputText += this.dateService.format(event.start, "d MMM yy");
+    if (this.range?.start) {
+      inputText += this.dateService.format(this.range.start, "d MMM yy");
     }
-    if (event.end) {
+    if (this.range?.end) {
       inputText += " - ";
-      inputText += this.dateService.format(event.end, "d MMM yy");
+      inputText += this.dateService.format(this.range.end, "d MMM yy");
     }
     setTimeout(() => {
       this.periodPickerInput.nativeElement.value = inputText;
     });
+  }
+
+  onSetPeriod(event: NbCalendarRange<Date>) {
+    this.range = event;
+    this.updateText();
 
     var startSet = event.start != undefined && event.start != null;
     var endSet = event.end != undefined && event.end != null;

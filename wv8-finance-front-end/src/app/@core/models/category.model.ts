@@ -12,7 +12,7 @@ export class Category {
   icon: IIcon = {
     name: "home",
     pack: "fas",
-    color: "#070ab5"
+    color: "#070ab5",
   };
   children: Category[];
 
@@ -28,19 +28,19 @@ export class Category {
     instance.id = dto.id;
     instance.description = dto.description;
     instance.isObsolete = dto.isObsolete;
-    instance.expectedMonthlyAmount = Maybe.deserialize(dto.expectedMonthlyAmount).map(a => Math.abs(a));
-    instance.parentCategoryId = Maybe.deserialize(dto.parentCategoryId);
-    instance.parentCategory = Maybe.deserialize(dto.parentCategory).map(c =>
-      Category.fromDto(c)
+    instance.expectedMonthlyAmount = Maybe.deserialize(dto.expectedMonthlyAmount).map((a) =>
+      Math.abs(a)
     );
+    instance.parentCategoryId = Maybe.deserialize(dto.parentCategoryId);
+    instance.parentCategory = Maybe.deserialize(dto.parentCategory).map((c) => Category.fromDto(c));
     instance.icon = dto.icon
       ? {
           name: dto.icon.name,
           pack: dto.icon.pack,
-          color: dto.icon.color
+          color: dto.icon.color,
         }
       : undefined;
-    instance.children = dto.children.map(c => Category.fromDto(c));
+    instance.children = dto.children.map((c) => Category.fromDto(c));
 
     return instance;
   }
@@ -51,15 +51,15 @@ export class Category {
     instance.id = this.id;
     instance.description = this.description;
     instance.isObsolete = this.isObsolete;
-    instance.expectedMonthlyAmount = this.expectedMonthlyAmount.map(a => a);
-    instance.parentCategoryId = this.parentCategoryId.map(id => id);
-    instance.parentCategory = this.parentCategory.map(c => c.copy());
+    instance.expectedMonthlyAmount = this.expectedMonthlyAmount.map((a) => a);
+    instance.parentCategoryId = this.parentCategoryId.map((id) => id);
+    instance.parentCategory = this.parentCategory.map((c) => c.copy());
     instance.icon = {
       name: this.icon.name,
       pack: this.icon.pack,
-      color: this.icon.color
+      color: this.icon.color,
     };
-    instance.children = this.children.map(c => c.copy());
+    instance.children = this.children.map((c) => c.copy());
 
     return instance;
   }

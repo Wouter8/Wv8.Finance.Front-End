@@ -2,16 +2,16 @@ import { Component, OnInit, ViewChild, Input, OnChanges } from "@angular/core";
 import { Router } from "@angular/router";
 import { TableComponent } from "../table/table.component";
 import { Budget } from "../../../@core/models/budget.model";
-import { CustomTableSettings, Columns } from "../table/table-settings.model";
 import { TableNameCellComponent } from "../table/table-name-cell/table-name-cell.component";
 import { TableEuroCellComponent } from "../table/table-euro-cell/table-euro-cell.component";
 import { TableDateCellComponent } from "../table/table-date-cell/table-date-cell.component";
 import { TableProgressCellComponent } from "../table/table-progress-cell/table-progress-cell.component";
+import { IColumns, IColumnType, Settings } from "angular2-smart-table";
 
 @Component({
   selector: "budgets-table",
   templateUrl: "./budgets-table.component.html",
-  styleUrls: ["./budgets-table.component.scss"]
+  styleUrls: ["./budgets-table.component.scss"],
 })
 export class BudgetsTableComponent implements OnInit, OnChanges {
   @ViewChild("table", { static: true })
@@ -41,58 +41,56 @@ export class BudgetsTableComponent implements OnInit, OnChanges {
     this.table.setData(this.budgets);
   }
 
-  private getTableSettings(): CustomTableSettings<Budget> {
-    let columns: Columns = {};
+  private getTableSettings(): Settings {
+    let columns: IColumns = {};
     columns["category"] = {
       title: "Category",
-      type: "custom",
+      type: IColumnType.Custom,
       renderComponent: TableNameCellComponent,
-      sort: false,
+      isSortable: false,
 
       onComponentInitFunction: (instance: TableNameCellComponent<Budget>) => {
         instance.iconSize = "small";
-        instance.nameFunction = () =>
-          instance.typedData.category.getCompleteName();
+        instance.nameFunction = () => instance.typedData.category.getCompleteName();
         instance.iconFunction = () => instance.typedData.category.icon;
-      }
+      },
     };
     columns["amount"] = {
       title: "Amount",
-      type: "custom",
+      type: IColumnType.Custom,
       renderComponent: TableEuroCellComponent,
-      sort: false
+      isSortable: false,
     };
     if (this.showDates) {
       columns["startDate"] = {
         title: "Start Date",
-        type: "custom",
+        type: IColumnType.Custom,
         renderComponent: TableDateCellComponent,
-        sort: false
+        isSortable: false,
       };
       columns["endDate"] = {
         title: "End Date",
-        type: "custom",
+        type: IColumnType.Custom,
         renderComponent: TableDateCellComponent,
-        sort: false
+        isSortable: false,
       };
     }
     columns["spentPercentage"] = {
       title: "Spent",
-      type: "custom",
+      type: IColumnType.Custom,
       renderComponent: TableProgressCellComponent,
-      sort: false,
+      isSortable: false,
       onComponentInitFunction: (instance: TableProgressCellComponent) => {
         instance.invertStatus = true;
-      }
+      },
     };
     return {
       columns,
-      hideFilter: true,
-      clickable: true,
+      hideSubHeader: true,
       rowClassFunction: (row: Budget) => {
         let classes: string[] = [];
         return classes;
-      }
+      },
     };
   }
 }

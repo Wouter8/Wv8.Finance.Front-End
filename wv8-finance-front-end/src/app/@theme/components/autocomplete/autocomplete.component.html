@@ -1,0 +1,53 @@
+<div class="autocomplete" #autocomplete>
+  <input
+    type="text"
+    nbInput
+    fieldSize="small"
+    fullWidth
+    [(ngModel)]="inputText"
+    [placeholder]="placeholder"
+    #input
+    (focus)="onFocus()"
+    (click)="dropdownOpen = true; scrollToFocusedItem()"
+    (input)="debouncedFilterItems()"
+    (keydown)="onKeyDown($event)"
+  />
+  <nb-icon
+    *ngIf="canDeselect"
+    nbTooltip="Clear"
+    nbTooltipPlacement="right"
+    class="clickable"
+    id="clear-input"
+    icon="close-circle-outline"
+    #clearIcon
+    (click)="clearSelectedItems()"
+  ></nb-icon>
+
+  <div class="dropdown" [ngClass]="{ open: dropdownOpen }" #dropdown>
+    <div *ngIf="filteredItems.length === 0" class="no-items">
+      <span> No items to show...</span>
+    </div>
+    <div
+      *ngFor="let acItem of filteredItems; let index = index"
+      class="item"
+      [ngClass]="{
+        focused: focusedIndex.isSome && focusedIndex.value == index,
+        child: acItem.isChild
+      }"
+      (click)="selectItem(acItem)"
+    >
+      <div class="checkbox-container">
+        <nb-checkbox class="checkbox" [checked]="isSelected(acItem.item)"></nb-checkbox>
+      </div>
+      <div *ngIf="itemIcon.isSome" class="icon">
+        <wv8-icon-with-background
+          [icon]="itemIcon.value(acItem.item).name"
+          [pack]="itemIcon.value(acItem.item).pack"
+          [color]="itemIcon.value(acItem.item).color"
+          size="small"
+        ></wv8-icon-with-background>
+      </div>
+      <div class="title">{{ itemTitle(acItem.item) }}</div>
+    </div>
+  </div>
+</div>

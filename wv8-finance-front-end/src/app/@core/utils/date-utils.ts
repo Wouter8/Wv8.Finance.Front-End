@@ -17,7 +17,8 @@ export class DateUtils {
 
   private static overwriteToDateString() {
     Date.prototype.toDateString = function () {
-      return `${this.getMonth() + 1}/${this.getDate()}/${this.getFullYear()}`;
+      const datepipe: DatePipe = new DatePipe("nl-NL");
+      return datepipe.transform(this, "yyyy-MM-dd");
     };
   }
 
