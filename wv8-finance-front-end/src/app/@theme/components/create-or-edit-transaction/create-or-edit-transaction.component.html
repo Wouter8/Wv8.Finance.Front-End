@@ -13,9 +13,11 @@
       >
         <create-or-edit-expense
           #expenseTabComponent
-          *ngIf="!editing || transaction.type === transactionTypes.Expense"
+          *ngIf="initialized && (!editing || transaction.type === transactionTypes.Expense)"
           [transaction]="transaction"
           [editing]="editing"
+          [categories]="categories"
+          [accounts]="accounts"
         >
         </create-or-edit-expense>
       </nb-tab>
@@ -27,9 +29,11 @@
         [disabled]="editing && transaction.type != transactionTypes.Income"
       >
         <create-or-edit-income
-          *ngIf="!editing || transaction.type === transactionTypes.Income"
+          *ngIf="initialized && (!editing || transaction.type === transactionTypes.Income)"
           [transaction]="transaction"
           [editing]="editing"
+          [categories]="categories"
+          [accounts]="accounts"
         >
         </create-or-edit-income>
       </nb-tab>
@@ -41,9 +45,10 @@
         [disabled]="editing && transaction.type != transactionTypes.Transfer"
       >
         <create-or-edit-transfer
-          *ngIf="!editing || transaction.type === transactionTypes.Transfer"
+          *ngIf="initialized && (!editing || transaction.type === transactionTypes.Transfer)"
           [transaction]="transaction"
           [editing]="editing"
+          [accounts]="accounts"
         >
         </create-or-edit-transfer>
       </nb-tab>

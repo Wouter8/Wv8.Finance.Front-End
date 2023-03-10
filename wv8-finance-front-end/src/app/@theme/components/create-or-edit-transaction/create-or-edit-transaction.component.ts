@@ -22,6 +22,8 @@ import { Maybe } from "@wv8/typescript.core";
 import { InputTransaction } from "../../../@core/datatransfer/input-transaction";
 import { CreateOrEditExpenseComponent } from "./create-or-edit-expense/create-or-edit-expense.component";
 import { AccountType } from "../../../@core/enums/account-type.enum";
+import { Account } from "../../../@core/models/account.model";
+import { AccountData } from "../../../@core/data/account";
 
 @Component({
   selector: "create-or-edit-transaction",
@@ -42,20 +44,25 @@ export class CreateOrEditTransactionComponent implements OnInit {
   @Input()
   transaction: Transaction;
 
+  initialized = false;
+
   editing = false;
   header: string = "Creating transaction";
 
   transactionTypes = TransactionType;
-  categories: Category[];
+  categories: Category[] = [];
+  accounts: Account[] = [];
 
   constructor(
     protected dialogRef: NbDialogRef<CreateOrEditTransactionComponent>,
     private transactionService: TransactionData,
     private toasterService: NbToastrService,
+    private accountService: AccountData,
+    private categoryService: CategoryData,
     private dateService: NbDateService<Date>
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     if (this.transaction) {
       this.editing = true;
       this.header = `Editing transaction`;
@@ -79,12 +86,23 @@ export class CreateOrEditTransactionComponent implements OnInit {
       this.transaction.categoryId = Maybe.none();
       this.transaction.receivingAccountId = Maybe.none();
     }
+    this.accounts = await this.accountService.getAccounts(false, Maybe.none());
+    this.categories = await this.categoryService.getCategories(false, true);
+
+    this.initialized = true;
   }
 
   onTypeChange(selectedTab: NbTabComponent) {
     if (this.editing) return;
 
+    const oldType = this.transaction.type;
     this.transaction.type = this.transactionTypes[selectedTab.tabTitle];
+
+    const shouldClear = !(
+      (this.transaction.type === TransactionType.Expense && oldType === TransactionType.Income) ||
+      (this.transaction.type === TransactionType.Income && oldType === TransactionType.Expense)
+    );
+    if (!shouldClear) return;
 
     switch (this.transaction.type) {
       case TransactionType.Expense:
@@ -108,21 +126,12 @@ export class CreateOrEditTransactionComponent implements OnInit {
     if (!this.transaction.fullyEditable) {
       if (this.transaction.type == TransactionType.Transfer) {
         if (this.transaction.account.type == AccountType.Splitwise) {
-          await this.transactionService.updateTransactionReceiver(
-            this.transaction.id,
-            this.transaction.receivingAccountId.value
-          );
+          await this.transactionService.updateTransactionReceiver(this.transaction.id, this.transaction.receivingAccountId.value);
         } else {
-          await this.transactionService.updateTransactionSender(
-            this.transaction.id,
-            this.transaction.accountId
-          );
+          await this.transactionService.updateTransactionSender(this.transaction.id, this.transaction.accountId);
         }
       } else {
-        await this.transactionService.updateTransactionCategory(
-          this.transaction.id,
-          this.transaction.categoryId.value
-        );
+        await this.transactionService.updateTransactionCategory(this.transaction.id, this.transaction.categoryId.value);
       }
       this.dialogRef.close({ success: true, transaction: this.transaction });
       return;
@@ -130,21 +139,15 @@ export class CreateOrEditTransactionComponent implements OnInit {
 
     let errors = this.validate().reverse();
     if (errors.length > 0) {
-      errors.map((e) => this.toasterService.warning(e, "Incorrect data"));
+      errors.map(e => this.toasterService.warning(e, "Incorrect data"));
       return;
     }
 
-    var amount =
-      this.transaction.type == TransactionType.Expense
-        ? -this.transaction.amount
-        : this.transaction.amount;
+    var amount = this.transaction.type == TransactionType.Expense ? -this.transaction.amount : this.transaction.amount;
 
     var splitDetails =
-      this.transaction.type == TransactionType.Expense &&
-      this.expenseTabComponent.hasSplits
-        ? this.expenseTabComponent.splits
-            .filter((s) => s.userId !== -1 && s.amount > 0)
-            .map((s) => s.asInput())
+      this.transaction.type == TransactionType.Expense && this.expenseTabComponent.hasSplits
+        ? this.expenseTabComponent.splits.filter(s => s.userId !== -1 && s.amount > 0).map(s => s.asInput())
         : [];
 
     let input = new InputTransaction(
@@ -160,10 +163,7 @@ export class CreateOrEditTransactionComponent implements OnInit {
     );
 
     if (this.editing) {
-      this.transaction = await this.transactionService.updateTransaction(
-        this.transaction.id,
-        input
-      );
+      this.transaction = await this.transactionService.updateTransaction(this.transaction.id, input);
       this.dialogRef.close({ success: true, transaction: this.transaction });
     } else {
       this.transaction = await this.transactionService.createTransaction(input);
@@ -171,36 +171,24 @@ export class CreateOrEditTransactionComponent implements OnInit {
     }
   }
 
-  setReceivingAccountId(id: number) {
-    this.transaction.receivingAccountId = new Maybe(id);
-  }
-
   private validate() {
     let messages: string[] = [];
 
-    if (this.transaction.type === TransactionType.Expense)
-      messages = messages.concat(this.expenseTabComponent.validate());
+    if (this.transaction.type === TransactionType.Expense) messages = messages.concat(this.expenseTabComponent.validate());
 
     if (!this.transaction.accountId) messages.push("Select an account.");
     if (!this.transaction.date) messages.push("Select a date.");
-    if (
-      !this.transaction.description ||
-      this.transaction.description.trim().length < 3
-    )
-      messages.push("Enter a description.");
+    if (!this.transaction.description || this.transaction.description.trim().length < 3) messages.push("Enter a description.");
 
-    if (!this.transaction.amount || this.transaction.amount <= 0)
-      messages.push("Enter a positive amount.");
+    if (!this.transaction.amount || this.transaction.amount <= 0) messages.push("Enter a positive amount.");
 
     switch (this.transaction.type) {
       case TransactionType.Expense:
       case TransactionType.Income:
-        if (this.transaction.categoryId.isNone)
-          messages.push("No category selected.");
+        if (this.transaction.categoryId.isNone) messages.push("No category selected.");
         break;
       case TransactionType.Transfer:
-        if (this.transaction.receivingAccountId.isNone)
-          messages.push("No receiver selected.");
+        if (this.transaction.receivingAccountId.isNone) messages.push("No receiver selected.");
         break;
     }
 

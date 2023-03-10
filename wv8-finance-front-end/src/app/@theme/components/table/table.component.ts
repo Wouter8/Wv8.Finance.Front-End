@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, Input } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter, ViewChild, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { TableSettings, CustomTableSettings, Pager } from "./table-settings.model";
 import { LocalDataSource } from "ng2-smart-table";
 import { Maybe } from "@wv8/typescript.core";
@@ -9,7 +9,7 @@ import { TablePagination } from "./table-pagination-model";
   templateUrl: "./table.component.html",
   styleUrls: ["./table.component.scss"],
 })
-export class TableComponent<T> implements OnInit {
+export class TableComponent<T> implements OnInit, OnChanges {
   @ViewChild("table", { static: true })
   table: Ng2SmartTable;
 
@@ -43,10 +43,11 @@ export class TableComponent<T> implements OnInit {
   };
 
   constructor() {}
-
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges): void {
     this.currentPage = this.initialPage;
   }
+
+  ngOnInit() {}
 
   goToPage(i: number) {
     this.currentPage = i;

@@ -18,6 +18,8 @@ import { TransactionType } from "../../../@core/enums/transaction-type.enum";
 import { AccountData } from "../../../@core/data/account";
 import { CreateOrEditTransactionComponent } from "../../../@theme/components/create-or-edit-transaction/create-or-edit-transaction.component";
 import { debounce } from "../../../@core/utils/debounce";
+import { Category } from "../../../@core/models/category.model";
+import { CategoryData } from "../../../@core/data/category";
 
 @Component({
   selector: "transactions-overview",
@@ -28,11 +30,13 @@ export class TransactionsOverviewComponent implements OnInit {
   transactionGroup: TransactionGroup = undefined;
 
   accounts: Account[] = [];
+  categories: Category[] = [];
+  flatCategories: Category[] = [];
   transactionTypes = TransactionType;
 
   descriptionFilter: string = undefined;
-  categoryFilter: number = undefined;
-  accountFilter: number = undefined;
+  categoryFilter: Category = undefined;
+  accountFilter: Account = undefined;
   rangeFilter: NbCalendarRange<Date> = undefined;
   typeFilter: TransactionType = undefined;
   initializedFilters: boolean = false;
@@ -47,6 +51,7 @@ export class TransactionsOverviewComponent implements OnInit {
   constructor(
     private transactionservice: TransactionData,
     private accountService: AccountData,
+    private categoryService: CategoryData,
     private router: Router,
     private route: ActivatedRoute,
     private dialogService: NbDialogService,
@@ -55,27 +60,31 @@ export class TransactionsOverviewComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.accounts = await this.accountService.getAccounts(true, Maybe.none());
-    let params = this.route.snapshot.queryParamMap;
-    if (params.has("periodStart") && params.has("periodEnd")) {
-      this.rangeFilter = {
-        start: new Date(params.get("periodStart")),
-        end: new Date(params.get("periodEnd")),
-      };
-    } else {
-      this.rangeFilter = {
-        start: undefined,
-        end: undefined,
-      };
-    }
-    if (params.has("account")) this.accountFilter = parseInt(params.get("account"));
-    if (params.has("category")) this.categoryFilter = parseInt(params.get("category"));
-    if (params.has("description")) this.descriptionFilter = params.get("description");
-    if (params.has("type")) this.typeFilter = parseInt(params.get("type"));
-    if (params.has("page")) this.pageNumber = parseInt(params.get("page"));
-    this.initializedFilters = true;
-    // TODO: Filter components are not propertly updated if set by the lines above (UI does not reflect the value)
-    this.loadData();
+    this.accounts = await this.accountService.getAccounts(false, Maybe.none());
+    this.categories = await this.categoryService.getCategories(false, true);
+    this.flatCategories = this.categories.concat(...this.categories.map(c => c.children));
+    this.route.queryParamMap.subscribe(params => {
+      if (params.has("periodStart") && params.has("periodEnd")) {
+        this.rangeFilter = {
+          start: new Date(params.get("periodStart")),
+          end: new Date(params.get("periodEnd")),
+        };
+      } else {
+        this.rangeFilter = {
+          start: undefined,
+          end: undefined,
+        };
+      }
+      this.accountFilter = params.has("account") ? this.accounts.find(a => a.id === parseInt(params.get("account"))) : undefined;
+      this.categoryFilter = params.has("category") ? this.flatCategories.find(c => c.id === parseInt(params.get("category"))) : undefined;
+      this.descriptionFilter = params.has("description") ? params.get("description") : undefined;
+      this.typeFilter = params.has("type") ? parseInt(params.get("type")) : undefined;
+      this.pageNumber = params.has("page") ? parseInt(params.get("page")) : 1;
+      // TODO: Filter components are not propertly updated if set by the lines above (UI does not reflect the value)
+      this.loadData();
+      this.initializedFilters = true;
+      this.setQueryParameters();
+    });
   }
 
   onClickAdd(event: MouseEvent) {
@@ -97,8 +106,8 @@ export class TransactionsOverviewComponent implements OnInit {
       queryParams.periodStart = this.rangeFilter.start.toDateString();
       queryParams.periodEnd = this.rangeFilter.end.toDateString();
     }
-    if (this.accountFilter) queryParams.account = this.accountFilter;
-    if (this.categoryFilter) queryParams.category = this.categoryFilter;
+    if (this.accountFilter) queryParams.account = this.accountFilter.id;
+    if (this.categoryFilter) queryParams.category = this.categoryFilter.id;
     if (this.descriptionFilter) queryParams.description = this.descriptionFilter;
     if (this.typeFilter) queryParams.type = this.typeFilter;
     queryParams.page = this.pageNumber; // TODO: Hashtag instead of query param?
@@ -110,10 +119,10 @@ export class TransactionsOverviewComponent implements OnInit {
     this.pageNumber = newPageNumber;
   }
 
-  async filter(page: number) {
+  filter(page: number) {
     this.pageNumber = page;
     this.descriptionFilter = this.descriptionFilter && this.descriptionFilter.trim().length > 0 ? this.descriptionFilter.trim() : undefined;
-    await this.loadData();
+    this.setQueryParameters();
   }
 
   onSetPeriod(event: NbCalendarRange<Date>) {
@@ -124,7 +133,6 @@ export class TransactionsOverviewComponent implements OnInit {
   public debouncedFilter = debounce(this.filter.bind(this));
 
   private async loadData() {
-    this.setQueryParameters();
     let range = {
       start: undefined,
       end: undefined,
@@ -137,9 +145,9 @@ export class TransactionsOverviewComponent implements OnInit {
     let debounceNumber = ++this.debounceCounter;
     let response = await this.transactionservice.getTransactionsByFilter(
       new Maybe(this.typeFilter),
-      new Maybe(this.accountFilter),
+      new Maybe(this.accountFilter?.id),
       new Maybe(this.descriptionFilter),
-      new Maybe(this.categoryFilter),
+      new Maybe(this.categoryFilter?.id),
       new Maybe(range.start),
       new Maybe(range.end),
       (this.pageNumber - 1) * this.rowsPerPage,
@@ -154,4 +162,31 @@ export class TransactionsOverviewComponent implements OnInit {
 
     this.transactionGroup = response;
   }
+
+  public categoryFilterChanged(categories: Array<Category>) {
+    if (categories.length === 1) {
+      this.categoryFilter = categories[0];
+    } else {
+      this.categoryFilter = null;
+    }
+    this.filter(1);
+  }
+
+  public accountFilterChanged(accounts: Array<Account>) {
+    if (accounts.length === 1) {
+      this.accountFilter = accounts[0];
+    } else {
+      this.accountFilter = undefined;
+    }
+    this.filter(1);
+  }
+
+  public categoryId = (c: Category) => c.id;
+  public categoryTitle = (c: Category) => c.description;
+  public categoryIcon = Maybe.some((c: Category) => c.icon);
+  public categoryChildren = Maybe.some((c: Category) => c.children);
+
+  public accountId = (a: Account) => a.id;
+  public accountTitle = (a: Account) => a.description;
+  public accountIcon = Maybe.some((a: Account) => a.icon);
 }

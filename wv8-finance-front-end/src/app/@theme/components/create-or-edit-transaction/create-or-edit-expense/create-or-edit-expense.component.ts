@@ -7,6 +7,8 @@ import { SplitCalculaterService } from "../../../../@core/services/split-calcula
 import { ISplitwiseData } from "../../../../@core/data/splitwise";
 import { SplitwiseUser } from "../../../../@core/models/splitwise-user.model";
 import { environment } from "../../../../../environments/environment";
+import { Account } from "../../../../@core/models/account.model";
+import { Category } from "../../../../@core/models/category.model";
 
 @Component({
   selector: "create-or-edit-expense",
@@ -16,6 +18,8 @@ import { environment } from "../../../../../environments/environment";
 export class CreateOrEditExpenseComponent implements OnInit {
   @Input() transaction: Transaction;
   @Input() editing: boolean;
+  @Input() accounts: Account[];
+  @Input() categories: Category[];
 
   warningMessage: Maybe<string> = Maybe.none();
 
@@ -27,10 +31,7 @@ export class CreateOrEditExpenseComponent implements OnInit {
 
   splitwiseUsers: SplitwiseUser[];
 
-  constructor(
-    private splitwiseService: ISplitwiseData,
-    private calculateService: SplitCalculaterService
-  ) {}
+  constructor(private splitwiseService: ISplitwiseData, private calculateService: SplitCalculaterService) {}
 
   async ngOnInit() {
     this.splitwiseIntegrationEnabled = environment.splitwiseIntegrationEnabled;
@@ -39,15 +40,11 @@ export class CreateOrEditExpenseComponent implements OnInit {
     if (this.hasSplits) {
       await this.loadSplitwiseUsers();
 
-      let existingSplitwiseUserIds = this.splitwiseUsers.map((u) => u.id);
-      let splitUsersExist = this.transaction.splitDetails.every((sd) =>
-        existingSplitwiseUserIds.includes(sd.splitwiseUserId)
-      );
+      let existingSplitwiseUserIds = this.splitwiseUsers.map(u => u.id);
+      let splitUsersExist = this.transaction.splitDetails.every(sd => existingSplitwiseUserIds.includes(sd.splitwiseUserId));
       this.transaction.fullyEditable = this.transaction.fullyEditable && splitUsersExist;
       if (!this.transaction.fullyEditable) {
-        this.warningMessage = Maybe.some(
-          "Only the category of this transaction is editable.\nUpdate the other properties in Splitwise."
-        );
+        this.warningMessage = Maybe.some("Only the category of this transaction is editable.\nUpdate the other properties in Splitwise.");
       }
 
       this.splits = this.calculateService.toSpecifications(
@@ -59,7 +56,7 @@ export class CreateOrEditExpenseComponent implements OnInit {
       this.splitType = this.calculateService.getSplitType(
         this.transaction.amount,
         this.transaction.personalAmount,
-        this.splits.map((s) => s.amount)
+        this.splits.map(s => s.amount)
       );
     }
   }
@@ -68,8 +65,14 @@ export class CreateOrEditExpenseComponent implements OnInit {
     this.transaction.date = new Date(date);
   }
 
-  setCategoryId(id: number) {
-    this.transaction.categoryId = new Maybe(id);
+  setAccount(account: Account[]) {
+    this.transaction.account = account[0];
+    this.transaction.accountId = account[0].id;
+  }
+
+  setCategory(category: Category[]) {
+    this.transaction.category = new Maybe(category[0]);
+    this.transaction.categoryId = new Maybe(category[0].id);
   }
 
   async toggleSpecifyingSplits() {
@@ -84,7 +87,7 @@ export class CreateOrEditExpenseComponent implements OnInit {
     this.splitwiseUsers = await this.splitwiseService.getSplitwiseUsers();
 
     let me = new SplitSpecification(-1, "Me", 0);
-    this.splits = this.splitwiseUsers.map((u) => new SplitSpecification(u.id, u.name, 0));
+    this.splits = this.splitwiseUsers.map(u => new SplitSpecification(u.id, u.name, 0));
     this.splits.unshift(me);
   }
 
@@ -125,9 +128,17 @@ export class CreateOrEditExpenseComponent implements OnInit {
 
     sumSplits = Math.round(sumSplits * 100) / 100;
 
-    if (sumSplits !== this.transaction.amount)
-      return ["The sum of the splits must be equal to the transaction amount."];
+    if (sumSplits !== this.transaction.amount) return ["The sum of the splits must be equal to the transaction amount."];
 
     return [];
   }
+
+  public categoryId = (c: Category) => c.id;
+  public categoryTitle = (c: Category) => c.description;
+  public categoryIcon = Maybe.some((c: Category) => c.icon);
+  public categoryChildren = Maybe.some((c: Category) => c.children);
+
+  public accountId = (a: Account) => a.id;
+  public accountTitle = (a: Account) => a.description;
+  public accountIcon = Maybe.some((a: Account) => a.icon);
 }

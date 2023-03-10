@@ -2,12 +2,15 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from "@angular/core";
+import { NbIconComponent } from "@nebular/theme";
 import { Maybe } from "@wv8/typescript.core";
 import { IIcon } from "../../../@core/data/icon";
 import { debounce } from "../../../@core/utils/debounce";
@@ -29,10 +32,11 @@ class AutocompleteItem<T> {
   templateUrl: "./autocomplete.component.html",
   styleUrls: ["./autocomplete.component.scss"],
 })
-export class AutocompleteComponent<T> implements OnInit {
+export class AutocompleteComponent<T> implements OnInit, OnChanges {
   // Required
   @Input() items: Array<T> = [];
   @Input() itemTitle: (i: T) => string;
+  @Input() itemId: (i: T) => number;
 
   // If `multiSelect` = false, then this only emits with 0 or 1 values.
   @Output() selectedItemsChanged = new EventEmitter<Array<T>>();
@@ -43,6 +47,7 @@ export class AutocompleteComponent<T> implements OnInit {
   @Input() itemIcon: Maybe<(i: T) => IIcon> = Maybe.none();
   @Input() itemChildren: Maybe<(i: T) => Array<T>> = Maybe.none();
   @Input() canDeselect: boolean = !this.multiSelect;
+  @Input() placeholder: string = "Select items...";
 
   query: string = "";
   inputText: string = "";
@@ -51,52 +56,62 @@ export class AutocompleteComponent<T> implements OnInit {
   dropdownOpen: boolean = false;
   focusedIndex: Maybe<number> = Maybe.none();
 
+  @ViewChild("autocomplete") autocomplete: ElementRef<HTMLDivElement>;
   @ViewChild("input") input: ElementRef<HTMLInputElement>;
   @ViewChild("dropdown") dropdown: ElementRef<HTMLInputElement>;
 
   constructor() {}
 
   ngOnInit(): void {
-    document.onclick = (e: PointerEvent) => {
-      let clearIconElem = document.getElementById("clear-input");
-      let node = e.target as Node;
-      let clickInInput = e.target == this.input.nativeElement || clearIconElem.contains(node);
-      let clickInDropdown = this.dropdown.nativeElement.contains(node);
-
-      // Close the dropdown if not clicked inside the input or the dropdown
-      if (!clickInInput && !clickInDropdown && !(clickInDropdown && this.multiSelect)) {
-        this.closeDropdown();
-      } else {
-        this.input.nativeElement.focus();
-      }
-    };
-
     let allItems = this.allItems();
 
     allItems.forEach((children, outer) => {
       this.filteredItems.push(new AutocompleteItem(outer, false));
-      this.filteredItems.push(...children.map((i) => new AutocompleteItem(i, true)));
+      this.filteredItems.push(...children.map(i => new AutocompleteItem(i, true)));
     });
 
-    this.inputText = this.selectedItems.map((i) => this.itemTitle(i)).join(", ");
+    if (this.selectedItems.length === 1 && this.selectedItems[0]) {
+      this.focusedIndex = new Maybe(this.filteredItems.findIndex(i => this.itemId(i.item) === this.itemId(this.selectedItems[0])));
+    }
+  }
+
+  @HostListener("document:click", ["$event"])
+  clickout(e) {
+    const clearIcon = this.autocomplete.nativeElement.getElementsByTagName("nb-icon")[0];
+    let node = e.target as Node;
+    let clickInInput = e.target == this.input.nativeElement || clearIcon?.contains(node);
+    let clickInDropdown = this.dropdown.nativeElement.contains(node);
+
+    // Close the dropdown if not clicked inside the input or the dropdown
+    if (!clickInInput && !clickInDropdown) {
+      this.closeDropdown();
+    } else if ((clickInDropdown && this.multiSelect) || clickInInput) {
+      this.onFocus();
+    }
+  }
+
+  private getInputTextFromSelected() {
+    return this.selectedItems
+      .filter(i => i)
+      .map(i => this.itemTitle(i))
+      .join(", ");
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.inputText = this.getInputTextFromSelected();
   }
 
   public onKeyDown(e: KeyboardEvent): void {
     switch (e.key) {
       case "ArrowUp":
         if (this.dropdownOpen) {
-          this.focusedIndex = Maybe.some(
-            this.focusedIndex.valueOrElse(this.filteredItems.length) - 1
-          );
+          this.focusedIndex = Maybe.some(this.focusedIndex.valueOrElse(this.filteredItems.length) - 1);
           if (this.focusedIndex.isSome && this.focusedIndex.value === -1) {
             this.focusedIndex = Maybe.none();
           }
         } else {
           this.dropdownOpen = true;
-          this.focusedIndex =
-            this.filteredItems.length > 0
-              ? Maybe.some(this.filteredItems.length - 1)
-              : Maybe.none();
+          this.focusedIndex = this.filteredItems.length > 0 ? Maybe.some(this.filteredItems.length - 1) : Maybe.none();
         }
         e.preventDefault();
         this.scrollToFocusedItem();
@@ -118,8 +133,8 @@ export class AutocompleteComponent<T> implements OnInit {
         // Enter with a highlighted item selects/deselects it
         if (this.dropdownOpen && this.focusedIndex.isSome) {
           let item = this.filteredItems[this.focusedIndex.value];
-          this.selectItem(item);
           this.input.nativeElement.select();
+          this.selectItem(item);
           e.preventDefault();
         }
         break;
@@ -127,9 +142,9 @@ export class AutocompleteComponent<T> implements OnInit {
         // Selects all filtered items and clears old selected items.
         if (this.dropdownOpen && this.filteredItems.length > 0) {
           if (this.filteredItems.length > 1 && this.multiSelect) {
-            this.selectedItems = Array.from(this.filteredItems.map((i) => i.item));
+            this.selectedItems = Array.from(this.filteredItems.map(i => i.item));
           } else if (this.filteredItems.length === 1) {
-            this.selectedItems = Array.from(this.filteredItems.map((i) => i.item));
+            this.selectedItems = Array.from(this.filteredItems.map(i => i.item));
           } else if (this.focusedIndex.isSome && !this.multiSelect) {
             this.selectedItems = [this.filteredItems[this.focusedIndex.value].item];
           }
@@ -159,10 +174,7 @@ export class AutocompleteComponent<T> implements OnInit {
 
   public closeDropdown() {
     this.dropdownOpen = false;
-    this.inputText =
-      this.selectedItems.length > 0
-        ? this.selectedItems.map((i) => this.itemTitle(i)).join(", ")
-        : this.query;
+    this.inputText = this.selectedItems.length > 0 ? this.getInputTextFromSelected() : this.query;
     this.input.nativeElement.blur();
   }
 
@@ -171,20 +183,19 @@ export class AutocompleteComponent<T> implements OnInit {
     setTimeout(() => {
       this.input.nativeElement.select();
     });
-    this.dropdownOpen = true;
   }
 
   public scrollToFocusedItem() {
-    let focusedElement = this.focusedIndex.bind(
-      (i) => new Maybe(this.dropdown.nativeElement.children[i])
-    );
-    if (focusedElement.isSome) {
-      focusedElement.value.scrollIntoView({ block: "nearest", inline: "nearest" });
-    }
+    let focusedElement = this.focusedIndex.bind(i => new Maybe(this.dropdown.nativeElement.children[i]));
+    setTimeout(() => {
+      if (focusedElement.isSome) {
+        focusedElement.value.scrollIntoView({ block: "nearest", inline: "nearest" });
+      }
+    });
   }
 
   private allItems() {
-    return new Map(this.items.map((i) => [i, this.itemChildren.map((f) => f(i)).valueOrElse([])]));
+    return new Map(this.items.map(i => [i, this.itemChildren.map(f => f(i)).valueOrElse([])]));
   }
 
   private filterItems() {
@@ -192,17 +203,17 @@ export class AutocompleteComponent<T> implements OnInit {
 
     let itemsToShow: Array<AutocompleteItem<T>> = [];
 
-    let oldFocusedItem = this.focusedIndex.map((i) => this.filteredItems[i]);
+    let oldFocusedItem = this.focusedIndex.map(i => this.filteredItems[i]);
 
     let allItems = this.allItems();
-    let itemFilter = (i) => this.itemTitle(i).toLowerCase().includes(this.query.toLowerCase());
+    let itemFilter = i => this.itemTitle(i).toLowerCase().includes(this.query.toLowerCase());
 
     allItems.forEach((children, outer) => {
       let filteredChildren = children.filter(itemFilter);
       if (filteredChildren.length > 0 || itemFilter(outer)) {
         itemsToShow.push(new AutocompleteItem(outer, false));
       }
-      itemsToShow.push(...filteredChildren.map((i) => new AutocompleteItem(i, true)));
+      itemsToShow.push(...filteredChildren.map(i => new AutocompleteItem(i, true)));
     });
 
     this.filteredItems = itemsToShow;
@@ -223,22 +234,34 @@ export class AutocompleteComponent<T> implements OnInit {
 
   public selectItem(item: AutocompleteItem<T>) {
     let selectedItemCount = this.selectedItems.length;
-    let isSelected = this.selectedItems.includes(item.item);
+    let isSelected = this.isSelected(item.item);
+
+    this.focusedIndex = new Maybe(this.filteredItems.findIndex(i => this.itemId(i.item) === this.itemId(item.item)));
 
     if (isSelected) {
       if (selectedItemCount === 1 && !this.canDeselect) return;
-      this.selectedItems = this.selectedItems.filter((i) => i != item.item);
+      this.selectedItems = this.selectedItems.filter(i => this.itemId(i) != this.itemId(item.item));
+
+      if (!this.multiSelect) {
+        this.closeDropdown();
+      }
     } else {
       if (this.multiSelect) {
         this.selectedItems.push(item.item);
       } else {
         this.selectedItems = [item.item];
+
+        this.closeDropdown();
       }
     }
+
     this.selectedItemsChanged.emit(this.selectedItems);
   }
 
   public isSelected(i: T) {
-    return this.selectedItems.includes(i);
+    return this.selectedItems
+      .filter(i => i)
+      .map(this.itemId)
+      .includes(this.itemId(i));
   }
 }

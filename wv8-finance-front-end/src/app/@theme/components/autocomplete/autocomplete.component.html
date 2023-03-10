@@ -1,22 +1,25 @@
-<div class="autocomplete">
+<div class="autocomplete" #autocomplete>
   <input
     type="text"
     nbInput
     fieldSize="small"
     fullWidth
     [(ngModel)]="inputText"
-    placeholder="Select items..."
+    [placeholder]="placeholder"
     #input
     (focus)="onFocus()"
+    (click)="dropdownOpen = true; scrollToFocusedItem()"
     (input)="debouncedFilterItems()"
     (keydown)="onKeyDown($event)"
   />
   <nb-icon
+    *ngIf="canDeselect"
     nbTooltip="Clear"
     nbTooltipPlacement="right"
     class="clickable"
     id="clear-input"
     icon="close-circle-outline"
+    #clearIcon
     (click)="clearSelectedItems()"
   ></nb-icon>
 
@@ -33,11 +36,8 @@
       }"
       (click)="selectItem(acItem)"
     >
-      <div *ngIf="multiSelect" class="checkbox-container">
-        <nb-checkbox
-          class="checkbox"
-          [checked]="isSelected(acItem.item)"
-        ></nb-checkbox>
+      <div class="checkbox-container">
+        <nb-checkbox class="checkbox" [checked]="isSelected(acItem.item)"></nb-checkbox>
       </div>
       <div *ngIf="itemIcon.isSome" class="icon">
         <wv8-icon-with-background

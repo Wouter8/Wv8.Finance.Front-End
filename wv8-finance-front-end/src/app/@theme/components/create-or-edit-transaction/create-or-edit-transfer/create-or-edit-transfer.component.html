@@ -1,30 +1,27 @@
-<warning
-  *ngIf="warningMessage.isSome"
-  [message]="warningMessage.value"
-  [marginBottom]="8"
-></warning>
+<warning *ngIf="warningMessage.isSome" [message]="warningMessage.value" [marginBottom]="8"></warning>
 <table *ngIf="transaction.fullyEditable">
   <tbody>
     <tr>
       <th>Account</th>
       <td>
-        <account-picker
-          [fullWidth]="true"
-          [(accountId)]="transaction.accountId"
-          [onlyNormalAccounts]="true"
-          [disabled]="warningMessage.isSome && editableReceiver"
+        <wv8-autocomplete
+          [items]="accounts"
+          [itemId]="accountId"
+          [itemTitle]="accountTitle"
+          [itemIcon]="accountIcon"
+          placeholder="Select account..."
+          [multiSelect]="false"
+          [canDeselect]="false"
+          [selectedItems]="[transaction.account]"
+          (selectedItemsChanged)="setAccount($event)"
         >
-        </account-picker>
+        </wv8-autocomplete>
       </td>
     </tr>
     <tr>
       <th>Date</th>
       <td>
-        <date-picker
-          [date]="transaction.date"
-          (dateChange)="dateChanged($event)"
-          [disabled]="warningMessage.isSome"
-        ></date-picker>
+        <date-picker [date]="transaction.date" (dateChange)="dateChanged($event)" [disabled]="warningMessage.isSome"></date-picker>
       </td>
     </tr>
     <tr>
@@ -63,31 +60,27 @@
     <tr>
       <th>Receiver</th>
       <td>
-        <account-picker
-          [selectDefault]="false"
-          [fullWidth]="true"
-          [accountId]="transaction.receivingAccountId.valueOrElse(undefined)"
-          (accountIdChange)="setReceivingAccountId($event)"
-          [onlyNormalAccounts]="true"
-          [disabled]="warningMessage.isSome && !editableReceiver"
-        ></account-picker>
+        <wv8-autocomplete
+          [items]="accounts"
+          [itemId]="accountId"
+          [itemTitle]="accountTitle"
+          [itemIcon]="accountIcon"
+          placeholder="Select receiver..."
+          [multiSelect]="false"
+          [canDeselect]="false"
+          [selectedItems]="[transaction.receivingAccount.valueOrElse(undefined)]"
+          (selectedItemsChanged)="setReceiver($event)"
+        >
+        </wv8-autocomplete>
       </td>
     </tr>
     <tr>
       <th>
         Needs confirmation
-        <nb-icon
-          icon="info-outline"
-          nbTooltip="Check this if you don't know the exact date or amount."
-          status="info"
-        >
-        </nb-icon>
+        <nb-icon icon="info-outline" nbTooltip="Check this if you don't know the exact date or amount." status="info"> </nb-icon>
       </th>
       <td>
-        <nb-checkbox
-          [disabled]="this.editing || warningMessage.isSome"
-          [(checked)]="transaction.needsConfirmation"
-        ></nb-checkbox>
+        <nb-checkbox [disabled]="this.editing || warningMessage.isSome" [(checked)]="transaction.needsConfirmation"></nb-checkbox>
       </td>
     </tr>
   </tbody>

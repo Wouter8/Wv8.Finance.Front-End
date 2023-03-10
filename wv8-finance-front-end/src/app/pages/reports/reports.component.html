@@ -1,12 +1,13 @@
 <div class="page" *ngIf="initializedFilters">
   <div class="filters">
     <div class="period-filter">
-      <period-picker (periodChanged)="periodSet($event)" [start]="period.start" [end]="period.end" [setInitialValue]="false">
+      <period-picker (periodChanged)="periodSet($event)" [start]="period.start" [end]="period.end" [setInitialValue]="false" [max]="today">
       </period-picker>
     </div>
     <div class="category-filter">
       <wv8-autocomplete
         [items]="categories"
+        [itemId]="categoryId"
         [itemTitle]="categoryTitle"
         [itemIcon]="categoryIcon"
         [multiSelect]="true"
