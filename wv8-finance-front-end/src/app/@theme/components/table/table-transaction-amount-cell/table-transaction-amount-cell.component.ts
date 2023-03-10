@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { ViewCell } from "ng2-smart-table";
+import { ViewCell } from "angular2-smart-table";
 import { TransactionType } from "../../../../@core/enums/transaction-type.enum";
 import { BaseTransaction } from "../../../../@core/models/base-transaction.model";
 import { Transaction } from "../../../../@core/models/transaction.model";
@@ -34,19 +34,11 @@ export class TableTransactionAmountCellComponent implements OnInit, ViewCell {
       this.typedRowData.type === TransactionType.Expense &&
       !this.importedTransaction &&
       this.typedRowData.amount !== this.typedRowData.personalAmount;
-    this.settlementTransaction =
-      this.typedRowData.type === TransactionType.Transfer &&
-      this.rowData.splitwiseTransaction?.isSome;
+    this.settlementTransaction = this.typedRowData.type === TransactionType.Transfer && this.rowData.splitwiseTransaction?.isSome;
 
     if (this.differentPersonalAmount) {
-      this.splitDetailsSum = this.typedRowData.splitDetails.reduce(
-        (prev, sd) => prev + sd.amount,
-        0
-      );
-      this.paymentRequestsSum = this.typedRowData.paymentRequests.reduce(
-        (prev, pr) => prev + pr.amount * pr.count,
-        0
-      );
+      this.splitDetailsSum = this.typedRowData.splitDetails.reduce((prev, sd) => prev + sd.amount, 0);
+      this.paymentRequestsSum = this.typedRowData.paymentRequests.reduce((prev, pr) => prev + pr.amount * pr.count, 0);
     }
   }
 }

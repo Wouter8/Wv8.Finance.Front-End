@@ -1,29 +1,11 @@
-<ng2-smart-table
-  #table
-  [settings]="settings"
-  [source]="source"
-  (userRowSelect)="rowSelected($event)"
->
-</ng2-smart-table>
+<angular2-smart-table #table [settings]="settings" [source]="source" (userRowSelect)="rowSelected($event)"> </angular2-smart-table>
 <div *ngIf="pager.display && totalPages > 1" class="pagination-container">
   <span nbTooltip="To page 1">
-    <button
-      nbButton
-      class="pagination-button"
-      status="basic"
-      (click)="goToPage(1)"
-      [disabled]="currentPage == 1"
-    >
+    <button nbButton class="pagination-button" status="basic" (click)="goToPage(1)" [disabled]="currentPage == 1">
       <nb-icon icon="arrowhead-left-outline"></nb-icon>
     </button>
   </span>
-  <button
-    nbButton
-    class="pagination-button"
-    status="basic"
-    (click)="goToPage(currentPage - 1)"
-    [disabled]="currentPage == 1"
-  >
+  <button nbButton class="pagination-button" status="basic" (click)="goToPage(currentPage - 1)" [disabled]="currentPage == 1">
     <nb-icon icon="arrow-ios-back-outline"></nb-icon>
   </button>
   <button
@@ -35,23 +17,11 @@
   >
     {{ i }}
   </button>
-  <button
-    nbButton
-    class="pagination-button"
-    status="basic"
-    (click)="goToPage(currentPage + 1)"
-    [disabled]="currentPage == totalPages"
-  >
+  <button nbButton class="pagination-button" status="basic" (click)="goToPage(currentPage + 1)" [disabled]="currentPage == totalPages">
     <nb-icon icon="arrow-ios-forward-outline"></nb-icon>
   </button>
   <span [nbTooltip]="'To page ' + totalPages">
-    <button
-      nbButton
-      class="pagination-button"
-      status="basic"
-      (click)="goToPage(totalPages)"
-      [disabled]="currentPage == totalPages"
-    >
+    <button nbButton class="pagination-button" status="basic" (click)="goToPage(totalPages)" [disabled]="currentPage == totalPages">
       <nb-icon icon="arrowhead-right-outline"></nb-icon>
     </button>
   </span>

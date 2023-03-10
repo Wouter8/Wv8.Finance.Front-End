@@ -4,7 +4,7 @@ import { TableEuroCellComponent } from "./table-euro-cell/table-euro-cell.compon
 import { Type } from "@angular/core";
 import { TableIconCellComponent } from "./table-icon-cell/table-icon-cell.component";
 import { TableDefaultAndObsoleteCellComponent } from "./table-default-and-obsolete-cell/table-default-and-obsolete-cell.component";
-import { ViewCell } from "ng2-smart-table";
+import { ViewCell } from "angular2-smart-table";
 
 export interface CustomTableSettings<T> {
   columns: Columns;

@@ -33,7 +33,7 @@ import { DEFAULT_THEME } from "./styles/theme.default";
 import { COSMIC_THEME } from "./styles/theme.cosmic";
 import { CORPORATE_THEME } from "./styles/theme.corporate";
 import { DARK_THEME } from "./styles/theme.dark";
-import { Ng2SmartTableModule } from "ng2-smart-table";
+import { Angular2SmartTableModule } from "angular2-smart-table";
 import { TableComponent } from "./components/table/table.component";
 import { TableEuroCellComponent } from "./components/table/table-euro-cell/table-euro-cell.component";
 import { TableBooleanCellComponent } from "./components/table/table-boolean-cell/table-boolean-cell.component";
@@ -81,7 +81,7 @@ const NB_MODULES = [
   NbCardModule,
   NbIconModule,
   NbEvaIconsModule,
-  Ng2SmartTableModule,
+  Angular2SmartTableModule,
   NbTooltipModule,
   NbPopoverModule,
   NbProgressBarModule,
@@ -128,14 +128,7 @@ const COMPONENTS = [
   WarningComponent,
   AutocompleteComponent,
 ];
-const PIPES = [
-  CapitalizePipe,
-  PluralPipe,
-  RoundPipe,
-  TimingPipe,
-  NumberWithCommasPipe,
-  EnumToArrayPipe,
-];
+const PIPES = [CapitalizePipe, PluralPipe, RoundPipe, TimingPipe, NumberWithCommasPipe, EnumToArrayPipe];
 const ENTRY_COMPONENTS = [
   TableBooleanCellComponent,
   TableEuroCellComponent,
@@ -153,9 +146,9 @@ const ENTRY_COMPONENTS = [
 const IMPORT_MODULES = [FormsModule];
 
 @NgModule({
-    imports: [CommonModule, ...NB_MODULES, ...IMPORT_MODULES],
-    exports: [CommonModule, ...PIPES, ...COMPONENTS],
-    declarations: [...COMPONENTS, ...PIPES]
+  imports: [CommonModule, ...NB_MODULES, ...IMPORT_MODULES],
+  exports: [CommonModule, ...PIPES, ...COMPONENTS],
+  declarations: [...COMPONENTS, ...PIPES],
 })
 export class ThemeModule {
   static forRoot(): ModuleWithProviders<ThemeModule> {

@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { TableSettings, CustomTableSettings, Pager } from "./table-settings.model";
-import { LocalDataSource } from "ng2-smart-table";
+import { Angular2SmartTableComponent, LocalDataSource } from "angular2-smart-table";
 import { Maybe } from "@wv8/typescript.core";
 import { TablePagination } from "./table-pagination-model";
 
@@ -11,7 +11,7 @@ import { TablePagination } from "./table-pagination-model";
 })
 export class TableComponent<T> implements OnInit, OnChanges {
   @ViewChild("table", { static: true })
-  table: Ng2SmartTable;
+  table: Angular2SmartTableComponent;
 
   @Input()
   onPageChange: (page: number) => void;

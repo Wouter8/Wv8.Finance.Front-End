@@ -19,34 +19,29 @@ import {
   NbFormFieldModule,
 } from "@nebular/theme";
 import { ThemeModule } from "../../@theme/theme.module";
-import { Ng2SmartTableModule } from "ng2-smart-table";
+import { Angular2SmartTableModule } from "angular2-smart-table";
 import { FormsModule } from "@angular/forms";
 import { NgxEchartsModule } from "ngx-echarts";
 
 @NgModule({
-    imports: [
-        CategoriesRoutingModule,
-        NbCardModule,
-        ThemeModule,
-        NbIconModule,
-        NbInputModule,
-        Ng2SmartTableModule,
-        NbTreeGridModule,
-        NbCheckboxModule,
-        NbDialogModule.forChild(),
-        NbButtonModule,
-        FormsModule,
-        NbTooltipModule,
-        NbPopoverModule,
-        NbSelectModule,
-        NbFormFieldModule,
-        NgxEchartsModule,
-    ],
-    declarations: [
-        CategoryComponent,
-        CategoriesOverviewComponent,
-        CreateOrEditCategoryComponent,
-        CategoriesComponent,
-    ]
+  imports: [
+    CategoriesRoutingModule,
+    NbCardModule,
+    ThemeModule,
+    NbIconModule,
+    NbInputModule,
+    Angular2SmartTableModule,
+    NbTreeGridModule,
+    NbCheckboxModule,
+    NbDialogModule.forChild(),
+    NbButtonModule,
+    FormsModule,
+    NbTooltipModule,
+    NbPopoverModule,
+    NbSelectModule,
+    NbFormFieldModule,
+    NgxEchartsModule,
+  ],
+  declarations: [CategoryComponent, CategoriesOverviewComponent, CreateOrEditCategoryComponent, CategoriesComponent],
 })
 export class CategoriesModule {}
