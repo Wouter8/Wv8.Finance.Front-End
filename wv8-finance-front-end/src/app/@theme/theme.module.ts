@@ -153,10 +153,9 @@ const ENTRY_COMPONENTS = [
 const IMPORT_MODULES = [FormsModule];
 
 @NgModule({
-  imports: [CommonModule, ...NB_MODULES, ...IMPORT_MODULES],
-  exports: [CommonModule, ...PIPES, ...COMPONENTS],
-  declarations: [...COMPONENTS, ...PIPES],
-  entryComponents: [...ENTRY_COMPONENTS],
+    imports: [CommonModule, ...NB_MODULES, ...IMPORT_MODULES],
+    exports: [CommonModule, ...PIPES, ...COMPONENTS],
+    declarations: [...COMPONENTS, ...PIPES]
 })
 export class ThemeModule {
   static forRoot(): ModuleWithProviders<ThemeModule> {

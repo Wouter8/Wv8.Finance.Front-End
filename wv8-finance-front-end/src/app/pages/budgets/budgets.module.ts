@@ -21,28 +21,27 @@ import { CreateOrEditBudgetComponent } from "./create-or-edit-budget/create-or-e
 import { BudgetsRoutingModule } from "./budgets-routing.module";
 import { BudgetsOverviewComponent } from "./budgets-overview/budgets-overview.component";
 @NgModule({
-  imports: [
-    BudgetsRoutingModule,
-    NbCardModule,
-    ThemeModule,
-    NbIconModule,
-    NbInputModule,
-    Ng2SmartTableModule,
-    NbCheckboxModule,
-    NbDialogModule.forChild(),
-    NbButtonModule,
-    FormsModule,
-    NbTooltipModule,
-    NbDatepickerModule,
-    NbStepperModule,
-    NbFormFieldModule
-  ],
-  declarations: [
-    BudgetsComponent,
-    BudgetComponent,
-    CreateOrEditBudgetComponent,
-    BudgetsOverviewComponent
-  ],
-  entryComponents: [CreateOrEditBudgetComponent]
+    imports: [
+        BudgetsRoutingModule,
+        NbCardModule,
+        ThemeModule,
+        NbIconModule,
+        NbInputModule,
+        Ng2SmartTableModule,
+        NbCheckboxModule,
+        NbDialogModule.forChild(),
+        NbButtonModule,
+        FormsModule,
+        NbTooltipModule,
+        NbDatepickerModule,
+        NbStepperModule,
+        NbFormFieldModule
+    ],
+    declarations: [
+        BudgetsComponent,
+        BudgetComponent,
+        CreateOrEditBudgetComponent,
+        BudgetsOverviewComponent
+    ]
 })
 export class BudgetsModule {}

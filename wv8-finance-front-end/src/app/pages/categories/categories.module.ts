@@ -24,30 +24,29 @@ import { FormsModule } from "@angular/forms";
 import { NgxEchartsModule } from "ngx-echarts";
 
 @NgModule({
-  imports: [
-    CategoriesRoutingModule,
-    NbCardModule,
-    ThemeModule,
-    NbIconModule,
-    NbInputModule,
-    Ng2SmartTableModule,
-    NbTreeGridModule,
-    NbCheckboxModule,
-    NbDialogModule.forChild(),
-    NbButtonModule,
-    FormsModule,
-    NbTooltipModule,
-    NbPopoverModule,
-    NbSelectModule,
-    NbFormFieldModule,
-    NgxEchartsModule,
-  ],
-  declarations: [
-    CategoryComponent,
-    CategoriesOverviewComponent,
-    CreateOrEditCategoryComponent,
-    CategoriesComponent,
-  ],
-  entryComponents: [CreateOrEditCategoryComponent],
+    imports: [
+        CategoriesRoutingModule,
+        NbCardModule,
+        ThemeModule,
+        NbIconModule,
+        NbInputModule,
+        Ng2SmartTableModule,
+        NbTreeGridModule,
+        NbCheckboxModule,
+        NbDialogModule.forChild(),
+        NbButtonModule,
+        FormsModule,
+        NbTooltipModule,
+        NbPopoverModule,
+        NbSelectModule,
+        NbFormFieldModule,
+        NgxEchartsModule,
+    ],
+    declarations: [
+        CategoryComponent,
+        CategoriesOverviewComponent,
+        CreateOrEditCategoryComponent,
+        CategoriesComponent,
+    ]
 })
 export class CategoriesModule {}

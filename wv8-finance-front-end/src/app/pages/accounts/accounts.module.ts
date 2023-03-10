@@ -11,30 +11,27 @@ import { CreateOrEditAccountComponent } from './create-or-edit-account/create-or
 import { FormsModule } from '@angular/forms';
 import { NgxEchartsModule } from 'ngx-echarts';
 @NgModule({
-  imports: [
-    AccountsRoutingModule,
-    NbCardModule,
-    ThemeModule,
-    NbIconModule,
-    NbInputModule,
-    Ng2SmartTableModule,
-    NbCheckboxModule,
-    NbDialogModule.forChild(),
-    NbButtonModule,
-    FormsModule,
-    NbTooltipModule,
-    NbPopoverModule,
-    NbSelectModule,
-    NgxEchartsModule,
-  ],
-  declarations: [
-    AccountsComponent,
-    AccountComponent,
-    CreateOrEditAccountComponent,
-    AccountsOverviewComponent,
-  ],
-  entryComponents: [
-    CreateOrEditAccountComponent,
-  ]
+    imports: [
+        AccountsRoutingModule,
+        NbCardModule,
+        ThemeModule,
+        NbIconModule,
+        NbInputModule,
+        Ng2SmartTableModule,
+        NbCheckboxModule,
+        NbDialogModule.forChild(),
+        NbButtonModule,
+        FormsModule,
+        NbTooltipModule,
+        NbPopoverModule,
+        NbSelectModule,
+        NgxEchartsModule,
+    ],
+    declarations: [
+        AccountsComponent,
+        AccountComponent,
+        CreateOrEditAccountComponent,
+        AccountsOverviewComponent,
+    ]
 })
 export class AccountsModule { }
