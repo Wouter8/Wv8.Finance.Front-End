@@ -12,7 +12,6 @@ import {
 } from "@nebular/theme";
 import { CreateOrEditCategoryComponent } from "../create-or-edit-category/create-or-edit-category.component";
 import { Category } from "../../../@core/models/category.model";
-import { CustomTableSettings } from "../../../@theme/components/table/table-settings.model";
 import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
 import { TreeNode } from "../../../@core/models/tree-node.model";
 
@@ -43,23 +42,19 @@ export class CategoriesOverviewComponent implements OnInit {
   }
 
   async onClickAdd(event: MouseEvent) {
-    this.dialogService
-      .open(CreateOrEditCategoryComponent, {})
-      .onClose.subscribe((data: { success: boolean; category: Category }) => {
-        if (data.success) {
-          if (data.category.parentCategoryId.isSome) {
-            let parent = this.categories.filter(
-              (c) => c.id == data.category.parentCategoryId.value
-            )[0];
-            parent.children.push(data.category);
-          } else {
-            this.categories.push(data.category);
-          }
-          this.setTableData();
-
-          this.toasterService.success("", "Added category");
+    this.dialogService.open(CreateOrEditCategoryComponent, {}).onClose.subscribe((data: { success: boolean; category: Category }) => {
+      if (data.success) {
+        if (data.category.parentCategoryId.isSome) {
+          let parent = this.categories.filter(c => c.id == data.category.parentCategoryId.value)[0];
+          parent.children.push(data.category);
+        } else {
+          this.categories.push(data.category);
         }
-      });
+        this.setTableData();
+
+        this.toasterService.success("", "Added category");
+      }
+    });
   }
 
   openCategory(id: number) {
@@ -67,10 +62,7 @@ export class CategoriesOverviewComponent implements OnInit {
   }
 
   public async loadData(showObsolete: boolean) {
-    this.categories = await this.categoriesService.getCategories(
-      showObsolete,
-      true
-    );
+    this.categories = await this.categoriesService.getCategories(showObsolete, true);
     this.setTableData();
   }
 

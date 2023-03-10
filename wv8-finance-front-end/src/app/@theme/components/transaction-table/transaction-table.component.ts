@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, Input, OnChanges, Output, EventEmitter } from "@angular/core";
-import { CustomTableSettings, Columns } from "../table/table-settings.model";
 import { Transaction } from "../../../@core/models/transaction.model";
 import { TableNameCellComponent } from "../table/table-name-cell/table-name-cell.component";
 import { TableDateCellComponent } from "../table/table-date-cell/table-date-cell.component";
@@ -8,6 +7,7 @@ import { TableTransactionTypeIconCellComponent } from "../table/table-transactio
 import { TableComponent } from "../table/table.component";
 import { Router } from "@angular/router";
 import { TableTransactionAmountCellComponent } from "../table/table-transaction-amount-cell/table-transaction-amount-cell.component";
+import { IColumn, IColumns, IColumnType, Settings } from "angular2-smart-table";
 
 @Component({
   selector: "transaction-table",
@@ -68,27 +68,28 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     this.table.totalPages = Math.ceil(this.totalRows / this.rowsPerPage);
   }
 
-  private getTableSettings(): CustomTableSettings<Transaction> {
-    let columns: Columns = {};
+  private getTableSettings(): Settings {
+    let columns: IColumns = {};
     columns["type"] = {
       title: "",
-      type: "custom",
+      type: IColumnType.Custom,
       width: "36px",
       renderComponent: TableTransactionTypeIconCellComponent,
-      sort: false,
+      isSortable: false,
     };
+
     columns["amount"] = {
       title: "Amount",
-      type: "custom",
+      type: IColumnType.Custom,
       renderComponent: TableTransactionAmountCellComponent,
-      sort: false,
+      isSortable: false,
     };
     if (this.showDateColumn) {
       columns["date"] = {
         title: "Date",
-        type: "custom",
+        type: IColumnType.Custom,
         renderComponent: TableDateCellComponent,
-        sort: false,
+        isSortable: false,
         onComponentInitFunction: (instance: TableDateCellComponent) => {
           instance.showFutureIcon = this.showDateColumnIcon;
           instance.determineIsFuture = () => !instance.rowData.processed;
@@ -99,9 +100,9 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     if (this.showCategoryColumn) {
       columns["categoryId"] = {
         title: "Category",
-        type: "custom",
+        type: IColumnType.Custom,
         renderComponent: TableNameCellComponent,
-        sort: false,
+        isSortable: false,
         onComponentInitFunction: (instance: TableNameCellComponent<Transaction>) => {
           instance.nameFunction = () =>
             instance.typedData.category.isSome
@@ -118,15 +119,16 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     if (this.showDescriptionColumn) {
       columns["description"] = {
         title: "Description",
-        type: "text",
+        type: IColumnType.Text,
+        isSortable: false,
       };
     }
     if (this.showAccountColumn) {
       columns["accountId"] = {
         title: "Account",
-        type: "custom",
+        type: IColumnType.Custom,
         renderComponent: TableNameCellComponent,
-        sort: false,
+        isSortable: false,
         onComponentInitFunction: (instance: TableNameCellComponent<Transaction>) => {
           instance.nameFunction = () => instance.typedData.account.description;
           instance.iconFunction = () => instance.typedData.account.icon;
@@ -139,8 +141,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
 
     return {
       columns,
-      hideFilter: true,
-      clickable: true,
+      filter: undefined,
       rowClassFunction: (row: Transaction) => {
         let classes: string[] = [];
 

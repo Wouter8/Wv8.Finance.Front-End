@@ -30,12 +30,7 @@
               "src/app/@theme/styles/styles.scss"
             ],
             "scripts": ["node_modules/pace-js/pace.min.js"],
-            "allowedCommonJsDependencies": [
-              "ts-money",
-              "javascript-time-ago/locale/en",
-              "echarts",
-              "lodash"
-            ],
+            "allowedCommonJsDependencies": ["ts-money", "javascript-time-ago/locale/en", "echarts", "lodash"],
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
@@ -83,27 +78,6 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "wv8-finance-front-end:build"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/test.ts",
-            "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "scripts": ["node_modules/pace-js/pace.min.js"],
-            "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.css",
-              "node_modules/typeface-exo/index.css",
-              "node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
-              "node_modules/ionicons/scss/ionicons.scss",
-              "node_modules/socicon/css/socicon.css",
-              "node_modules/nebular-icons/scss/nebular-icons.scss",
-              "node_modules/pace-js/templates/pace-theme-flash.tmpl.css",
-              "src/app/@theme/styles/styles.scss"
-            ],
-            "assets": ["src/assets", "src/favicon.ico", "src/favicon.png"]
           }
         }
       }

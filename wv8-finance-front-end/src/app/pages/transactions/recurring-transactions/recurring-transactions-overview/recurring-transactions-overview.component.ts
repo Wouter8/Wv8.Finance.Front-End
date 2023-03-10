@@ -3,15 +3,10 @@ import { RecurringTransaction } from "../../../../@core/models/recurring-transac
 import { TableComponent } from "../../../../@theme/components/table/table.component";
 import { RecurringTransactionData } from "../../../../@core/data/recurring-transaction";
 import { Router } from "@angular/router";
-import {
-  NbDialogService,
-  NbToastrService,
-  NbCalendarRange,
-} from "@nebular/theme";
+import { NbDialogService, NbToastrService, NbCalendarRange } from "@nebular/theme";
 import { Transaction } from "../../../../@core/models/transaction.model";
 import { Maybe } from "@wv8/typescript.core";
 import { TransactionType } from "../../../../@core/enums/transaction-type.enum";
-import { CustomTableSettings } from "../../../../@theme/components/table/table-settings.model";
 import { TableNameCellComponent } from "../../../../@theme/components/table/table-name-cell/table-name-cell.component";
 import { TableDateCellComponent } from "../../../../@theme/components/table/table-date-cell/table-date-cell.component";
 import { TableEuroCellComponent } from "../../../../@theme/components/table/table-euro-cell/table-euro-cell.component";
@@ -19,6 +14,7 @@ import { TableTransactionTypeIconCellComponent } from "../../../../@theme/compon
 import { CreateOrEditRecurringTransactionComponent } from "../create-or-edit-recurring-transaction/create-or-edit-recurring-transaction.component";
 import { TableMaybeDateCellComponent } from "../../../../@theme/components/table/table-maybe-date-cell/table-maybe-date-cell.component";
 import { TableTransactionAmountCellComponent } from "../../../../@theme/components/table/table-transaction-amount-cell/table-transaction-amount-cell.component";
+import { IColumnType, Settings } from "angular2-smart-table";
 
 @Component({
   selector: "recurring-transactions-overview",
@@ -52,19 +48,14 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
   onClickAdd(event: MouseEvent) {
     this.dialogService
       .open(CreateOrEditRecurringTransactionComponent)
-      .onClose.subscribe(
-        (data: {
-          success: boolean;
-          recurringTransaction: RecurringTransaction;
-        }) => {
-          if (data.success) {
-            this.recurringTransactions.push(data.recurringTransaction);
-            this.setTransactionList();
+      .onClose.subscribe((data: { success: boolean; recurringTransaction: RecurringTransaction }) => {
+        if (data.success) {
+          this.recurringTransactions.push(data.recurringTransaction);
+          this.setTransactionList();
 
-            this.toasterService.success("", "Added transaction");
-          }
+          this.toasterService.success("", "Added transaction");
         }
-      );
+      });
   }
 
   async loadData() {
@@ -81,19 +72,16 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
     this.table.setData(this.recurringTransactions);
   }
 
-  private getTableSettings(): CustomTableSettings<RecurringTransaction> {
+  private getTableSettings(): Settings {
     return {
       columns: {
         accountId: {
           title: "Account",
-          type: "custom",
+          type: IColumnType.Custom,
           renderComponent: TableNameCellComponent,
-          sort: false,
-          onComponentInitFunction: (
-            instance: TableNameCellComponent<RecurringTransaction>
-          ) => {
-            instance.nameFunction = () =>
-              instance.typedData.account.description;
+          isSortable: false,
+          onComponentInitFunction: (instance: TableNameCellComponent<RecurringTransaction>) => {
+            instance.nameFunction = () => instance.typedData.account.description;
             instance.iconFunction = () => instance.typedData.account.icon;
 
             instance.showDefaultIcon = false;
@@ -102,20 +90,12 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
         },
         categoryId: {
           title: "Category",
-          type: "custom",
+          type: IColumnType.Custom,
           renderComponent: TableNameCellComponent,
-          sort: false,
-          onComponentInitFunction: (
-            instance: TableNameCellComponent<RecurringTransaction>
-          ) => {
-            instance.nameFunction = () =>
-              instance.typedData.category
-                .map((c) => c.getCompleteName())
-                .valueOrElse("-");
-            instance.iconFunction = () =>
-              instance.typedData.category
-                .map((c) => c.icon)
-                .valueOrElse(undefined);
+          isSortable: false,
+          onComponentInitFunction: (instance: TableNameCellComponent<RecurringTransaction>) => {
+            instance.nameFunction = () => instance.typedData.category.map(c => c.getCompleteName()).valueOrElse("-");
+            instance.iconFunction = () => instance.typedData.category.map(c => c.icon).valueOrElse(undefined);
 
             instance.showDefaultIcon = false;
             instance.iconSize = "small";
@@ -123,20 +103,12 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
         },
         receivingAccountId: {
           title: "Receiver",
-          type: "custom",
+          type: IColumnType.Custom,
           renderComponent: TableNameCellComponent,
-          sort: false,
-          onComponentInitFunction: (
-            instance: TableNameCellComponent<RecurringTransaction>
-          ) => {
-            instance.nameFunction = () =>
-              instance.typedData.receivingAccount
-                .map((a) => a.description)
-                .valueOrElse("-");
-            instance.iconFunction = () =>
-              instance.typedData.receivingAccount
-                .map((a) => a.icon)
-                .valueOrElse(undefined);
+          isSortable: false,
+          onComponentInitFunction: (instance: TableNameCellComponent<RecurringTransaction>) => {
+            instance.nameFunction = () => instance.typedData.receivingAccount.map(a => a.description).valueOrElse("-");
+            instance.iconFunction = () => instance.typedData.receivingAccount.map(a => a.icon).valueOrElse(undefined);
 
             instance.showDefaultIcon = false;
             instance.iconSize = "small";
@@ -144,38 +116,37 @@ export class RecurringTransactionsOverviewComponent implements OnInit {
         },
         description: {
           title: "Description",
-          type: "text",
+          type: IColumnType.Text,
         },
         startDate: {
           title: "Start Date",
-          type: "custom",
+          type: IColumnType.Custom,
           renderComponent: TableDateCellComponent,
-          sort: false,
+          isSortable: false,
           onComponentInitFunction: (instance: TableDateCellComponent) => {
             instance.showFutureIcon = false;
           },
         },
         endDate: {
           title: "End Date",
-          type: "custom",
+          type: IColumnType.Custom,
           renderComponent: TableMaybeDateCellComponent,
-          sort: false,
+          isSortable: false,
         },
         amount: {
           title: "Amount",
-          type: "custom",
+          type: IColumnType.Custom,
           renderComponent: TableTransactionAmountCellComponent,
-          sort: false,
+          isSortable: false,
         },
         type: {
           title: "Type",
-          type: "custom",
+          type: IColumnType.Custom,
           renderComponent: TableTransactionTypeIconCellComponent,
-          sort: false,
+          isSortable: false,
         },
       },
-      hideFilter: true,
-      clickable: true,
+      hideSubHeader: true,
       rowClassFunction: (row: RecurringTransaction) => {
         let classes: string[] = [];
 

@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { TableComponent } from "../../../@theme/components/table/table.component";
-import { CustomTableSettings } from "../../../@theme/components/table/table-settings.model";
 import { TableDefaultAndObsoleteCellComponent } from "../../../@theme/components/table/table-default-and-obsolete-cell/table-default-and-obsolete-cell.component";
 import { TableEuroCellComponent } from "../../../@theme/components/table/table-euro-cell/table-euro-cell.component";
 import { AccountData } from "../../../@core/data/account";
@@ -13,6 +12,7 @@ import { TableIconCellComponent } from "../../../@theme/components/table/table-i
 import { TableNameCellComponent } from "../../../@theme/components/table/table-name-cell/table-name-cell.component";
 import { AccountType } from "../../../@core/enums/account-type.enum";
 import { Maybe } from "@wv8/typescript.core";
+import { IColumnType, Settings } from "angular2-smart-table";
 
 @Component({
   selector: "accounts-overview",
@@ -48,18 +48,14 @@ export class AccountsOverviewComponent implements OnInit {
   }
 
   async onClickAdd(event: MouseEvent) {
-    this.dialogService
-      .open(CreateOrEditAccountComponent)
-      .onClose.subscribe(
-        async (data: { success: boolean; account: Account }) => {
-          if (data.success) {
-            this.accounts.push(data.account);
-            this.loadData();
+    this.dialogService.open(CreateOrEditAccountComponent).onClose.subscribe(async (data: { success: boolean; account: Account }) => {
+      if (data.success) {
+        this.accounts.push(data.account);
+        this.loadData();
 
-            this.toasterService.success("", "Added account");
-          }
-        }
-      );
+        this.toasterService.success("", "Added account");
+      }
+    });
   }
 
   private async loadData() {
@@ -71,28 +67,27 @@ export class AccountsOverviewComponent implements OnInit {
     if (showObsolete) {
       this.table.setData(this.accounts);
     } else {
-      this.table.setData(this.accounts.filter((a) => !a.isObsolete));
+      this.table.setData(this.accounts.filter(a => !a.isObsolete));
     }
   }
 
-  private getTableSettings(): CustomTableSettings<IAccount> {
+  private getTableSettings(): Settings {
     return {
       columns: {
         description: {
           title: "Description",
-          type: "custom",
+          type: IColumnType.Custom,
           renderComponent: TableNameCellComponent,
-          sort: false,
+          isSortable: false,
         },
         currentBalance: {
           title: "Current Balance",
-          type: "custom",
+          type: IColumnType.Custom,
           renderComponent: TableEuroCellComponent,
-          sort: false,
+          isSortable: false,
         },
       },
-      hideFilter: true,
-      clickable: true,
+      hideSubHeader: true,
       rowClassFunction: (row: IAccount) => {
         let classes: string[] = [];
         if (row.isObsolete) {

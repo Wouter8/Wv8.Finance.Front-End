@@ -1,6 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { TableSettings, CustomTableSettings, Pager } from "./table-settings.model";
-import { Angular2SmartTableComponent, LocalDataSource } from "angular2-smart-table";
+import { Actions, Angular2SmartTableComponent, LocalDataSource, Pager, Settings } from "angular2-smart-table";
 import { Maybe } from "@wv8/typescript.core";
 import { TablePagination } from "./table-pagination-model";
 
@@ -20,7 +19,7 @@ export class TableComponent<T> implements OnInit, OnChanges {
   @Input() initialPage: number = 1;
 
   source: LocalDataSource = new LocalDataSource();
-  settings: TableSettings;
+  settings: Settings;
   currentPage: number = 1;
   totalPages: number = 1;
   pager: Pager = {
@@ -28,14 +27,15 @@ export class TableComponent<T> implements OnInit, OnChanges {
     perPage: 25,
   };
 
-  private DEFAULT_SETTINGS: TableSettings = {
-    actions: false,
+  private DEFAULT_SETTINGS: Settings = {
+    actions: { add: false, edit: false, delete: false, custom: [] },
     hideHeader: false,
-    hideSubHeader: false,
+    hideSubHeader: true,
     mode: "external",
-    selectMode: false,
+    selectMode: "single",
     pager: {
-      display: false,
+      display: true,
+      perPage: 25,
     },
     attr: {
       class: "table",
@@ -73,7 +73,7 @@ export class TableComponent<T> implements OnInit, OnChanges {
     this.source.load(data);
   }
 
-  public setSettings(settings: CustomTableSettings<T>) {
+  public setSettings(settings: Settings) {
     this.settings = this.DEFAULT_SETTINGS;
 
     this.settings.columns = settings.columns;
@@ -83,11 +83,11 @@ export class TableComponent<T> implements OnInit, OnChanges {
       this.pager.perPage = new Maybe(settings.pager.perPage).valueOrElse(this.pager.perPage);
     }
     this.settings.selectMode = new Maybe(settings.selectMode).valueOrElse(this.DEFAULT_SETTINGS.selectMode);
-    this.settings.hideSubHeader = new Maybe(settings.hideFilter).valueOrElse(this.DEFAULT_SETTINGS.hideSubHeader);
+    this.settings.hideSubHeader = new Maybe(settings.hideSubHeader).valueOrElse(this.DEFAULT_SETTINGS.hideSubHeader);
 
     this.settings.rowClassFunction = (row: { data: T }) => {
       let rowClasses: string[] = [];
-      if (settings.clickable) rowClasses.push("clickable");
+      rowClasses.push("clickable");
       if (settings.rowClassFunction) rowClasses = rowClasses.concat(settings.rowClassFunction(row.data));
       return rowClasses.join(" ");
     };
