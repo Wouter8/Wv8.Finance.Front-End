@@ -599,7 +599,7 @@ const getCategoryResultChartOptions = (report: PeriodReport): EChartOption => {
   };
 
   return {
-    color: categories.reduce((prev, c) => prev.concat(c.childCategories.map(c => c.color)), ["rgba(89, 139, 255, 1)"]),
+    color: categories.reduce((prev, c) => prev.concat(c.childCategories.map(c => c.color)), ["#3366ff"]),
     tooltip: {
       trigger: "axis",
       backgroundColor: "rgba(50, 50, 50, 0.8)",
