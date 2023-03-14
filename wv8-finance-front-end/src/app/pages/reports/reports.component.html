@@ -23,7 +23,7 @@
       <div class="col-sm-12 totals">
         <nb-card>
           <nb-card-body class="number-card">
-            <div class="value">
+            <div *ngIf="report" class="value">
               {{ report.totals.income | currency : "EUR" }}
             </div>
             <div class="label">Total income</div>
@@ -32,9 +32,12 @@
         <nb-card>
           <nb-card-body
             class="number-card"
-            [ngClass]="{ positive: report.totals.income > report.totals.expense, negative: report.totals.income < report.totals.expense }"
+            [ngClass]="{
+              positive: report?.totals.income > report?.totals.expense,
+              negative: report?.totals.income < report?.totals.expense
+            }"
           >
-            <div class="value">
+            <div *ngIf="report" class="value">
               {{ report.totals.income - report.totals.expense | currency : "EUR" }}
             </div>
             <div class="label">Result</div>
@@ -42,7 +45,7 @@
         </nb-card>
         <nb-card>
           <nb-card-body class="number-card">
-            <div class="value">
+            <div *ngIf="report" class="value">
               {{ report.totals.expense | currency : "EUR" }}
             </div>
             <div class="label">Total expenses</div>

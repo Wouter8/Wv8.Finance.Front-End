@@ -593,13 +593,13 @@ const getCategoryResultChartOptions = (report: PeriodReport): EChartOption => {
       type: "bar",
       barGap: 0,
       barWidth: "25%",
-      stack: child.value > 0 ? 2 : 3,
+      stack: child.value > 0 ? 1 : 3,
       data: [[parentName, Math.abs(child.value), child]],
     };
   };
 
   return {
-    color: categories.reduce((prev, c) => prev.concat(c.childCategories.map(c => c.color)), ["rgba(89, 139, 255, 0.75)"]),
+    color: categories.reduce((prev, c) => prev.concat(c.childCategories.map(c => c.color)), ["rgba(89, 139, 255, 1)"]),
     tooltip: {
       trigger: "axis",
       backgroundColor: "rgba(50, 50, 50, 0.8)",
@@ -645,8 +645,8 @@ const getCategoryResultChartOptions = (report: PeriodReport): EChartOption => {
       {
         name: "Result",
         type: "bar",
-        stack: 1,
-        barWidth: "25%",
+        stack: 2,
+        barWidth: "3px",
         data: categories.map(c => [c.name, Math.abs(c.result), c.result]),
       },
       ...categories.reduce((prev, c) => prev.concat(c.childCategories.map(cc => childCategoryData(c.name, cc))), []),
