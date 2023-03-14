@@ -12,12 +12,11 @@ import { ChartTooltip } from "../../@core/models/chart-tooltip/chart-tooltip.mod
 import { PeriodReport } from "../../@core/models/period-report.model";
 import { CategoryService } from "../../@core/services/category.service";
 import { ColorUtils } from "../../@core/utils/color-utils";
-import { getCategoryChartOptions, getNetWorthChartOptions } from "./chart-options";
+import { getCategoryChartOptions, getCategoryResultChartOptions, getIntervalChartOptions, getNetWorthChartOptions } from "./chart-options";
 
 enum ByCategoryTab {
-  Result = 1,
-  Expense = 2,
-  Income = 3,
+  Combined = 1,
+  Separate = 2,
 }
 
 @Component({
@@ -36,12 +35,15 @@ export class ReportsComponent implements OnInit {
 
   report: PeriodReport = null;
   categories: Array<Category> = null;
+  flatCategories: Array<Category> = null;
 
-  byCategoryTab: ByCategoryTab = ByCategoryTab.Expense;
+  byCategoryTab: ByCategoryTab = ByCategoryTab.Combined;
 
   netWorthChartOptions: EChartOption;
+  intervalChartOptions: EChartOption;
   expenseByCategoryChartOptions: EChartOption;
   incomeByCategoryChartOptions: EChartOption;
+  resultByCategoryChartOptions: EChartOption;
 
   constructor(
     private reportService: ReportData,
@@ -53,10 +55,11 @@ export class ReportsComponent implements OnInit {
 
   async ngOnInit() {
     this.categories = await this.categoryService.getCategories(false, true);
+    this.flatCategories = this.categories.concat(...this.categories.map(c => c.children));
     this.route.queryParamMap.subscribe(params => {
       if (params.has("catId")) {
         let catIds = params.getAll("catId").map(id => parseInt(id));
-        this.selectedCategories = this.categories.filter(c => catIds.includes(c.id));
+        this.selectedCategories = this.flatCategories.filter(c => catIds.includes(c.id));
       }
 
       if (params.has("periodStart") && params.has("periodEnd")) {
@@ -117,13 +120,17 @@ export class ReportsComponent implements OnInit {
     this.loading = false;
 
     this.netWorthChartOptions = getNetWorthChartOptions(this.report);
+    this.intervalChartOptions = getIntervalChartOptions(this.report);
     this.expenseByCategoryChartOptions = getCategoryChartOptions(s => s.expense, this.report);
     this.incomeByCategoryChartOptions = getCategoryChartOptions(s => s.income, this.report);
+    this.resultByCategoryChartOptions = getCategoryResultChartOptions(this.report);
+    console.log(this.resultByCategoryChartOptions);
   }
 
   public categoryId = (c: Category) => c.id;
   public categoryTitle = (c: Category) => c.description;
   public categoryIcon = Maybe.some((c: Category) => c.icon);
+  public categoryChildren = Maybe.some((c: Category) => c.children);
 
   public selectedCategoriesChanged(cs: Array<Category>) {
     this.selectedCategories = cs;

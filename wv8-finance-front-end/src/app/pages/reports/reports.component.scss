@@ -77,12 +77,14 @@ nb-card-header {
     height: 320px;
   }
 
+  #interval-chart {
+    height: 320px;
+  }
+
   .by-category-chart-container {
     display: flex;
     align-items: center;
     justify-content: center;
-
-    overflow-x: visible;
 
     padding: 0;
 
@@ -111,28 +113,52 @@ nb-card-header {
   }
 
   .totals {
-    .total-row {
-      display: flex;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-      padding-bottom: 6px;
+    nb-card {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
 
-      &:last-child {
-        padding-bottom: 0;
+      .number-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        width: 240px;
+        min-height: 100px;
+        max-height: 100px;
+
+        .value {
+          font-size: 24px;
+          line-height: 24px;
+          font-weight: 600;
+        }
+
+        .label {
+          margin-top: 6px;
+          font-size: 14px;
+          font-weight: 400;
+        }
+
+        &.positive {
+          color: var(--icon-success-color);
+
+          .label {
+            color: var(--icon-success-color);
+          }
+        }
+
+        &.negative {
+          color: var(--icon-danger-color);
+
+          .label {
+            color: var(--icon-danger-color);
+          }
+        }
       }
-
-      .row-value {
-        flex-grow: 1;
-        text-align: right;
-      }
-
-      &.result {
-        font-weight: bold;
-      }
-    }
-
-    hr {
-      margin-top: 0;
-      margin-bottom: 0.5rem;
     }
   }
 

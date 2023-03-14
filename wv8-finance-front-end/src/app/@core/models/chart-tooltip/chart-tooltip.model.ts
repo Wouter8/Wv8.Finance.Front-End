@@ -30,9 +30,14 @@ export class ChartTooltip {
   }
 
   public addEuroRow(data: any): ChartTooltip {
-    this.rows.push(
-      new ChartTooltipEuroRow(this.getValue(data), this.getLabel(data), this.getColor(data))
-    );
+    this.rows.push(new ChartTooltipEuroRow(this.getValue(data), this.getLabel(data), this.getColor(data)));
+    return this;
+  }
+
+  public addEuroRows(data: any[]): ChartTooltip {
+    for (let d of data) {
+      this.addEuroRow(d);
+    }
     return this;
   }
 
@@ -44,13 +49,13 @@ export class ChartTooltip {
   public render() {
     return `<div class='chart-tooltip'>
     <span class='tooltip-header'>${this.headerText}</span>
-    ${this.rows.map((r) => r.render()).join("")}
+    ${this.rows.map(r => r.render()).join("")}
     </div>`;
   }
 
-  private getValue = (data) => data.value;
-  private getLabel = (data) => data.seriesName;
-  private getColor = (data) => data.color;
+  private getValue = data => data.value;
+  private getLabel = data => data.seriesName;
+  private getColor = data => data.color;
 }
 
 abstract class ChartTooltipRow {
@@ -69,9 +74,7 @@ abstract class ChartTooltipRow {
   }
 
   private renderColor() {
-    return this.color
-      ? `<div class='tooltip-row-color' style='background-color:${this.color}'></div>`
-      : "";
+    return this.color ? `<div class='tooltip-row-color' style='background-color:${this.color}'></div>` : "";
   }
 
   abstract renderContent();
@@ -88,7 +91,7 @@ class ChartTooltipEuroRow extends ChartTooltipRow {
 
   renderContent() {
     const currencyPipe: CurrencyPipe = new CurrencyPipe("nl-NL");
-    return currencyPipe.transform(this.amount, "EUR");
+    return `<div class="value">${currencyPipe.transform(this.amount, "EUR")}</div>`;
   }
 }
 

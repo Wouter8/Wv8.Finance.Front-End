@@ -113,6 +113,7 @@
     .tooltip-row {
       display: flex;
       align-items: baseline;
+      gap: 6px;
 
       .tooltip-row-color {
         width: 10px;
@@ -121,6 +122,11 @@
 
         display: inline-block;
         margin-right: 4px;
+      }
+
+      .value {
+        flex-grow: 1;
+        text-align: right;
       }
     }
   }
