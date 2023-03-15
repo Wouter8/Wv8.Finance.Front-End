@@ -1,5 +1,5 @@
 import { CurrencyPipe, DatePipe, PercentPipe } from "@angular/common";
-import { Maybe } from "@wv8/typescript.core";
+import { IMaybe, Maybe } from "@wv8/typescript.core";
 import { EChartOption } from "echarts";
 import { ITransactionSums } from "../../@core/data/report";
 import { Category } from "../../@core/models/category.model";
@@ -21,6 +21,7 @@ const percentPipe = new PercentPipe("nl-NL");
 const datePipe = new DatePipe("nl-NL");
 
 type GroupedCategory = {
+  id: number;
   name: string;
   value: number;
   percentage: number;
@@ -92,7 +93,7 @@ const childPieChartCategories = (
 
     toShow.push({
       name: `${parent.name}.${name}`,
-      categoryId: catId,
+      categoryId: catId.isSome ? catId : parent.categoryId.isSome ? parent.categoryId : Maybe.none(),
       title: catId.map(cId => categoryMap.get(cId).description).valueOrElse("Not further specified"),
       color: catId.isSome ? ColorUtils.lighten(parent.color, i * 7.5) : parent.color,
       value: val,
@@ -106,6 +107,7 @@ const childPieChartCategories = (
   if (categoriesToGroup.length > 0) {
     let groupedCategories = categoriesToGroup.map(([catId, v]) => {
       return {
+        id: catId.valueOrElse(parent.categoryId.isSome ? parent.categoryId.value : -1),
         name: catId.map(cId => categoryMap.get(cId).description).valueOrElse("Not further specified"),
         value: v,
         percentage: v / total,
@@ -115,7 +117,7 @@ const childPieChartCategories = (
     let groupedValue = categoriesToGroup.reduce((sum, [_, val]) => sum + val, 0);
     toShow.push({
       name: `${parent.name}.Other`,
-      categoryId: Maybe.none(),
+      categoryId: Maybe.none<number>(),
       title: "Other",
       color: ColorUtils.lighten(parent.color, toShow.length * 7.5),
       value: groupedValue,
@@ -183,6 +185,7 @@ const pieChartCategories = (map: (_: ITransactionSums) => number, report: Period
   if (categoriesToGroup.length > 0) {
     let groupedCategories = categoriesToGroup.map(([catId, val]) => {
       return {
+        id: catId,
         name: report.categories.get(catId).description,
         value: val,
         percentage: val / total,
@@ -413,6 +416,7 @@ const getIntervalChartOptions = (report: PeriodReport): EChartOption => {
 };
 
 type BarChartChildCategory = {
+  idsToFilter: number[];
   name: string;
   title: string;
   value: number;
@@ -478,10 +482,10 @@ const childBarChartCategories = (isExpense: boolean, report: PeriodReport, paren
   for (let [i, [catId, val]] of categoriesToShow.entries()) {
     let name = catId.map(cId => report.categories.get(cId).description).valueOrElse("Not further specified");
 
-    console.log(name, i, val);
     const color = ColorUtils.lighten(isExpense ? red2 : green2, i * 8);
 
     toShow.push({
+      idsToFilter: [parentId],
       name: `${parentName}.${name}.${isExpense ? "Expense" : "Income"}`,
       title: name,
       value: val,
@@ -494,12 +498,14 @@ const childBarChartCategories = (isExpense: boolean, report: PeriodReport, paren
   if (categoriesToGroup.length > 0) {
     let groupedValue = categoriesToGroup.reduce((sum, [_, val]) => sum + val, 0);
     toShow.push({
+      idsToFilter: [parentId],
       name: `${parentName}.Other.${isExpense ? "Expense" : "Income"}`,
       title: `Other`,
       color: ColorUtils.lighten(isExpense ? red2 : green2, toShow.length * 8),
       value: groupedValue,
       groupingCategories: categoriesToGroup.map(([catId, val]) => {
         return {
+          id: catId.valueOrElse(-1),
           name: catId.map(cId => report.categories.get(cId).description).valueOrElse("Not further specified"),
           value: val,
           percentage: 0,
@@ -559,6 +565,7 @@ const barChartCategories = (report: PeriodReport) => {
     const childCategories = categoriesToGroup.map(([catId, result], i) => {
       const catName = report.categories.get(catId).description;
       return {
+        idsToFilter: categoriesToGroup.map(([catId, _]) => catId),
         name: `Other.${catName}`,
         title: catName,
         value: result,
@@ -605,7 +612,6 @@ const getCategoryResultChartOptions = (report: PeriodReport): EChartOption => {
         const formatted = [{ ...data[0], value: data[0].value[2] }].concat(
           ...data.splice(1, data.length).map(d => {
             const barData: BarChartChildCategory = d.value[2];
-            console.log(barData);
             if (barData.groupingCategories.length > 0) {
               return barData.groupingCategories.map(gd => {
                 return {
@@ -659,4 +665,4 @@ const getCategoryResultChartOptions = (report: PeriodReport): EChartOption => {
 };
 
 export { getCategoryChartOptions, getNetWorthChartOptions, getIntervalChartOptions, getCategoryResultChartOptions };
-export type { PieChartCategory };
+export type { PieChartCategory, BarChartCategory, BarChartChildCategory, GroupedCategory };
