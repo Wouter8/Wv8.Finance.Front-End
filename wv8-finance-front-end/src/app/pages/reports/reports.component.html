@@ -86,22 +86,18 @@
               ></div>
             </div>
             <div *ngIf="byCategoryTab == 2">
-              <div *ngIf="!report || report.totals.expense == 0" class="no-data">No data</div>
-              <div
-                *ngIf="report && report.totals.expense > 0"
-                echarts
-                [options]="expenseByCategoryChartOptions"
-                class="echart by-category-chart"
-              ></div>
-              <div
-                *ngIf="report && report.totals.income > 0"
-                echarts
-                [options]="incomeByCategoryChartOptions"
-                class="echart by-category-chart"
-              ></div>
+              <div *ngIf="!report || report.totals.income == 0" class="no-data by-category-chart-half">No data</div>
+              <div *ngIf="report && report.totals.income > 0" class="by-category-chart-half">
+                <div class="label">Income</div>
+                <div echarts [options]="incomeByCategoryChartOptions" class="echart by-category-chart"></div>
+              </div>
+              <div *ngIf="!report || report.totals.expense == 0" class="no-data by-category-chart-half">No data</div>
+              <div *ngIf="report && report.totals.expense > 0" class="by-category-chart-half">
+                <div class="label">Expense</div>
+                <div echarts [options]="expenseByCategoryChartOptions" class="echart by-category-chart"></div>
+              </div>
             </div>
-            ></nb-card-body
-          >
+          </nb-card-body>
         </nb-card>
       </div>
     </div>

@@ -99,10 +99,23 @@ nb-card-header {
       width: 100%;
 
       .by-category-chart {
-        min-height: 320px;
-        height: 320px;
-        max-height: 320px;
+        flex-grow: 1;
         width: 100%;
+        max-height: 320px;
+      }
+
+      .by-category-chart-half {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+
+        .label {
+          text-align: center;
+        }
+
+        .by-category-chart {
+          max-height: 280px;
+        }
       }
     }
   }

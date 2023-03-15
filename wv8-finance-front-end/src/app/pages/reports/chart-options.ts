@@ -417,6 +417,7 @@ type BarChartChildCategory = {
   title: string;
   value: number;
   color: string;
+  groupingCategories: Array<GroupedCategory>;
 };
 
 type BarChartCategory = {
@@ -426,7 +427,8 @@ type BarChartCategory = {
   result: number;
 };
 
-const childBarChartCategories = (map: (_: ITransactionSums) => number, report: PeriodReport, parentId: number, minAngle: number) => {
+const childBarChartCategories = (isExpense: boolean, report: PeriodReport, parentId: number, maxCount: number) => {
+  const map = (x: ITransactionSums) => (isExpense ? -x.expense : x.income);
   const parentValue = map(report.totalsPerRootCategory.get(parentId));
 
   const parentName = report.categories.get(parentId).description;
@@ -444,12 +446,9 @@ const childBarChartCategories = (map: (_: ITransactionSums) => number, report: P
   }
 
   // Sorted from largest to smallest
-  let sortedCategories = Array.from(categoryMapWithImplicit).sort(([x, a], [y, b]) => Math.abs(b) - Math.abs(a));
-
-  const maxValue = Math.abs(sortedCategories[0]?.[1] ?? 0);
-
-  let positive = 0;
-  let negative = 0;
+  let sortedCategories = Array.from(categoryMapWithImplicit)
+    .filter(([x, a]) => Math.abs(a) > 1)
+    .sort(([x, a], [y, b]) => Math.abs(b) - Math.abs(a));
 
   let [categoriesToShow, categoriesToGroup]: [Array<[Maybe<number>, number]>, Array<[Maybe<number>, number]>] = [
     ...sortedCategories,
@@ -457,19 +456,11 @@ const childBarChartCategories = (map: (_: ITransactionSums) => number, report: P
     ([toShow, toGroup], [cat, val]) => {
       let newToShow = [...toShow];
       let newToGroup = [...toGroup];
-      let angle = Math.abs(val / maxValue) * 360;
-      const isPositive = val > 1;
-      if (angle >= minAngle && ((isPositive && positive < 4) || (!isPositive && negative < 4))) {
+      if (newToShow.length < maxCount - 2) {
         newToShow.push([cat, val]);
         // don't show empty categories or categories whose value is super small due to floating point calculations
-      } else if (Math.abs(val) > 1) {
+      } else {
         newToGroup.push([cat, val]);
-      }
-
-      if (val > 1) {
-        positive += 1;
-      } else if (val < 1) {
-        negative += 1;
       }
 
       return [newToShow, newToGroup];
@@ -484,36 +475,36 @@ const childBarChartCategories = (map: (_: ITransactionSums) => number, report: P
 
   const toShow: Array<BarChartChildCategory> = [];
 
-  let coloredGreen = 0;
-  let coloredRed = 0;
-
   for (let [i, [catId, val]] of categoriesToShow.entries()) {
     let name = catId.map(cId => report.categories.get(cId).description).valueOrElse("Not further specified");
 
-    const color = val > 0 ? ColorUtils.lighten(green2, coloredGreen * 8) : ColorUtils.lighten(red2, coloredRed * 8);
+    console.log(name, i, val);
+    const color = ColorUtils.lighten(isExpense ? red2 : green2, i * 8);
 
     toShow.push({
-      name: `${parentName}.${name}`,
+      name: `${parentName}.${name}.${isExpense ? "Expense" : "Income"}`,
       title: name,
       value: val,
-      color: val > 0 ? ColorUtils.lighten(green2, coloredGreen * 8) : ColorUtils.lighten(red2, coloredRed * 8),
+      color: color,
+      groupingCategories: [],
     });
-
-    if (val > 0) {
-      coloredGreen += 1;
-    } else {
-      coloredRed += 1;
-    }
   }
 
   // Group the remaining categories
   if (categoriesToGroup.length > 0) {
     let groupedValue = categoriesToGroup.reduce((sum, [_, val]) => sum + val, 0);
     toShow.push({
-      name: `${parentName}.Other`,
+      name: `${parentName}.Other.${isExpense ? "Expense" : "Income"}`,
       title: `Other`,
-      color: groupedValue > 0 ? ColorUtils.lighten(green2, coloredGreen * 8) : ColorUtils.lighten(red2, coloredRed * 8),
+      color: ColorUtils.lighten(isExpense ? red2 : green2, toShow.length * 8),
       value: groupedValue,
+      groupingCategories: categoriesToGroup.map(([catId, val]) => {
+        return {
+          name: catId.map(cId => report.categories.get(cId).description).valueOrElse("Not further specified"),
+          value: val,
+          percentage: 0,
+        };
+      }),
     });
   }
 
@@ -527,6 +518,7 @@ const barChartCategories = (report: PeriodReport) => {
     .sort(([x, a], [y, b]) => Math.abs(b) - Math.abs(a));
 
   const maxValue = Math.abs(sortedCategories[0]?.[1] ?? 0);
+  const minChildValue = 0.05 * maxValue;
 
   let [categoriesToShow, categoriesToGroup]: [Array<[number, number]>, Array<[number, number]>] = [...sortedCategories].reduce(
     ([toShow, toGroup], [cat, val]) => {
@@ -556,7 +548,7 @@ const barChartCategories = (report: PeriodReport) => {
     let outer = {
       name: catName,
       title: catName,
-      childCategories: childBarChartCategories(s => s.income - s.expense, report, catId, 4 / 360),
+      childCategories: childBarChartCategories(false, report, catId, 5).concat(childBarChartCategories(true, report, catId, 5)),
       result: result,
     };
     categories.push(outer);
@@ -571,6 +563,7 @@ const barChartCategories = (report: PeriodReport) => {
         title: catName,
         value: result,
         color: ColorUtils.lighten(result > 0 ? green2 : red2, i * 8),
+        groupingCategories: [],
       };
     });
     categories.push({
@@ -610,9 +603,20 @@ const getCategoryResultChartOptions = (report: PeriodReport): EChartOption => {
       formatter: (data: any[]) => {
         const parent = data[0]?.name;
         const formatted = [{ ...data[0], value: data[0].value[2] }].concat(
-          data.splice(1, data.length).map(d => {
+          ...data.splice(1, data.length).map(d => {
             const barData: BarChartChildCategory = d.value[2];
-            return { ...d, value: d.value[1], seriesName: barData.title };
+            console.log(barData);
+            if (barData.groupingCategories.length > 0) {
+              return barData.groupingCategories.map(gd => {
+                return {
+                  value: gd.value,
+                  seriesName: `${barData.title === "Other" || d.name === "Other" ? "" : "Other > "}${gd.name}`,
+                  color: d.color,
+                };
+              });
+            } else {
+              return [{ ...d, value: d.value[1], seriesName: barData.title }];
+            }
           })
         );
         return ChartTooltip.create(parent).addEuroRows(formatted).render();
