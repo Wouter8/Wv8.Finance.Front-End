@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       workingDirectory: ./wv8-finance-front-end
-      distDirectory: ./wv8-finance-front-end/dist/
+      distDirectory: ./wv8-finance-front-end/dist/*
       environmentFileDirectory: ./wv8-finance-front-end/src/environments/
 
     steps:
@@ -44,6 +44,6 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           local_path: ${{env.distDirectory}}
           remote_path: ${{ secrets.FTP_FOLDER }}
-          sftp_only: true
+          # sftp_only: true
           delete_remote_files: true
           password: ${{ secrets.FTP_PASSWORD }}
