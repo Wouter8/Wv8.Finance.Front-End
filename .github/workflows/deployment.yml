@@ -45,5 +45,5 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local_path: ${{env.distDirectory}}
           remote_path: ${{ secrets.FTP_FOLDER }}
-          sftp_only: true
+          sftp_only: false
           delete_remote_files: true
