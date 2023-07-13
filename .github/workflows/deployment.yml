@@ -42,8 +42,8 @@ jobs:
         with:
           username: ${{ secrets.FTP_USER }}
           server: ${{ secrets.FTP_HOST }}
+          ssh_private_key: ${{ secrets.FTP_KEY }}
           local_path: ${{env.distDirectory}}
           remote_path: ${{ secrets.FTP_FOLDER }}
-          # sftp_only: true
-          delete_remote_files: true
-          password: ${{ secrets.FTP_PASSWORD }}
+          sftp_only: true
+          # delete_remote_files: true
