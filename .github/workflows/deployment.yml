@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       workingDirectory: ./wv8-finance-front-end
-      distDirectory: ./wv8-finance-front-end/dist/
+      distDirectory: ./wv8-finance-front-end/dist/*
       environmentFileDirectory: ./wv8-finance-front-end/src/environments/
 
     steps:
