@@ -37,13 +37,23 @@ jobs:
       # build angular production configuration
       - run: npm run "build:prod"
         working-directory: ${{env.workingDirectory}}
-      - name: SFTP Deploy
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      - name: SFTP uploader
+        # You may pin to the exact commit or the version.
+        # uses: wangyucode/sftp-upload-action@0ce8147ad8637906ceb7ebb272640ca45e4b2b31
+        uses: wangyucode/sftp-upload-action@v2.0.2
         with:
-          username: ${{ secrets.FTP_USER }}
-          server: ${{ secrets.FTP_HOST }}
-          ssh_private_key: ${{ secrets.FTP_KEY }}
-          local_path: ${{env.distDirectory}}
-          remote_path: ${{ secrets.FTP_FOLDER }}
-          sftp_only: true
-          # delete_remote_files: true
+          host: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }} 
+          password: ${{ secrets.FTP_PASSWORD }}
+          localDir: ${{env.distDirectory}}
+          remoteDir: ${{ secrets.FTP_FOLDER }}
+#       - name: SFTP Deploy
+#         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+#         with:
+#           username: ${{ secrets.FTP_USER }}
+#           server: ${{ secrets.FTP_HOST }}
+#           ssh_private_key: ${{ secrets.FTP_KEY }}
+#           local_path: ${{env.distDirectory}}
+#           remote_path: ${{ secrets.FTP_FOLDER }}
+#           sftp_only: true
+#           # delete_remote_files: true
