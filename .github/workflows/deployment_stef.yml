@@ -36,13 +36,13 @@ jobs:
       # build angular production configuration
       - run: npm run "build:prod"
         working-directory: ${{env.workingDirectory}}
-      - name: Deploy app
-        uses: isthatcentered/dist-to-ftp@master
+      - name: SFTP Deploy
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          user: ${{ secrets.FTP_USER }}
+          username: ${{ secrets.FTP_USER }}
+          server: ${{ secrets.FTP_HOST }}
           password: ${{ secrets.FTP_PASSWORD }}
-          host: ${{ secrets.FTP_HOST }}
-          port: 21
-          path: ${{env.distDirectory}}
-          into: ${{ secrets.FTP_FOLDER_STEF }}
-          cleanupExisting: true
+          local_path: ${{env.distDirectory}}
+          remote_path: ${{ secrets.FTP_FOLDER_STEF }}
+          sftp_only: false
+          delete_remote_files: true
