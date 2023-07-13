@@ -47,6 +47,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           localDir: ${{env.distDirectory}}
           remoteDir: ${{ secrets.FTP_FOLDER }}
+          privateKey: ${{ secrets.FTP_KEY }}
 #       - name: SFTP Deploy
 #         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
 #         with:
