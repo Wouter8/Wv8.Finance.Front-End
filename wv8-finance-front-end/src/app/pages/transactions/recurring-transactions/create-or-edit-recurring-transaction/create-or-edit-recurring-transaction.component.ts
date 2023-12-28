@@ -27,14 +27,14 @@ import { CategoryData } from "../../../../@core/data/category";
   styleUrls: ["./create-or-edit-recurring-transaction.component.scss"],
 })
 export class CreateOrEditRecurringTransactionComponent implements OnInit {
-  @ViewChild("expenseTab", { static: true })
+  @ViewChild("expenseTab")
   expenseTab: NbTabComponent;
-  @ViewChild("incomeTab", { static: true })
+  @ViewChild("incomeTab")
   incomeTab: NbTabComponent;
-  @ViewChild("transferTab", { static: true })
+  @ViewChild("transferTab")
   transferTab: NbTabComponent;
 
-  @ViewChild("expenseTabComponent", { static: true })
+  @ViewChild("expenseTabComponent")
   expenseTabComponent: CreateOrEditRecurringExpenseComponent;
 
   @Input()
@@ -45,7 +45,7 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
   editing = false;
   header: string = "Creating recurring transaction";
 
-  updateInstances: boolean = true;
+  updateInstances: boolean = false;
 
   transactionTypes = TransactionType;
   categories: Category[] = [];
@@ -64,18 +64,6 @@ export class CreateOrEditRecurringTransactionComponent implements OnInit {
     if (this.recurringTransaction) {
       this.editing = true;
       this.header = `Editing recurring transaction`;
-
-      switch (this.recurringTransaction.type) {
-        case TransactionType.Expense:
-          this.expenseTab.active = true;
-          break;
-        case TransactionType.Income:
-          this.incomeTab.active = true;
-          break;
-        case TransactionType.Transfer:
-          this.transferTab.active = true;
-          break;
-      }
     } else {
       this.recurringTransaction = new RecurringTransaction();
       let today = new Date();

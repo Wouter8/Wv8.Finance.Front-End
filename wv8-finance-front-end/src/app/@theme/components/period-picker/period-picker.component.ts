@@ -39,7 +39,7 @@ export class PeriodPickerComponent implements OnChanges {
   constructor(private dateService: NbDateService<Date>) {}
 
   ngOnChanges() {
-    if (this.start && this.end) {
+    if (this.start || (this.start && this.end)) {
       this.range = {
         start: this.start,
         end: this.end,

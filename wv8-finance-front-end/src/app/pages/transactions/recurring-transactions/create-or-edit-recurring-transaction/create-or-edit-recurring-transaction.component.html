@@ -10,6 +10,7 @@
         [tabindex]="transactionTypes.Expense"
         tabIcon="trending-down-outline"
         [disabled]="editing && recurringTransaction.type != transactionTypes.Expense"
+        [active]="editing && recurringTransaction.type == transactionTypes.Expense"
       >
         <create-or-edit-recurring-expense
           #expenseTabComponent
@@ -28,6 +29,7 @@
         [tabindex]="transactionTypes.Income"
         tabIcon="trending-up-outline"
         [disabled]="editing && recurringTransaction.type != transactionTypes.Income"
+        [active]="editing && recurringTransaction.type == transactionTypes.Income"
       >
         <create-or-edit-recurring-income
           *ngIf="initialized"
@@ -45,6 +47,7 @@
         [tabindex]="transactionTypes.Transfer"
         tabIcon="swap-outline"
         [disabled]="editing && recurringTransaction.type != transactionTypes.Transfer"
+        [active]="editing && recurringTransaction.type == transactionTypes.Transfer"
       >
         <create-or-edit-recurring-transfer
           *ngIf="initialized"
