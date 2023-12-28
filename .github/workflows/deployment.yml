@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       workingDirectory: ./wv8-finance-front-end
-      distDirectory: ./wv8-finance-front-end/dist/
+      distDirectory: ./wv8-finance-front-end/dist/*
       environmentFileDirectory: ./wv8-finance-front-end/src/environments/
 
     steps:
@@ -37,14 +37,13 @@ jobs:
       # build angular production configuration
       - run: npm run "build:prod"
         working-directory: ${{env.workingDirectory}}
-
-      - name: Deploy app
-        uses: isthatcentered/dist-to-ftp@master
+      - name: SFTP Deploy
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          user: ${{ secrets.FTP_USER }}
+          username: ${{ secrets.FTP_USER }}
+          server: ${{ secrets.FTP_HOST }}
           password: ${{ secrets.FTP_PASSWORD }}
-          host: ${{ secrets.FTP_HOST }}
-          port: 21
-          path: ${{env.distDirectory}}
-          into: ${{ secrets.FTP_FOLDER}}
-          cleanupExisting: true
+          local_path: ${{env.distDirectory}}
+          remote_path: ${{ secrets.FTP_FOLDER }}
+          sftp_only: false
+          delete_remote_files: true
